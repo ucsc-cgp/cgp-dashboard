@@ -90,9 +90,9 @@
                      <li class="divider"></li>
                      
                         <li class="nav-header">Center</li>
-                        <div ng-repeat="item in results.centerName.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('center_name', item['key'])" ng-click="checking('center_name', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.centerName.terms">
+                           <input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>
                         </div>
                         <li class="divider"></li> 
@@ -108,41 +108,41 @@
  -->
       
                         <li class="nav-header">Project</li>
-                        <div ng-repeat="item in results.projectCode.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('project', item['key'])" ng-click="checking('project', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.projectCode.terms">
+                           <input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>  
                         </div>
                         <li class="divider"></li> 
       
                         <li class="nav-header">Workflow</li>
-                        <div ng-repeat="item in results.workFlow.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('workflow', item['key'])" ng-click="checking('workflow', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.workFlow.terms">
+                           <input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>    
                         </div>
                         <li class="divider"></li> 
          
                         <li class="nav-header">Analysis Type</li>
-                        <div ng-repeat="item in results.analysisType.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('analysis_type', item['key'])"  ng-click="checking('analysis_type', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.analysisType.terms">
+                           <input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>    
                         </div>
                         <li class="divider"></li> 
          
                         <li class="nav-header">Specimen Type</li>
-                        <div ng-repeat="item in results.specimenType.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('specimen_type', item['key'])" ng-click="checking('specimen_type', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.specimenType.terms">
+                           <input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>    
                         </div>
                         <li class="divider"></li>         
          
                         <li class="nav-header">File Type</li>
-                        <div ng-repeat="item in results.fileFormat.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('file_type', item['key'])" ng-click="checking('file_type', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.fileFormat.terms">
+                           <input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input> 
                         </div>
                         <li class="divider"></li>    

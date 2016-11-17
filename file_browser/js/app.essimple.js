@@ -366,35 +366,35 @@ EsConnector.controller('QueryController', function($scope, es, $compile) {
       var pieTemp = [];
       var pieTemp2 = [];
       console.log($scope.results)
-      for (var i=0; i<$scope.results.analysis_type.buckets.length; i++){
+      for (var i=0; i<$scope.results.analysis_type.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.analysis_type.buckets[i].key);
-         pieTemp.push($scope.results.analysis_type.buckets[i].doc_count);
+         pieTemp.push($scope.results.analysis_type.terms[i].key);
+         pieTemp.push($scope.results.analysis_type.terms[i].doc_count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.analysis_type.buckets.length; i++){
+      for (var i=0; i<$scope.results.analysis_type.terms.length; i++){
          pieArrAnalysis.push(pieTemp2[i]);
       }
       pieArrWorkflow =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.workflow.buckets.length; i++){
+      for (var i=0; i<$scope.results.workflow.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.workflow.buckets[i].key);
-         pieTemp.push($scope.results.workflow.buckets[i].doc_count);
+         pieTemp.push($scope.results.workflow.terms[i].key);
+         pieTemp.push($scope.results.workflow.terms[i].doc_count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.workflow.buckets.length; i++){
+      for (var i=0; i<$scope.results.workflow.terms.length; i++){
          pieArrWorkflow.push(pieTemp2[i]);
       }
       pieArrFile =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.file_type.buckets.length; i++){
+      for (var i=0; i<$scope.results.file_type.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.file_type.buckets[i].key);
-         pieTemp.push($scope.results.file_type.buckets[i].doc_count);
+         pieTemp.push($scope.results.file_type.terms[i].key);
+         pieTemp.push($scope.results.file_type.terms[i].doc_count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.file_type.buckets.length; i++){
+      for (var i=0; i<$scope.results.file_type.terms.length; i++){
          pieArrFile.push(pieTemp2[i]);
       }
    }
@@ -614,6 +614,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    get_myService();
    //Function to be called whenever a checkbox is marked; applies the filters. 
    $scope.checking = function(facet, item){
+   	console.log(item);
       if(!(facet+item in checked_boxes)){
          //Add the checked box to the array containing all the checked boxes
          adding_Facet(facet, item);
@@ -734,38 +735,39 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    
    // turns pie data into array format
    $scope.piedata = function(){
+   	console.log($scope.results);
       pieArrAnalysis =[];
       var pieTemp = [];
       var pieTemp2 = [];
-      for (var i=0; i<$scope.results.analysisType.buckets.length; i++){
+      for (var i=0; i<$scope.results.analysisType.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.analysisType.buckets[i].key);
-         pieTemp.push($scope.results.analysisType.buckets[i].doc_count);
+         pieTemp.push($scope.results.analysisType.terms[i].term);
+         pieTemp.push($scope.results.analysisType.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.analysisType.buckets.length; i++){
+      for (var i=0; i<$scope.results.analysisType.terms.length; i++){
          pieArrAnalysis.push(pieTemp2[i]);
       }
       pieArrWorkflow =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.workFlow.buckets.length; i++){
+      for (var i=0; i<$scope.results.workFlow.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.workFlow.buckets[i].key);
-         pieTemp.push($scope.results.workFlow.buckets[i].doc_count);
+         pieTemp.push($scope.results.workFlow.terms[i].term);
+         pieTemp.push($scope.results.workFlow.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.workFlow.buckets.length; i++){
+      for (var i=0; i<$scope.results.workFlow.terms.length; i++){
          pieArrWorkflow.push(pieTemp2[i]);
       }
       pieArrFile =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.fileFormat.buckets.length; i++){
+      for (var i=0; i<$scope.results.fileFormat.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.fileFormat.buckets[i].key);
-         pieTemp.push($scope.results.fileFormat.buckets[i].doc_count);
+         pieTemp.push($scope.results.fileFormat.terms[i].term);
+         pieTemp.push($scope.results.fileFormat.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.fileFormat.buckets.length; i++){
+      for (var i=0; i<$scope.results.fileFormat.terms.length; i++){
          pieArrFile.push(pieTemp2[i]);
       }
    }
