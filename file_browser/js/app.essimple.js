@@ -258,14 +258,20 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    
    //download Manifest file
    $scope.downloadfile = function(){
-      //config['params']['size'] = $scope.numHits;
-      verify();
+      //configManifest = config;
+      var number_size = config['params']['size'];
+      config['params']['size'] = $scope.numHits;
+      
+      console.log(config);
+      console.log(configManifest);
+      //verify();
       console.log("calling get_myManifest");
       get_myManifest();
       console.log("after calling get_myManifest");
       console.log("calling makingManifest()");
       //makingManifest();
       console.log("after calling makingManifest()");
+      config['params']['size'] = number_size;
       verify();
    }
    //TO BE DELETED
