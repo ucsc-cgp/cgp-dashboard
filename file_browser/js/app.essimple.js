@@ -338,7 +338,8 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          title: 'Analysis Type',
          width: 200,
          height: 200,
-         legend: 'none'
+         legend: 'none',
+         fontName: 'Muli'
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartAnalysis'));
@@ -357,7 +358,8 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          title: 'Workflow Type',
          width: 200,
          height: 200,
-         legend: 'none'
+         legend: 'none',
+         fontName: 'Muli'
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartWorkflow'));
@@ -376,7 +378,8 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          title: 'File Type',
          width: 200,
          height: 200,
-         legend: 'none'
+         legend: 'none',
+         fontName: 'Muli'
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartFile'));

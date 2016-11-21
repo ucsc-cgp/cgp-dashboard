@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html ng-app="MyAPI_Connector">
    <head>
       <meta http-equiv="content-type" content="text/html; charset=UTF-8">
          <title>File Browser</title>
-         
+         <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
          <link rel="stylesheet" type="text/css" href="../mystyle.css">
          <link rel="stylesheet" href="common/css/normalize.min.css">
          <link rel="stylesheet" href="common/css/main.min.css">
@@ -25,25 +25,10 @@
          
          <!-- pie chart -->
          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   	</meta>
    </head>
    
    <style>
-      body{
-         font-family: Arial;
-      }
-
-      .chart {
-         background: #fff;
-         font: 10px;
-      }
-
-      .axis path, .axis line {
-         fill: none;
-         stroke: #000;
-         stroke-width: 2px;
-         shape-rendering: crispEdges;
-      }
-
       .button {
          border: none;
          color: black;
@@ -72,9 +57,9 @@
       </div>
    </div>
    <ul class="header text">
-      <li><a href="../index.html">Home</a></li>
-      <li class="dropbtn"><a href="../projects.html">Analysis Dashboard</a></li>
-      <li class="dropbtn"><a href="index.html">File Browser</a></li>
+      <li class="dropbtn"><a href="../index.html">Home</a></li>
+      <li><a href="../projects.html">Analysis Dashboard</a></li>
+      <li><a href="index.html">File Browser</a></li>
       <li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
       <li><a href="../about.html">About</a></li>
    </ul>
@@ -196,13 +181,13 @@
          </div>
       </div>
       
-      <center>
+      <center class="text">
          <div>  
-            <button class="button" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
+            <button class="button text" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
                <span placeholder="{{next}}"> <button class="button" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
                   Page: {{offset}} {{of}} {{poutof}}
                </span>
-            <button class="button"><span ng-click="downloadfile();">Download Manifest</span></button>
+            <button class="button text"><span ng-click="downloadfile();">Download Manifest</span></button>
          </div>
       </center>
       
