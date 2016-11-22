@@ -22,7 +22,7 @@ var configManifest = {
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://localhost:8000/Documents/Genomelocal/dcc-dashboard/action_service/js/action_index.jsonl');
+         return $http.get('http://ucsc-cgl.org:8080/action_service/js/action_index.jsonl');
       }
    }
 });
@@ -31,7 +31,7 @@ MyAPI_Connector.factory('myService', function($http){
 MyAPI_Connector.factory('myParams', function($http){
    return{
       data: function(){
-         return $http.get('http://localhost:8000/Documents/Genomelocal/dcc-dashboard/action_service/js/action_index.jsonl');
+         return $http.get('http://ucsc-cgl.org:8080/action_service/js/action_index.jsonl');
       }
    }
 });
