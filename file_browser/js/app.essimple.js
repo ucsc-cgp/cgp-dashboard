@@ -22,7 +22,7 @@ var configManifest = {
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://ec2-54-173-61-18.compute-1.amazonaws.com:5000/files/');
+         return $http.get('http://ec2-35-164-176-8.us-west-2.compute.amazonaws.com:5000/files/');
       }
    }
 });
