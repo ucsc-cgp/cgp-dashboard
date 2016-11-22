@@ -71,26 +71,24 @@
          
                         <thead>
                            <tr>
-                              <th>Donor ID</th>
-                              <th>Error Text</th>
-                              <th>Name</th>
-                              <th>Pipeline Name</th>
                               <th>Project</th>
+                              <th>Donor ID</th>
                               <th>Sample ID</th>
+                              <th>Pipeline Name</th>
                               <th>Start Time</th>
                               <th>Status</th>
+                              <th>Error Text</th>
                            </tr>
                         </thead>
                         <tbody>
                            <tr ng-repeat="item in hits">
+                           	<td>{{item['project']}}</td>
                            	<td>{{item['donor_id']}}</td>
-                              <td>{{item['error_text']}}</td>
-                              <td>{{item['name']}}</td>
-                              <td>{{item['pipeline_name']}}</td>
-                              <td>{{item['project']}}</td>
-                              <td>{{item['sample_id']}}</td>
+                           	<td>{{item['sample_id']}}</td>
+                           	<td>{{item['pipeline_name']}}</td>
                               <td>{{item['start_time']}}</td>
                               <td>{{item['status']}}</td>
+                              <td>{{item['error_text']}}</td>
                            </tr>
                         </tbody>
                   

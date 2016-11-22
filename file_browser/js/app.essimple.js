@@ -234,28 +234,6 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       verify();
    }
    
-   //download as manifest helper function
-   //TO BE DELETED
-   var bodydown = function(){
-      $scope.bodyArr = [];
-      for (var i=0; i<$scope.numHits; i++){
-         var projectDown = $scope.manData[i]['project'];
-         var donorDown = $scope.manData[i]['donor'];
-         var specimen_typeDown = $scope.manData[i]['specimen_type'];
-         var analysis_typeDown = $scope.manData[i]['analysis_type'];
-         var workflowDown = $scope.manData[i]['workflow'];
-         var file_typeDown = $scope.manData[i]['file_type'];
-         var titleDown = $scope.manData[i]['title'];
-         var download_idDown = $scope.manData[i]['download_id'];
-         $scope.bodyArr.push(projectDown+"\t"+donorDown+"\t"+specimen_typeDown+"\t"+analysis_typeDown+"\t"+workflowDown+"\t"+file_typeDown+"\t"+titleDown+"\t"+download_idDown);
-      }
-      bodyStr = $scope.bodyArr[0];
-      for (var i=1;i<$scope.numHits;i++){
-         bodyStr = bodyStr.concat("\n");
-         bodyStr = bodyStr.concat($scope.bodyArr[i]);
-      }
-   }
-   
    //download Manifest file
    $scope.downloadfile = function(){
       //configManifest = config;
@@ -273,15 +251,6 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       console.log("after calling makingManifest()");
       config['params']['size'] = number_size;
       verify();
-   }
-   //TO BE DELETED
-   var makingManifest = function(){
-      var titledown = "Project\tDonor\tSpecimen\tType\tAnalysis Type\tWorkflow\tFile Type\tFile\tDownload ID"
-      
-      var file = new File([titledown+"\n"+bodyStr], "results.tsv", {type: "text/plain;charset=utf-8"});
-      saveAs(file);
-      config['params']['size'] = null;
-      console.log("end of calling makingManifest()");
    }
    
    // turns pie data into array format
