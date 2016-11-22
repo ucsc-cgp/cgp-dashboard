@@ -40,7 +40,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('http://ec2-35-164-176-8.us-west-2.compute.amazonaws.com:5000/files/', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('http://ec2-35-164-176-8.us-west-2.compute.amazonaws.com:5000/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
