@@ -2,7 +2,7 @@
 
 //Deleted all the old code, this talks to the API service
 
-var MyAPI_Connector = angular.module('MyAPI_Connector', []);
+var MyAPI_Connector = angular.module('MyAPI_Connector', ["ngTextTruncate"]);
 
 //Parameter variable
 var config = {
@@ -43,6 +43,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    //Variables to be used to populate the page
    $scope.hits = [];
    $scope.results = [];
+   $scope.longText = "";
    
    //Assign the termFacets and hits to the scope variables
    var assign_Hits_Facets = function(data){
@@ -62,7 +63,5 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    
    //Call the regular service to populate the webpage initially
    get_myService();
-   
-
 });
 
