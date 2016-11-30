@@ -16,9 +16,11 @@
          <script src="../file_browser/common/lib/angular.min.js"></script>
          <script src="../file_browser/elasticsearch-js/elasticsearch.js"></script>
          <script src="../file_browser/elasticsearch-js/elasticsearch.angular.js"></script>
-         
+
          <!-- project specific files -->
          <script src="js/app.essimple.js"></script>
+         <script src="js/ng-text-truncate.js"></script>
+
 
    	</meta>
    </head>
@@ -38,6 +40,10 @@
          border-width: 2px;
          margin-top: 0.25em;
          margin-bottom: 0.5em;
+      }
+      .show {
+         overflow: visible;
+         height: auto;
       }
    </style>
    
@@ -81,15 +87,16 @@
                            </tr>
                         </thead>
                         <tbody>
-                           <tr ng-repeat="item in hits">
+                           <tr ng-repeat="item in hits" >
                            	<td>{{item['project']}}</td>
                            	<td>{{item['donor_id']}}</td>
                            	<td>{{item['sample_id']}}</td>
                            	<td>{{item['pipeline_name']}}</td>
                               <td>{{item['start_time']}}</td>
                               <td>{{item['status']}}</td>
-                              <td>{{item['error_text']}}</td>
+                              <td ng-text-truncate="item['error_text']" ng-tt-chars-threshold="40">{{item['error_text']}}</td>
                            </tr>
+                           </div>
                         </tbody>
                   
                      </table>
