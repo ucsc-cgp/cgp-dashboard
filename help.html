@@ -45,7 +45,7 @@
 		  			<p>Contact the admin to get an access token if you don't have one.</p>
 		  			<h3>Perform Bulk Download</h3>
 		  			<p>To do a bulk download, run the following docker command:<br>
-		  				<code>docker run --rm -it -e ACCESS_TOKEN=&lt;my_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`/&lt;my/data/path&gt;:/dcc/data benjaminran/redwood-client bash bulk_download &lt;object_id&gt; data/</code><br>
+		  				<code>docker run --rm -it -e ACCESS_TOKEN=&lt;my_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`/&lt;my/data/path&gt;:/dcc/data benjaminran/redwood-client bash bulk_download &lt;my_manifest&gt; data/</code><br>
 		  				This will download the data in the folder specified in the current directory.
 		  			</p>
 		 		</div>
