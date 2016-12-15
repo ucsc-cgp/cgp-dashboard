@@ -37,14 +37,16 @@
 			<div class="row-fluid">
 				<div class="text" style="margin: 20px">
 					<h2>Help</h2>
-		  			<p>You can use the manifest with the Redwood Client to perform a bulk download.</p>
+		  			<p>You can do a bulk download from the Redwood Client using the manifest. To get the manifest, go to the File Browser, scroll to the bottom, and click "Download Manifest".</p>
 		  			<h3>Setting up the Redwood Client</h3>
-		  			<p>To set up the Redwood Client, you can download it using docker. To download the client, use:<br>
+		  			<p>You can download the Redwood Client using docker. To download the client, use from the command line:<br>
 		  			<code>docker pull benjaminran/redwood-client</code> </p>
 		  			<h3>Getting the token</h3>
 		  			<p>Contact the admin to get an access token if you don't have one.</p>
 		  			<h3>Perform Bulk Download</h3>
-		  			<p>In order to Bulk download, first, download the manifest file from the file browser. Then you can run the following command to download the files:<br>
+		  			<p>To do a bulk download, run the following docker command:<br>
+		  				<code>docker run --rm -it -e ACCESS_TOKEN=&lt;my_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`/&lt;my/data/path&gt;:/dcc/data benjaminran/redwood-client bash bulk_download &lt;object_id&gt; data/</code><br>
+		  				This will download the data in the folder specified in the current directory.
 		  			</p>
 		 		</div>
 		 	</div>
