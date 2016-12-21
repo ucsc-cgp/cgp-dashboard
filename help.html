@@ -37,16 +37,34 @@
 			<div class="row-fluid">
 				<div class="text" style="margin: 20px">
 					<h2>Help</h2>
-		  			<p>You can do a bulk download from the Redwood Client using the manifest. To get the manifest, go to the File Browser, scroll to the bottom, and click "Download Manifest".</p>
-		  			<h3>Setting up the Redwood Client</h3>
+		  			<p>You can do a bulk download from the Client using the manifest. To get the manifest, go to the File Browser, scroll to the bottom, and click "Download Manifest".</p>
+		  			<h3>Setting up the Client</h3>
 		  			<p>You can download the Redwood Client using docker. To download the client, use from the command line:<br>
-		  			<code>docker pull benjaminran/redwood-client</code> </p>
+		  			<code>docker pull quay.io/ucsc_cgl/core-client:1.0.0</code> </p>
 		  			<h3>Getting the token</h3>
-		  			<p>Contact the admin to get an access token if you don't have one.</p>
-		  			<h3>Perform Bulk Download</h3>
-		  			<p>To do a bulk download, run the following docker command:<br>
-		  				<code>docker run --rm -it -e ACCESS_TOKEN=&lt;my_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`/&lt;my/data/path&gt;:/dcc/data benjaminran/redwood-client bash bulk_download &lt;my_manifest&gt; data/</code><br>
+		  			<p>If you don't have an access token, you can contact <a href="mailto:broconno@ucsc.edu">Brian O'Connor</a> and request one. </p>
+		  			<h3>Perform Bulk Download via Manifest</h3>
+		  			<p>
+
+                                          This assumes the current working directory (pwd) has a manifest, like the ones you can download from the <a href="http://ucsc-cgl.org/file_browser/">file browser.</a> The command below will then download the files to the current working directory.<br>
+
+NOTE: make sure you have enough space in pwd!<br>
+						<code>docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.1 redwood-download /dcc/data/manifest.tsv /dcc/data/</code><br>
 		  				This will download the data in the folder specified in the current directory.
+		  			</p>
+		  			<h3>Upload via Spinnaker</h3>
+		  			<p>
+
+                                          Create a manifest that links your metdata and data. Your manifest.tsv should be a TSV based on this <a href="https://docs.google.com/spreadsheets/d/13fqil92C-Evi-4cy_GTnzNMmrD0ssuSCx3-cveZ4k70/edit#gid=0">template</a>. <br>
+
+You need to include file paths to your upload files that start with /dcc/data since that's the location used in the docker run below.<br>
+
+You should create a directory where you want to have your files for upload (assumed to be pwd), place your manifest.tsv in this directory along with all your files for upload, and then execute the following:<br>
+
+						<code>docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.1 spinnaker-upload /dcc/data/manifest.tsv</code><br>
+		  				Once completed, you will find a receipt file (spinnaker/output_metadata/receipt.tsv) which you should save. It provides various IDs assigned to your donor, specimen, sample and file that make it much easier to find/audit later.<br>
+
+NOTE: Uploads can take a long time and our feedback on the command line needs to be improved. I suggest using a tool like dstat to monitor network usage to ensure uploads are in progress.
 		  			</p>
 		 		</div>
 		 	</div>
