@@ -84,15 +84,15 @@
                         </div>
                         <li class="divider"></li> 
                         
-<!-- 
+<!-- -->
                         <li class="nav-header">Program</li>
-                        <div ng-repeat="item in results.program.buckets">
-                           <input type="checkbox" ng-checked="hasCheck('program', item['key'])" ng-click="checking('program', item['key'])">
-                              {{item['key']}} <span class="muted">{{item['doc_count']}}</span>
+                        <div ng-repeat="item in results.program.terms">
+                           <input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
+                              {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>  
                         </div>
                         <li class="divider"></li> 
--->
+<!-- -->
       
                         <li class="nav-header">Project</li>
                         <div ng-repeat="item in results.projectCode.terms">
