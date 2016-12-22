@@ -45,11 +45,22 @@ MyAPI_Connector.factory('myManifest', function($http){
    }
 });
 
+//Factory for the piechart endpoint:
+ MyAPI_Connector.factory('myParams_pie', function($http){
+   return{
+      data: function(){
+         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/piecharts', config);
+      }
+   }
+});
+
+
 //Controller for the page
-MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService, myParams, myManifest){
+MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService, myParams, myManifest, myParams_pie){
    //Variables to be used to populate the page
    $scope.hits = [];
    $scope.results = [];
+   $scope.results_pie = []; //This will hold the appropriate data for the pie charts.
    $scope.offset = 0;
    $scope.poutof = 0;
    $scope.of = "of";
@@ -98,11 +109,20 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       $scope.hits = data.data.hits;
       $scope.numHits = data.data.pagination.total;
    }
+
+   //TESTING: Assign the termFacets but this time for the piecharts.
+   var assign_Pie_Facets = function(data){
+      $scope.results_pie = data.data.termFacets;
+      //$scope.hits = data.data.hits;
+      //$scope.numHits = data.data.pagination.total;
+   }
+
    //Get a regular default call to the API
    var get_myService = function(){
       myService.data().then(function(data){
          assign_Hits_Facets(data);
          get_myPaging(data);
+         assign_Pie_Facets(data); //TEST TO ASSIGN PIE DATA
          //Call the pie charts initially //////TEST
          drawAnalysisChart();
          drawWorkflowChart();
@@ -116,6 +136,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          assign_Hits_Facets(data);
          get_myPaging(data);
          //updates pie charts
+         //drawAnalysisChart();
+         //drawWorkflowChart();
+         //drawFileChart();
+         //return;
+      });
+      myParams_pie.data().then(function(data){
+         //assign_Hits_Facets(data);
+        // get_myPaging(data);
+         //updates pie charts
+         assign_Pie_Facets(data); 
          drawAnalysisChart();
          drawWorkflowChart();
          drawFileChart();
@@ -255,39 +285,39 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    
    // turns pie data into array format
    $scope.piedata = function(){
-   	console.log($scope.results);
+   	console.log($scope.results_pie);
       pieArrAnalysis =[];
       var pieTemp = [];
       var pieTemp2 = [];
-      for (var i=0; i<$scope.results.analysisType.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.analysisType.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.analysisType.terms[i].term);
-         pieTemp.push($scope.results.analysisType.terms[i].count);
+         pieTemp.push($scope.results_pie.analysisType.terms[i].term);
+         pieTemp.push($scope.results_pie.analysisType.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.analysisType.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.analysisType.terms.length; i++){
          pieArrAnalysis.push(pieTemp2[i]);
       }
       pieArrWorkflow =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.workFlow.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.workFlow.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.workFlow.terms[i].term);
-         pieTemp.push($scope.results.workFlow.terms[i].count);
+         pieTemp.push($scope.results_pie.workFlow.terms[i].term);
+         pieTemp.push($scope.results_pie.workFlow.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.workFlow.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.workFlow.terms.length; i++){
          pieArrWorkflow.push(pieTemp2[i]);
       }
       pieArrFile =[];
       pieTemp2 = [];
-      for (var i=0; i<$scope.results.fileFormat.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.fileFormat.terms.length; i++){
          pieTemp = [];
-         pieTemp.push($scope.results.fileFormat.terms[i].term);
-         pieTemp.push($scope.results.fileFormat.terms[i].count);
+         pieTemp.push($scope.results_pie.fileFormat.terms[i].term);
+         pieTemp.push($scope.results_pie.fileFormat.terms[i].count);
          pieTemp2.push(pieTemp);
       }
-      for (var i=0; i<$scope.results.fileFormat.terms.length; i++){
+      for (var i=0; i<$scope.results_pie.fileFormat.terms.length; i++){
          pieArrFile.push(pieTemp2[i]);
       }
    }
