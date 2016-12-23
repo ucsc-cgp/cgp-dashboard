@@ -38,6 +38,12 @@
          margin: 1px 1px;
          cursor: pointer;
       }
+      .mannifest{
+         background-color: #4a8ce8 !important;
+         border: 2px solid #a8e6ff;
+         padding:10px;
+
+      }
 
       hr {
          border-width: 2px;
@@ -180,11 +186,35 @@
                   
                      </table>
                   </div>
+
+                  <hr>
+
+                     <center>
+                        <div>  
+                           <button class="button text" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
+                              <span placeholder="{{next}}"> <button class="button" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
+                                 Page: {{offset}} {{of}} {{poutof}}
+                              </span>
+                           <button class="button text mannifest"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
+                        </div>
+                     </center>
+
+
                </div>
+
+               
+
             </div>
+            <!-- Last place where the fluid container is -->
+
+
+
+
+
          </div>
       </div>
       
+ <!--     
       <center class="text">
          <div>  
             <button class="button text" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
@@ -195,7 +225,7 @@
          </div>
       </center>
       
-      
+ -->     
       
 
    
