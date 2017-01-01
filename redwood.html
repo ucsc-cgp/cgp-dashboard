@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+			<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+			<link rel="stylesheet" type="text/css" href="mystyle.css">
+			<link rel="stylesheet" href="file_browser/common/css/normalize.min.css">
+			<link rel="stylesheet" href="file_browser/common/css/main.min.css">
+			<link rel="stylesheet" href="file_browser/common/css/bootstrap.min.css">
+			<link rel="stylesheet" href="file_browser/common/css/bootstrap-responsive.min.css">
+			<link rel="stylesheet" href="file_browser/common/css/elasticjs.css">
+			<title>Home</title>
+			<link rel="stylesheet" type="text/css" href="mystyle.css">
+		</meta>
+	</head>
+	<body>
+		<div class="imgcgl">
+			<div class="imgcontainer">
+				<a href="https://genomics.soe.ucsc.edu/">
+					<img src="UCSC-Logo-genomics-web-80.png" alt="University of California Santa Cruz" class="imglogo" style="padding: 10px">
+				</a>
+			</div>
+			<div class="cglcontainer" style="float: right;">
+				<a href="https://cgl.genomics.ucsc.edu/" class="text">Computational Genomics Laboratory</a>
+			</div>
+		</div>
+		<ul class="header text">
+			<li class="dropbtn"><a href="index.html">Home</a></li>
+			<!-- <li><a href="projects.html">Analysis Dashboard</a></li> -->
+      <li><a href="file_browser">File Browser</a></li>
+      <li><a href="boardwalk.html">Boardwalk</a></li>
+      <li><a href="redwood.html">Redwood</a></li>
+      <li><a href="spinnaker.html">Spinnaker</a></li>
+			<!--  <li><a href="action_service">Action Service</a></li> -->
+			<li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
+			<li><a href="about.html">About</a></li>
+			<li><a href="help.html">Help</a></li>
+		</ul>
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<div class="text" style="margin: 20px">
+				  	<h2>About Redwood</h2>
+				  	<p>Redwood is a cloud-agnostic object storage + metadata system designed to store genomic data and metadata files.  The storage backend is based on the <a href="https://github.com/icgc-dcc/dcc-storage">ICGC Storage System</a> which affords support of both Amazon S3 and Ceph object stores.  Layered on top of the backend is a metadata standard based on JSON Schema which is used to model the biospecimen, clinical metadata, phenotypic information, etc for a given file.  Redwood includes indexing technologies that aggregates metadata into a searchable index, which is used by a variety of systems to track, search, and mine information stored in the system.</p>
+            <h2>Supporting Spinnaker and Boardwalk</h2>
+            Redwood is a key component of the Analysis Core's infrastructure.  It provides the backend for storing all project metadata and data files in multiple cloud environments.  <a href="spinnaker.html">Spinnaker</a> uses Redwood as the source for files needing validation along with persistence of validation reports. <a href="boardwalk.html">Boardwalk</a> uses the metadata and data indexes built using Redwood in its faceted File Browser search interface.
+            <h2>Source</h2>
+            <p>Redwood is open source. The project repositories can be found at:</p>
+            <center>
+            <table class="table-striped">
+						 	<thead>
+								<tr><th><b>Repository</b></th>
+								<th><b>Description</b></th></tr>
+						 	</thead>
+						 	<tbody>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-metadata">https://github.com/BD2KGenomics/dcc-metadata</a></td><td>Metadata service</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-storage">https://github.com/BD2KGenomics/dcc-storage</a></td><td>Core storage service</td></tr>
+                <tr><td><a href="https://github.com/BD2KGenomics/dcc-metadata-schemas">https://github.com/BD2KGenomics/dcc-metadata-schemas</a></td><td>Metadata schemas</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-metadata-indexer">https://github.com/BD2KGenomics/dcc-metadata-indexer</a></td><td>Indexer generates Elasticsearch indexes from contents in Redwood</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-redwood-client">https://github.com/BD2KGenomics/dcc-redwood-client</a></td><td>Redwood client</td></tr>
+						 	</tbody>
+					  </table>
+          </center>
+				</div>
+			</div>
+		</div>
+		<footer class="text">
+		<section style="color: white">UCSC Genomics Institute - Analysis Core
+			<ul class="header" style="float: right; font-size:50%; padding: 4px;">
+				<li><a href="index.html">Home</a></li>
+				<li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
+				<li><a href="about.html">About</a></li>
+			</ul>
+			</section>
+		</footer>
+	</body>
+</html>
