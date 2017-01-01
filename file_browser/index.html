@@ -16,18 +16,18 @@
          <script src="common/lib/angular.min.js"></script>
          <script src="elasticsearch-js/elasticsearch.js"></script>
          <script src="elasticsearch-js/elasticsearch.angular.js"></script>
-         
+
          <!-- project specific files -->
          <script src="js/app.essimple.js"></script>
-         
+
          <!-- manifest download -->
          <script src="common/js/filesaver.min.js"></script>
-         
+
          <!-- pie chart -->
          <script src="common/js/loader.js"></script>
    	</meta>
    </head>
-   
+
    <style>
       .button {
          border: none;
@@ -55,7 +55,7 @@
          margin-bottom: 0.5em;
       }
    </style>
-   
+
    <div class="imgcgl">
       <div class="imgcontainer">
          <a href="https://genomics.soe.ucsc.edu/">
@@ -70,84 +70,87 @@
       <li class="dropbtn"><a href="../index.html">Home</a></li>
       <!-- <li><a href="../projects.html">Analysis Dashboard</a></li> -->
       <li><a href="index.html">File Browser</a></li>
+      <li><a href="../boardwalk.html">Boardwalk</a></li>
+      <li><a href="../redwood.html">Redwood</a></li>
+      <li><a href="../spinnaker.html">Spinnaker</a></li>
       <!--  <li><a href="../action_service/index.html">Action Service</a></li> -->
       <li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
       <li><a href="../about.html">About</a></li>
       <li><a href="../help.html">Help</a></li>
    </ul>
-   
+
    <body ng-controller="API_Controller">
-      
-   
-      <div>  
+
+
+      <div>
          <div class="container-fluid">
-            <div class="row-fluid"> 
+            <div class="row-fluid">
                <div class="span2 well text">
                   <ul class="nav nav-sidebar">
                      <li class="divider"></li>
-                     
+
                         <li class="nav-header">Center</li>
                         <div ng-repeat="item in results.centerName.terms">
                            <input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
                            </input>
                         </div>
-                        <li class="divider"></li> 
-                        
+                        <li class="divider"></li>
+
 <!-- -->
                         <li class="nav-header">Program</li>
                         <div ng-repeat="item in results.program.terms">
                            <input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>  
+                           </input>
                         </div>
-                        <li class="divider"></li> 
+                        <li class="divider"></li>
 <!-- -->
-      
+
                         <li class="nav-header">Project</li>
                         <div ng-repeat="item in results.projectCode.terms">
                            <input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>  
+                           </input>
                         </div>
-                        <li class="divider"></li> 
-      
+                        <li class="divider"></li>
+
                         <li class="nav-header">Workflow</li>
                         <div ng-repeat="item in results.workFlow.terms">
                            <input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>    
+                           </input>
                         </div>
-                        <li class="divider"></li> 
-         
+                        <li class="divider"></li>
+
                         <li class="nav-header">Analysis Type</li>
                         <div ng-repeat="item in results.analysisType.terms">
                            <input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>    
+                           </input>
                         </div>
-                        <li class="divider"></li> 
-         
+                        <li class="divider"></li>
+
                         <li class="nav-header">Specimen Type</li>
                         <div ng-repeat="item in results.specimenType.terms">
                            <input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>    
+                           </input>
                         </div>
-                        <li class="divider"></li>         
-         
+                        <li class="divider"></li>
+
                         <li class="nav-header">File Type</li>
                         <div ng-repeat="item in results.fileFormat.terms">
                            <input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
                               {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input> 
+                           </input>
                         </div>
-                        <li class="divider"></li>    
-                         
-                     <li class="divider"></li>     
+                        <li class="divider"></li>
+
+                     <li class="divider"></li>
                   </ul>
                </div>
-               
+
                <center>
                <table>
                   <td id="piechartWorkflow"></td>
@@ -158,11 +161,11 @@
                <hr>
 
 
-               
+
                <div class="span9 text" align="center">
                   <div class="table-responsive">
                      <table class="table table-striped">
-         
+
                         <thead>
                            <tr>
                               <th>Project</th>
@@ -187,14 +190,14 @@
                               <td>{{item['fileCopies'][0]['indexFile']['objectId']}}</td>
                            </tr>
                         </tbody>
-                  
+
                      </table>
                   </div>
 
                   <hr>
 
                      <center>
-                        <div>  
+                        <div>
                            <button class="button text navig" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
                               <span placeholder="{{next}}"> <button class="button navig" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
                                  Page: {{offset}} {{of}} {{poutof}}
@@ -206,7 +209,7 @@
 
                </div>
 
-               
+
 
             </div>
             <!-- Last place where the fluid container is -->
@@ -217,10 +220,10 @@
 
          </div>
       </div>
-      
- <!--     
+
+ <!--
       <center class="text">
-         <div>  
+         <div>
             <button class="button text" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
                <span placeholder="{{next}}"> <button class="button" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
                   Page: {{offset}} {{of}} {{poutof}}
@@ -228,11 +231,11 @@
             <button class="button text"><span ng-click="downloadfile();">Download Manifest</span></button>
          </div>
       </center>
-      
- -->     
-      
 
-   
+ -->
+
+
+
       <footer class="text">
          <section style="color: white">UCSC Genomics Institute - Analysis Core
             <ul class="header" style="float: right; font-size:50%; padding: 4px;">
@@ -242,6 +245,6 @@
             </ul>
          </section>
       </footer>
-      
+
    </body>
 </html>
