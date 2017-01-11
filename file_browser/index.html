@@ -3,6 +3,33 @@
    <head>
       <meta http-equiv="content-type" content="text/html; charset=UTF-8">
          <title>File Browser</title>
+         
+         <!-- clever canary files -->
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/styles.css">
+         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+         <script type="text/javascript" src="https://clevercanary.github.io/ucsc-cgl-style-guide/scripts/cgl-hamburger.component.js"></script>
+         
+         <!-- favicon -->
+         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-57x57.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-114x114.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-72x72.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-144x144.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-60x60.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-120x120.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-76x76.png" />
+			<link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-152x152.png" />
+			<link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-196x196.png" sizes="196x196" />
+			<link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-96x96.png" sizes="96x96" />
+			<link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-32x32.png" sizes="32x32" />
+			<link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-16x16.png" sizes="16x16" />
+			<link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-128.png" sizes="128x128" />
+			<meta name="msapplication-TileColor" content="#FFFFFF" />
+			<meta name="msapplication-TileImage" content="mstile-144x144.png" />
+			<meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+			<meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+			<meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+			<meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+<!-- 
          <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
          <link rel="stylesheet" type="text/css" href="../mystyle.css">
          <link rel="stylesheet" href="common/css/normalize.min.css">
@@ -12,6 +39,8 @@
          <link rel="stylesheet" href="common/css/elasticjs.css">
          <script src="common/lib/modernizr-2.6.1.min.js"></script>
          <script src="common/lib/underscore.min.js"></script>
+ -->
+
          <!-- project dependency libs -->
          <script src="common/lib/angular.min.js"></script>
          <script src="elasticsearch-js/elasticsearch.js"></script>
@@ -28,6 +57,7 @@
    	</meta>
    </head>
 
+<!-- 
    <style>
       .button {
          border: none;
@@ -55,7 +85,9 @@
          margin-bottom: 0.5em;
       }
    </style>
-
+ -->
+ 
+<!-- 
    <div class="imgcgl">
       <div class="imgcontainer">
          <a href="https://genomics.soe.ucsc.edu/">
@@ -65,162 +97,329 @@
       <div class="cglcontainer" style="float: right;">
          <a href="https://cgl.genomics.ucsc.edu/" class="text">Computational Genomics Laboratory</a>
       </div>
-   </div>
+   </div> 
+ -->
+ 
+
+	<body ng-controller="API_Controller">
+		<header> <!-- HTML 5 semantic element -->
+			<md-toolbar> <!-- Material Design-based toolbar -->
+				<md-toolbar-row> <!-- Required for correct alignment of child elements -->
+					<img src="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@1x.png" srcset="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@2x.png 2x, https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@3x.png 3x"> <!-- Use srcset to specify responsive images -->
+			
+					<!-- Hamburger start DOES NOT WORK-->
+					<button md-icon-button menu-open>
+						<span class="md-button-wrapper">
+							<md-icon role="img" class="material-icons">menu</md-icon>
+						</span>
+					</button>
+					<button md-icon-button menu-close>
+						<span class="md-button-wrapper">
+							<md-icon role="img" class="material-icons">close</md-icon>
+						</span>
+					</button>
+					<!-- Hamburger end -->
+			
+					<!-- Nav start -->
+					<cc-toolbar-nav>
+						<cc-toolbar-nav-item>
+							<a href="../index.html">Analysis Core</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item class="active">
+							<a href="index.html">File Browser</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="../boardwalk.html">Boardwalk</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="../redwood.html">Redwood</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="../spinnaker.html">Spinnaker</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="../about.html">About</a>
+						</cc-toolbar-nav-item>
+						<cc-toolbar-nav-item>
+							<a href="../help.html">Help</a>
+						</cc-toolbar-nav-item>
+					</cc-toolbar-nav>
+					<!-- Nav end -->
+				</md-toolbar-row>
+			</md-toolbar>
+		</header>
+
+<!-- 
    <ul class="header text">
       <li class="dropbtn"><a href="../index.html">Home</a></li>
-      <!-- <li><a href="../projects.html">Analysis Dashboard</a></li> -->
+      <!~~ <li><a href="../projects.html">Analysis Dashboard</a></li> ~~>
       <li><a href="index.html">File Browser</a></li>
       <li><a href="../boardwalk.html">Boardwalk</a></li>
       <li><a href="../redwood.html">Redwood</a></li>
       <li><a href="../spinnaker.html">Spinnaker</a></li>
-      <!--  <li><a href="../action_service/index.html">Action Service</a></li> -->
+      <!~~  <li><a href="../action_service/index.html">Action Service</a></li> ~~>
       <li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
       <li><a href="../about.html">About</a></li>
       <li><a href="../help.html">Help</a></li>
    </ul>
+ -->
 
-   <body ng-controller="API_Controller">
+   <!-- <body ng-controller="API_Controller"> -->
+   
 
+	<div class="layout-row">
+		<div class="flex-20">
+			<ul class="md-body-2">
+				<li class="nav-header">Center</li>
+				<div ng-repeat="item in results.centerName.terms">
+					<input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
 
-      <div>
-         <div class="container-fluid">
-            <div class="row-fluid">
-               <div class="span2 well text">
-                  <ul class="nav nav-sidebar">
-                     <li class="divider"></li>
+				<li class="nav-header">Program</li>
+				<div ng-repeat="item in results.program.terms">
+					<input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
 
-                        <li class="nav-header">Center</li>
-                        <div ng-repeat="item in results.centerName.terms">
-                           <input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+				<li class="nav-header">Project</li>
+				<div ng-repeat="item in results.projectCode.terms">
+					<input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
 
-<!-- -->
-                        <li class="nav-header">Program</li>
-                        <div ng-repeat="item in results.program.terms">
-                           <input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
-<!-- -->
+				<li class="nav-header">Workflow</li>
+				<div ng-repeat="item in results.workFlow.terms">
+					<input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
 
-                        <li class="nav-header">Project</li>
-                        <div ng-repeat="item in results.projectCode.terms">
-                           <input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+				<li class="nav-header">Analysis Type</li>
+				<div ng-repeat="item in results.analysisType.terms">
+					<input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
+				
+				<li class="nav-header">Specimen Type</li>
+				<div ng-repeat="item in results.specimenType.terms">
+					<input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
 
-                        <li class="nav-header">Workflow</li>
-                        <div ng-repeat="item in results.workFlow.terms">
-                           <input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+				<li class="nav-header">File Type</li>
+				<div ng-repeat="item in results.fileFormat.terms">
+					<input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
+						{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+					</input>
+				</div>
+			</ul>
+		
+		</div>
+		<div class="flex-80">
 
-                        <li class="nav-header">Analysis Type</li>
-                        <div ng-repeat="item in results.analysisType.terms">
-                           <input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+			<center>
+			<table>
+				<td id="piechartWorkflow"></td>
+				<td id="piechartAnalysis"></td>
+				<td id="piechartFile"></td>
+			</table>
+			</center>
+			<hr>
 
-                        <li class="nav-header">Specimen Type</li>
-                        <div ng-repeat="item in results.specimenType.terms">
-                           <input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+			<div class="span9 text" align="center">
+				<div class="table-responsive">
+					<table class="table table-striped">
 
-                        <li class="nav-header">File Type</li>
-                        <div ng-repeat="item in results.fileFormat.terms">
-                           <input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
-                              {{item['term']}} <span class="muted">{{item['count']}}</span>
-                           </input>
-                        </div>
-                        <li class="divider"></li>
+						<thead>
+							<tr>
+								<th>Project</th>
+								<th>Donor</th>
+								<th>Specimen Type</th>
+								<th>Analysis Type</th>
+								<th>Workflow</th>
+								<th>File Type</th>
+								<th>File</th>
+								<th>Download ID</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in hits">
+								<td>{{item['donors'][0]['projectCode']}}</td>
+								<td>{{item['donors'][0]['donorId']}}</td>
+								<td>{{item['donors'][0]['specimenType'][0]}}</td>
+								<td>{{item['dataCategorization']['dataType']}}</td>
+								<td>{{item['dataCategorization']['experimentalStrategy']}}</td>
+								<td>{{item['fileCopies'][0]['fileFormat']}}</td>
+								<td>{{item['fileCopies'][0]['fileName']}}</td>
+								<td>{{item['id']}}</td>
+							</tr>
+						</tbody>
 
-                     <li class="divider"></li>
-                  </ul>
-               </div>
+					</table>
+				</div>
 
-               <center>
-               <table>
-                  <td id="piechartWorkflow"></td>
-                  <td id="piechartAnalysis"></td>
-                  <td id="piechartFile"></td>
-               </table>
-               </center>
-               <hr>
+				<hr>
 
-
-
-               <div class="span9 text" align="center">
-                  <div class="table-responsive">
-                     <table class="table table-striped">
-
-                        <thead>
-                           <tr>
-                              <th>Project</th>
-                              <th>Donor</th>
-                              <th>Specimen Type</th>
-                              <th>Analysis Type</th>
-                              <th>Workflow</th>
-                              <th>File Type</th>
-                              <th>File</th>
-                              <th>Download ID</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           <tr ng-repeat="item in hits">
-                              <td>{{item['donors'][0]['projectCode']}}</td>
-                              <td>{{item['donors'][0]['donorId']}}</td>
-                              <td>{{item['donors'][0]['specimenType'][0]}}</td>
-                              <td>{{item['dataCategorization']['dataType']}}</td>
-                              <td>{{item['dataCategorization']['experimentalStrategy']}}</td>
-                              <td>{{item['fileCopies'][0]['fileFormat']}}</td>
-                              <td>{{item['fileCopies'][0]['fileName']}}</td>
-                              <td>{{item['id']}}</td>
-                           </tr>
-                        </tbody>
-
-                     </table>
-                  </div>
-
-                  <hr>
-
-                     <center>
-                        <div>
-                           <button class="button text navig" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
-                              <span placeholder="{{next}}"> <button class="button navig" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
-                                 Page: {{offset}} {{of}} {{poutof}}
-                              </span>
-                           <button class="button text mannifest"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
-                        </div>
-                     </center>
+					<center>
+						<div>
+							<button class="button text navig" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
+								<span placeholder="{{next}}"> <button class="button navig" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
+									Page: {{offset}} {{of}} {{poutof}}
+								</span>
+							<button class="button text mannifest"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
+						</div>
+					</center>
 
 
-               </div>
+			</div>
+		</div>
+	</div>
+	
+<!-- 
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="layout-row">
+				<div class="flex-15">
+					<div class="span2 well text">
+						<ul class="nav nav-sidebar">
+							<li class="divider"></li>
+
+								<li class="nav-header">Center</li>
+								<div ng-repeat="item in results.centerName.terms">
+									<input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+	<!~~ ~~>
+								<li class="nav-header">Program</li>
+								<div ng-repeat="item in results.program.terms">
+									<input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+	<!~~ ~~>
+
+								<li class="nav-header">Project</li>
+								<div ng-repeat="item in results.projectCode.terms">
+									<input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+								<li class="nav-header">Workflow</li>
+								<div ng-repeat="item in results.workFlow.terms">
+									<input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+								<li class="nav-header">Analysis Type</li>
+								<div ng-repeat="item in results.analysisType.terms">
+									<input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+								<li class="nav-header">Specimen Type</li>
+								<div ng-repeat="item in results.specimenType.terms">
+									<input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+								<li class="nav-header">File Type</li>
+								<div ng-repeat="item in results.fileFormat.terms">
+									<input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
+										{{item['term']}} <span class="muted">{{item['count']}}</span>
+									</input>
+								</div>
+								<li class="divider"></li>
+
+							<li class="divider"></li>
+						</ul>
+					</div>
+				</div>
+   			<div class="flex-85">
+
+					<center>
+					<table>
+						<td id="piechartWorkflow"></td>
+						<td id="piechartAnalysis"></td>
+						<td id="piechartFile"></td>
+					</table>
+					</center>
+					<hr>
 
 
 
-            </div>
-            <!-- Last place where the fluid container is -->
+					<div class="span9 text" align="center">
+						<div class="table-responsive">
+							<table class="table table-striped">
+
+								<thead>
+									<tr>
+										<th>Project</th>
+										<th>Donor</th>
+										<th>Specimen Type</th>
+										<th>Analysis Type</th>
+										<th>Workflow</th>
+										<th>File Type</th>
+										<th>File</th>
+										<th>Download ID</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in hits">
+										<td>{{item['donors'][0]['projectCode']}}</td>
+										<td>{{item['donors'][0]['donorId']}}</td>
+										<td>{{item['donors'][0]['specimenType'][0]}}</td>
+										<td>{{item['dataCategorization']['dataType']}}</td>
+										<td>{{item['dataCategorization']['experimentalStrategy']}}</td>
+										<td>{{item['fileCopies'][0]['fileFormat']}}</td>
+										<td>{{item['fileCopies'][0]['fileName']}}</td>
+										<td>{{item['id']}}</td>
+									</tr>
+								</tbody>
+
+							</table>
+						</div>
+
+						<hr>
+
+							<center>
+								<div>
+									<button class="button text navig" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
+										<span placeholder="{{next}}"> <button class="button navig" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
+											Page: {{offset}} {{of}} {{poutof}}
+										</span>
+									<button class="button text mannifest"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
+								</div>
+							</center>
 
 
-
-
-
-         </div>
-      </div>
-
+					</div>
+				</div>
+			</div>
+			<!~~ Last place where the fluid container is ~~>
+   	</div>
+	</div>
+ -->
  <!--
       <center class="text">
          <div>
@@ -233,9 +432,7 @@
       </center>
 
  -->
-
-
-
+<!-- 
       <footer class="text">
          <section style="color: white">UCSC Genomics Institute - Analysis Core
             <ul class="header" style="float: right; font-size:50%; padding: 4px;">
@@ -245,6 +442,44 @@
             </ul>
          </section>
       </footer>
+ -->
+ 
+		<footer>
+			 <div class="cgl-links layout-column layout-gt-sm-row layout-padding">
+
+				  <!-- Top row, left-hand links on small + devices -->
+				  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+						<cgl-footer-nav-item>
+							 <a href="https://www.ucsc.edu">UCSC</a>
+						</cgl-footer-nav-item>
+						<cgl-footer-nav-item>
+							 <a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
+						</cgl-footer-nav-item>
+						<cgl-footer-nav-item>
+							 <a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
+						</cgl-footer-nav-item>
+				  </cgl-footer-nav>
+
+				  <!-- Top row, right-hand links on small + devices -->
+				  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+						<cgl-footer-nav-item>
+							 <a href="#">Email</a>
+						</cgl-footer-nav-item>
+						<cgl-footer-nav-item>
+							 <a href="#">Facebook</a>
+						</cgl-footer-nav-item>
+						<cgl-footer-nav-item>
+							 <a href="#">Twitter</a>
+						</cgl-footer-nav-item>
+				  </cgl-footer-nav>
+
+			 </div>
+
+			 <!-- Copyright row -->
+			 <div class="cgl-disclaimer layout-column layout-gt-sm-row">
+				  <span>Copyright © 2016, The Regents of the University of California, Santa Cruz.</span> <span>All Rights Reserved. Apache-2.0 licence.</span>
+			 </div>
+		</footer>
 
    </body>
 </html>
