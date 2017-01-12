@@ -57,6 +57,18 @@
       </meta>
    </head>
 
+<style>
+	cgl-data-table-cell{
+		white-space: normal;
+		word-wrap: break-word;
+		padding-right: .5em;
+		padding-left: .5em;
+		line-height: 100%;
+	}
+	
+	/* Need to make pretty on smaller screens */
+	
+</style>
 <!-- 
    <style>
       .button {
@@ -174,152 +186,152 @@
 
    <!-- <body ng-controller="API_Controller"> -->
    
+   <div class="md-body-1">
+		<div class="layout-row color-patches">
+			<div class="flex-20 color-patch cgl-peach">  <!-- style="background-color:#FFE66D" -->
+				<br>
+				<ul>
+					<li class="nav-header">Center</li>
+					<div ng-repeat="item in results.centerName.terms">
+						<input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
 
-   <div class="layout-row">
-      <div class="flex-20">
-      	<br>
-         <ul class="md-body-1">
-            <li class="nav-header">Center</li>
-            <div ng-repeat="item in results.centerName.terms">
-               <input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
+					<li class="nav-header">Program</li>
+					<div ng-repeat="item in results.program.terms">
+						<input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
 
-            <li class="nav-header">Program</li>
-            <div ng-repeat="item in results.program.terms">
-               <input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
+					<li class="nav-header">Project</li>
+					<div ng-repeat="item in results.projectCode.terms">
+						<input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
 
-            <li class="nav-header">Project</li>
-            <div ng-repeat="item in results.projectCode.terms">
-               <input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
+					<li class="nav-header">Workflow</li>
+					<div ng-repeat="item in results.workFlow.terms">
+						<input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
 
-            <li class="nav-header">Workflow</li>
-            <div ng-repeat="item in results.workFlow.terms">
-               <input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
+					<li class="nav-header">Analysis Type</li>
+					<div ng-repeat="item in results.analysisType.terms">
+						<input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
+				
+					<li class="nav-header">Specimen Type</li>
+					<div ng-repeat="item in results.specimenType.terms">
+						<input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
 
-            <li class="nav-header">Analysis Type</li>
-            <div ng-repeat="item in results.analysisType.terms">
-               <input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
-            
-            <li class="nav-header">Specimen Type</li>
-            <div ng-repeat="item in results.specimenType.terms">
-               <input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
+					<li class="nav-header">File Type</li>
+					<div ng-repeat="item in results.fileFormat.terms">
+						<input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
+							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
+						</input>
+					</div>
+				</ul>
+		
+			</div>
+			<div class="flex-80">
 
-            <li class="nav-header">File Type</li>
-            <div ng-repeat="item in results.fileFormat.terms">
-               <input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
-                  {{item['term']}} <span class="md-body-1">{{item['count']}}</span>
-               </input>
-            </div>
-         </ul>
-      
-      </div>
-      <div class="flex-80">
+				<center>
+				<br>
+				<table>
+					<td id="piechartWorkflow"></td>
+					<td id="piechartAnalysis"></td>
+					<td id="piechartFile"></td>
+				</table>
+				</center>
+			<hr>
 
-         <center>
-         <br>
-         <table>
-            <td id="piechartWorkflow"></td>
-            <td id="piechartAnalysis"></td>
-            <td id="piechartFile"></td>
-         </table>
-         </center>
-      <hr>
+		 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+		 <cgl-data-table>
 
-    <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
-    <cgl-data-table>
+			  <!-- Header row start -->
+			  <cgl-data-table-row>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Project</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Donor Id</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Specimen Type</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Workflow</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Analysis Type</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">File Type</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">File Name</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">File ID</span>
+					</cgl-data-table-cell>
 
-        <!-- Header row start -->
-        <cgl-data-table-row>
-            <cgl-data-table-cell>
-                <span class="md-subhead">Project</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">Donor Id</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">Specimen Type</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">Workflow</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">Analysis Type</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">File Type</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">File Name</span>
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                <span class="md-subhead">File ID</span>
-            </cgl-data-table-cell>
+			  </cgl-data-table-row>
+			  <!-- Header row end -->
 
-        </cgl-data-table-row>
-        <!-- Header row end -->
+			  <cgl-data-table-row ng-repeat="item in hits">
+					<cgl-data-table-cell>
+						 {{item['donors'][0]['projectCode']}}
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 {{item['donors'][0]['donorId']}}
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 {{item['donors'][0]['specimenType'][0]}}
+					</cgl-data-table-cell>
+					<!-- Workflow is Software-->
+					<cgl-data-table-cell>
+						 {{item['analysisMethod']['software']}}
+					</cgl-data-table-cell> 
+					<cgl-data-table-cell>
+						 {{item['analysisMethod']['analysisType']}}
+					</cgl-data-table-cell>           
+					<cgl-data-table-cell>
+						 {{item['dataCategorization']['dataType']}}
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 {{item['fileCopies'][0]['fileName']}}
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 {{item['id']}}
+					</cgl-data-table-cell>
 
-        <cgl-data-table-row ng-repeat="item in hits">
-            <cgl-data-table-cell>
-                {{item['donors'][0]['projectCode']}}
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                {{item['donors'][0]['donorId']}}
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                {{item['donors'][0]['specimenType'][0]}}
-            </cgl-data-table-cell>
-            <!-- Workflow is Software-->
-            <cgl-data-table-cell>
-                {{item['analysisMethod']['software']}}
-            </cgl-data-table-cell> 
-            <cgl-data-table-cell>
-                {{item['analysisMethod']['analysisType']}}
-            </cgl-data-table-cell>           
-            <cgl-data-table-cell>
-                {{item['dataCategorization']['dataType']}}
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                {{item['fileCopies'][0]['fileName']}}
-            </cgl-data-table-cell>
-            <cgl-data-table-cell>
-                {{item['id']}}
-            </cgl-data-table-cell>
+			  </cgl-data-table-row>
+		
+		 </cgl-data-table>
+		</cgl-data-table-container>
 
-        </cgl-data-table-row>
-      
-    </cgl-data-table>
-   </cgl-data-table-container>
+						<center>
+							<div>
+								<button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
+									<span placeholder="{{next}}"> <button md-raised-button class="cgl-turquoise" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
+										<span class="md-caption">Page: {{offset}} {{of}} {{poutof}}</span>
+									</span>
+								<button md-raised-button class="cgl-turquoise"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
+							</div>
+						</center>
 
-               <center>
-                  <div>
-                     <button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
-                        <span placeholder="{{next}}"> <button md-raised-button class="cgl-turquoise" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
-                           <span class="md-caption">Page: {{offset}} {{of}} {{poutof}}</span>
-                        </span>
-                     <button md-raised-button class="cgl-turquoise"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
-                  </div>
-               </center>
-
-      </div>
-   </div>
-
+			</div>
+		</div>
+	</div>
 
 
 
