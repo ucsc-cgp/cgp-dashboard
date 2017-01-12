@@ -311,7 +311,7 @@
                   <div>
                      <button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);" ng-show="backPages"> {{back}} </span></button>
                         <span placeholder="{{next}}"> <button md-raised-button class="cgl-turquoise" ng-show="nextPages" ng-click="refresh(1);">{{next}} </button>
-                           Page: {{offset}} {{of}} {{poutof}}
+                           <span class="md-caption">Page: {{offset}} {{of}} {{poutof}}</span>
                         </span>
                      <button md-raised-button class="cgl-turquoise"><span ng-click="downloadfile();"><b>Download Manifest</b></span></button>
                   </div>
