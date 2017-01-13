@@ -54,7 +54,6 @@
 
          <!-- pie chart -->
          <script src="common/js/loader.js"></script>
-         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
       </meta>
    </head>
 
@@ -202,8 +201,8 @@
    <!-- <body ng-controller="API_Controller"> -->
    
    <div class="md-body-1">
-		<div class="layout-row color-patches">
-			<div class="flex-20 color-patch cgl-peach nav" style=" box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.24);">
+		<div class="layout-row">
+			<div class="flex-20 nav" style=" box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.24);">
 				<ul>
 					<li class="nav-header md-body-2">Center</li>
 					<div ng-repeat="item in results.centerName.terms">
@@ -261,6 +260,7 @@
 				<center>
 				<br>
 				<table>
+					<!-- font needs to be changed to Roboto -->
 					<td id="piechartWorkflow"></td>
 					<td id="piechartAnalysis"></td>
 					<td id="piechartFile"></td>

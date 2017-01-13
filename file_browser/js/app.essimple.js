@@ -338,7 +338,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Roboto',
+         fontName: 'Helvetica Neue',
          slices: {
             0: { color: '#1A535C' },
             1: { color: '#4CC9C0' },
@@ -367,7 +367,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Roboto',
+         fontName: 'Helvetica Neue',
          slices: {
             0: { color: '#1A535C' },
             1: { color: '#4CC9C0' },
@@ -396,7 +396,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Roboto',
+         fontName: 'Helvetica Neue',
          slices: {
             0: { color: '#1A535C' },
             1: { color: '#4CC9C0' },
