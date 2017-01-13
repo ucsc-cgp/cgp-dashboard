@@ -2,6 +2,210 @@
 <html>
    <head>
       <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+      
+      	<title>Redwood</title>
+      	
+      	<!-- clever canary files -->
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/styles.css">
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/docs.css">
+         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+         
+         
+         <!-- favicon -->
+         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-57x57.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-114x114.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-72x72.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-144x144.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-60x60.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-120x120.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-76x76.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-152x152.png" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-196x196.png" sizes="196x196" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-96x96.png" sizes="96x96" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-32x32.png" sizes="32x32" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-16x16.png" sizes="16x16" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-128.png" sizes="128x128" />
+         <meta name="msapplication-TileColor" content="#FFFFFF" />
+         <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+         <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+         <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+         <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+         <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+		</meta>
+	</head>
+
+	<body>
+		<div class="cgl-site layout-column layout-fill">
+	      <header> <!-- HTML 5 semantic element -->
+				<md-toolbar> <!-- Material Design-based toolbar -->
+					<md-toolbar-row> <!-- Required for correct alignment of child elements -->
+						<img src="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@1x.png" srcset="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@2x.png 2x, https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@3x.png 3x"> <!-- Use srcset to specify responsive images -->
+			
+						<!-- Hamburger start -->
+						<button md-icon-button menu-open>
+							<span class="md-button-wrapper">
+								<md-icon role="img" class="material-icons">menu</md-icon>
+							</span>
+						</button>
+						<button md-icon-button menu-close>
+							<span class="md-button-wrapper">
+								<md-icon role="img" class="material-icons">close</md-icon>
+							</span>
+						</button>
+						<!-- Hamburger end -->
+			
+						<!-- Nav start -->
+						<cc-toolbar-nav>
+							<cc-toolbar-nav-item>
+								<a href="index.html">Analysis Core</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="file_browser">File Browser</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="boardwalk.html">Boardwalk</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item class="active">
+								<a href="redwood.html">Redwood</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="spinnaker.html">Spinnaker</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="about.html">About</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item>
+								<a href="help.html">Help</a>
+							</cc-toolbar-nav-item>
+						</cc-toolbar-nav>
+						<!-- Nav end -->
+					</md-toolbar-row>
+				</md-toolbar>
+			</header>
+
+ 			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">About Redwood</h1>
+					<p class="md-body-1">Redwood is a cloud-agnostic object storage + metadata system designed to store genomic data and metadata files.  The storage backend is based on the <a href="https://github.com/icgc-dcc/dcc-storage">ICGC Storage System</a> which affords support of both Amazon S3 and Ceph object stores.  Layered on top of the backend is a metadata standard based on JSON Schema which is used to model the biospecimen, clinical metadata, phenotypic information, etc for a given file.  Redwood includes indexing technologies that aggregates metadata into a searchable index, which is used by a variety of systems to track, search, and mine information stored in the system.</p>
+            	<h3 class="md-title">Supporting Spinnaker and Boardwalk</h3>
+					<p class="md-body-1">Redwood is a key component of the Analysis Core's infrastructure.  It provides the backend for storing all project metadata and data files in multiple cloud environments.  <a href="spinnaker.html">Spinnaker</a> uses Redwood as the source for files needing validation along with persistence of validation reports. <a href="boardwalk.html">Boardwalk</a> uses the metadata and data indexes built using Redwood in its faceted File Browser search interface.</p>
+					<h3 class="md-title">Source</h3>
+            	<p class="md-body-1">Redwood is open source. The project repositories can be found at:</p>
+
+
+					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+					 <cgl-data-table>
+
+						  <!-- Header row start -->
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Repository</span>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Description</span>
+								</cgl-data-table-cell>
+						  </cgl-data-table-row>
+						  <!-- Header row end -->
+
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-metadata">https://github.com/BD2KGenomics/dcc-metadata</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Metadata service
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-storage">https://github.com/BD2KGenomics/dcc-storage</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Core storage service
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									<a href="https://github.com/BD2KGenomics/dcc-metadata-schemas">https://github.com/BD2KGenomics/dcc-metadata-schemas</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 	Metadata schemas
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									<a href="https://github.com/BD2KGenomics/dcc-metadata-indexer">https://github.com/BD2KGenomics/dcc-metadata-indexer</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Indexer generates Elasticsearch indexes from contents in Redwood
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-redwood-client">https://github.com/BD2KGenomics/dcc-redwood-client</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Redwood client
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+		
+					 </cgl-data-table>
+					</cgl-data-table-container>
+					
+				</section>
+			</main>
+
+ 			<footer>
+				 <div class="cgl-links layout-column layout-gt-sm-row layout-padding">
+
+					  <!-- Top row, left-hand links on small + devices -->
+					  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+							<cgl-footer-nav-item>
+								 <a href="https://www.ucsc.edu">UCSC</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
+							</cgl-footer-nav-item>
+					  </cgl-footer-nav>
+
+					  <!-- Top row, right-hand links on small + devices -->
+					  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+							<cgl-footer-nav-item>
+								 <a href="#">Email</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="#">Facebook</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="#">Twitter</a>
+							</cgl-footer-nav-item>
+					  </cgl-footer-nav>
+
+				 </div>
+
+				 <!-- Copyright row -->
+				 <div class="cgl-disclaimer layout-column layout-gt-sm-row">
+					  <span>Copyright © 2016, The Regents of the University of California, Santa Cruz.</span> <span>All Rights Reserved. Apache-2.0 licence.</span>
+				 </div>
+			</footer>
+
+      	<script type="text/javascript" src="https://clevercanary.github.io/ucsc-cgl-style-guide/scripts/cgl-hamburger.component.js"></script>
+      </div>
+   </body>
+</html>
+
+
+<!-- 
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 			<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
 			<link rel="stylesheet" type="text/css" href="mystyle.css">
 			<link rel="stylesheet" href="file_browser/common/css/normalize.min.css">
@@ -26,12 +230,12 @@
 		</div>
 		<ul class="header text">
 			<li class="dropbtn"><a href="index.html">Home</a></li>
-			<!-- <li><a href="projects.html">Analysis Dashboard</a></li> -->
+			<!~~ <li><a href="projects.html">Analysis Dashboard</a></li> ~~>
       <li><a href="file_browser">File Browser</a></li>
       <li><a href="boardwalk.html">Boardwalk</a></li>
       <li><a href="redwood.html">Redwood</a></li>
       <li><a href="spinnaker.html">Spinnaker</a></li>
-			<!--  <li><a href="action_service">Action Service</a></li> -->
+			<!~~  <li><a href="action_service">Action Service</a></li> ~~>
 			<li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
 			<li><a href="about.html">About</a></li>
 			<li><a href="help.html">Help</a></li>
@@ -74,3 +278,4 @@
 		</footer>
 	</body>
 </html>
+ -->
