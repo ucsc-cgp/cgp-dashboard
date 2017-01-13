@@ -338,7 +338,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Roboto',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartAnalysis'));
@@ -358,7 +367,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Roboto',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartWorkflow'));
@@ -378,7 +396,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Roboto',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartFile'));

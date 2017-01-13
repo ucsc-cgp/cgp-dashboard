@@ -54,19 +54,34 @@
 
          <!-- pie chart -->
          <script src="common/js/loader.js"></script>
+         <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
       </meta>
    </head>
 
 <style>
+	/* Need to make pretty on smaller screens */
+	/* table edits */
 	cgl-data-table-cell{
 		white-space: normal;
 		word-wrap: break-word;
 		padding-right: .5em;
 		padding-left: .5em;
 		line-height: 100%;
+		width: 100%;
 	}
 	
-	/* Need to make pretty on smaller screens */
+	
+	/* facet chooser edits */
+	ul{
+		list-style: none;
+	}
+	.nav-header{
+		padding-top: 1em;
+	}
+	.nav{
+		word-wrap: break-word;
+		padding-right: .5em;
+	}
 	
 </style>
 <!-- 
@@ -162,7 +177,7 @@
                <!-- Nav end -->
             </md-toolbar-row>
          </md-toolbar>
-         <md-toolbar class="subheader"> <!-- Material Design-based toolbar, note "subheader" CSS class -->
+         <md-toolbar class="subheader" style="position:relative"> <!-- Material Design-based toolbar, note "subheader" CSS class -->
     			<md-toolbar-row> <!-- Required for correct alignment of child elements -->
         			<span class="md-title">File Browser</span>
     			</md-toolbar-row>
@@ -188,52 +203,51 @@
    
    <div class="md-body-1">
 		<div class="layout-row color-patches">
-			<div class="flex-20 color-patch cgl-peach">  <!-- style="background-color:#FFE66D" -->
-				<br>
+			<div class="flex-20 color-patch cgl-peach nav" style=" box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.24);">
 				<ul>
-					<li class="nav-header">Center</li>
+					<li class="nav-header md-body-2">Center</li>
 					<div ng-repeat="item in results.centerName.terms">
 						<input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 
-					<li class="nav-header">Program</li>
+					<li class="nav-header md-body-2">Program</li>
 					<div ng-repeat="item in results.program.terms">
 						<input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 
-					<li class="nav-header">Project</li>
+					<li class="nav-header md-body-2">Project</li>
 					<div ng-repeat="item in results.projectCode.terms">
 						<input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 
-					<li class="nav-header">Workflow</li>
+					<li class="nav-header md-body-2">Workflow</li>
 					<div ng-repeat="item in results.workFlow.terms">
 						<input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 
-					<li class="nav-header">Analysis Type</li>
+					<li class="nav-header md-body-2">Analysis Type</li>
 					<div ng-repeat="item in results.analysisType.terms">
 						<input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 				
-					<li class="nav-header">Specimen Type</li>
+					<li class="nav-header md-body-2">Specimen Type</li>
 					<div ng-repeat="item in results.specimenType.terms">
 						<input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
 						</input>
 					</div>
 
-					<li class="nav-header">File Type</li>
+					<li class="nav-header md-body-2">File Type</li>
 					<div ng-repeat="item in results.fileFormat.terms">
 						<input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
 							{{item['term']}} <span class="md-body-1">{{item['count']}}</span>
