@@ -6,6 +6,7 @@
          
          <!-- clever canary files -->
          <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/styles.css">
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/docs.css">
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
          
          
@@ -57,32 +58,32 @@
       </meta>
    </head>
 
-<style>
-	/* Need to make pretty on smaller screens */
-	/* table edits */
-	cgl-data-table-cell{
-		white-space: normal;
-		word-wrap: break-word;
-		padding-right: .5em;
-		padding-left: .5em;
-		line-height: 100%;
-		width: 100%;
-	}
+	<style>
+		/* Need to make pretty on smaller screens */
+		/* table edits */
+		cgl-data-table-cell{
+			white-space: normal;
+			word-wrap: break-word;
+			padding-right: .5em;
+			padding-left: .5em;
+			line-height: 100%;
+			width: 100%;
+		}
 	
 	
-	/* facet chooser edits */
-	ul{
-		list-style: none;
-	}
-	.nav-header{
-		padding-top: 1em;
-	}
-	.nav{
-		word-wrap: break-word;
-		padding-right: .5em;
-	}
+		/* facet chooser edits */
+		ul{
+			list-style: none;
+		}
+		.nav-header{
+			padding-top: 1em;
+		}
+		.nav{
+			word-wrap: break-word;
+			padding-right: .5em;
+		}
 	
-</style>
+	</style>
 <!-- 
    <style>
       .button {
@@ -201,8 +202,8 @@
    <!-- <body ng-controller="API_Controller"> -->
    
    <div class="md-body-1">
-		<div class="layout-row">
-			<div class="flex-20 nav" style=" box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.24);">
+		<div class="layout-row color-patches">
+			<div class="flex-20 nav color-patch cgl-green">
 				<ul>
 					<li class="nav-header md-body-2">Center</li>
 					<div ng-repeat="item in results.centerName.terms">
