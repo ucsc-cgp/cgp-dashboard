@@ -61,6 +61,19 @@
 	<style>
 		/* Need to make pretty on smaller screens */
 		/* table edits */
+
+		/* wrapword important for long strings in table */
+		.wrapword{
+			white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			white-space: pre-wrap;       /* css-3 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
+			white-space: -webkit-pre-wrap; /* Newer versions of Chrome/Safari*/
+			word-break: break-all;
+			white-space: normal;
+		}
+		/* 
 		cgl-data-table-cell{
 			white-space: normal;
 			word-wrap: break-word;
@@ -69,7 +82,8 @@
 			line-height: 100%;
 			width: 100%;
 		}
-	
+ */
+
 	
 		/* facet chooser edits */
 		ul{
@@ -202,7 +216,7 @@
    <!-- <body ng-controller="API_Controller"> -->
    
    <div class="md-body-1">
-		<div class="layout-row color-patches">
+		<div class="layout-row color-patches cgl-site flex layout-padding">
 			<div class="flex-20 nav color-patch cgl-green">
 				<ul>
 					<li class="nav-header md-body-2">Center</li>
@@ -270,7 +284,7 @@
 			<hr>
 
 		 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
-		 <cgl-data-table>
+		 <cgl-data-table class="verbose">
 
 			  <!-- Header row start -->
 			  <cgl-data-table-row>
@@ -302,7 +316,7 @@
 			  </cgl-data-table-row>
 			  <!-- Header row end -->
 
-			  <cgl-data-table-row ng-repeat="item in hits">
+			  <cgl-data-table-row ng-repeat="item in hits" class ="wrapword">
 					<cgl-data-table-cell>
 						 {{item['donors'][0]['projectCode']}}
 					</cgl-data-table-cell>
@@ -517,40 +531,40 @@
  -->
  
       <footer>
-          <div class="cgl-links layout-column layout-gt-sm-row layout-padding">
+         <div class="cgl-links layout-column layout-gt-sm-row layout-padding">
 
-              <!-- Top row, left-hand links on small + devices -->
-              <cgl-footer-nav class="layout-column layout-gt-sm-row">
-                  <cgl-footer-nav-item>
-                      <a href="https://www.ucsc.edu">UCSC</a>
-                  </cgl-footer-nav-item>
-                  <cgl-footer-nav-item>
-                      <a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
-                  </cgl-footer-nav-item>
-                  <cgl-footer-nav-item>
-                      <a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
-                  </cgl-footer-nav-item>
-              </cgl-footer-nav>
+            <!-- Top row, left-hand links on small + devices -->
+            <cgl-footer-nav class="layout-column layout-gt-sm-row">
+					<cgl-footer-nav-item>
+						<a href="https://www.ucsc.edu">UCSC</a>
+					</cgl-footer-nav-item>
+					<cgl-footer-nav-item>
+						<a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
+					</cgl-footer-nav-item>
+					<cgl-footer-nav-item>
+						<a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
+					</cgl-footer-nav-item>
+            </cgl-footer-nav>
 
-              <!-- Top row, right-hand links on small + devices -->
-              <cgl-footer-nav class="layout-column layout-gt-sm-row">
-                  <cgl-footer-nav-item>
-                      <a href="#">Email</a>
-                  </cgl-footer-nav-item>
-                  <cgl-footer-nav-item>
-                      <a href="#">Facebook</a>
-                  </cgl-footer-nav-item>
-                  <cgl-footer-nav-item>
-                      <a href="#">Twitter</a>
-                  </cgl-footer-nav-item>
-              </cgl-footer-nav>
+            <!-- Top row, right-hand links on small + devices -->
+            <cgl-footer-nav class="layout-column layout-gt-sm-row">
+					<cgl-footer-nav-item>
+						<a href="mailto:broconno@ucsc.edu?Subject=Interested%20in%20CGL" target="_top">Email</a>
+					</cgl-footer-nav-item>
+					<cgl-footer-nav-item>
+						<a href="https://www.facebook.com/UCSCGenomicsInstitute/?fref=ts">Facebook</a>
+					</cgl-footer-nav-item>
+					<cgl-footer-nav-item>
+						<a href="https://twitter.com/ucscgenomics">Twitter</a>
+					</cgl-footer-nav-item>
+            </cgl-footer-nav>
 
-          </div>
+         </div>
 
-          <!-- Copyright row -->
-          <div class="cgl-disclaimer layout-column layout-gt-sm-row">
-              <span>Copyright © 2016, The Regents of the University of California, Santa Cruz.</span> <span>All Rights Reserved. Apache-2.0 licence.</span>
-          </div>
+         <!-- Copyright row -->
+         <div class="cgl-disclaimer layout-column layout-gt-sm-row">
+            <span>Copyright © 2016, The Regents of the University of California, Santa Cruz.</span> <span>All Rights Reserved. Apache-2.0 licence.</span>
+         </div>
       </footer>
 
       <script type="text/javascript" src="https://clevercanary.github.io/ucsc-cgl-style-guide/scripts/cgl-hamburger.component.js"></script>
