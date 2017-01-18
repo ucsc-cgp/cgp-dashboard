@@ -22,7 +22,7 @@ var configManifest = {
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/');
+         return $http.get('http://ec2-35-167-83-191.us-west-2.compute.amazonaws.com/api/v1/repository/files/');
       }
    }
 });
@@ -31,7 +31,7 @@ MyAPI_Connector.factory('myService', function($http){
 MyAPI_Connector.factory('myParams', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/', config);
+         return $http.get('http://ec2-35-167-83-191.us-west-2.compute.amazonaws.com/api/v1/repository/files/', config);
       }
    }
 });
@@ -40,7 +40,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('http://ec2-35-167-83-191.us-west-2.compute.amazonaws.com/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
@@ -49,7 +49,7 @@ MyAPI_Connector.factory('myManifest', function($http){
  MyAPI_Connector.factory('myParams_pie', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/piecharts', config);
+         return $http.get('http://ec2-35-167-83-191.us-west-2.compute.amazonaws.com/api/v1/repository/files/piecharts', config);
       }
    }
 });
@@ -338,7 +338,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Helvetica Neue',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartAnalysis'));
@@ -358,7 +367,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Helvetica Neue',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartWorkflow'));
@@ -378,7 +396,16 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          width: 200,
          height: 200,
          legend: 'none',
-         fontName: 'Muli'
+         fontName: 'Helvetica Neue',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
       };
 
       chart = new google.visualization.PieChart(document.getElementById('piechartFile'));

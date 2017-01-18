@@ -3,7 +3,7 @@
    <head>
       <meta http-equiv="content-type" content="text/html; charset=UTF-8">
       
-      	<title>Analysis Core</title>
+      	<title>Spinnaker</title>
       	
       	<!-- clever canary files -->
          <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/styles.css">
@@ -57,7 +57,7 @@
 			
 						<!-- Nav start -->
 						<cc-toolbar-nav>
-							<cc-toolbar-nav-item class="active">
+							<cc-toolbar-nav-item>
 								<a href="index.html">Analysis Core</a>
 							</cc-toolbar-nav-item>
 							<cc-toolbar-nav-item>
@@ -69,7 +69,7 @@
 							<cc-toolbar-nav-item>
 								<a href="redwood.html">Redwood</a>
 							</cc-toolbar-nav-item>
-							<cc-toolbar-nav-item>
+							<cc-toolbar-nav-item class="active">
 								<a href="spinnaker.html">Spinnaker</a>
 							</cc-toolbar-nav-item>
 							<cc-toolbar-nav-item>
@@ -89,18 +89,35 @@
 
  			<main class="layout-column layout-padding flex">
 				<section class="snap-960">
-					<h1 class="md-display-1" style="color:#FF6B6B;">Mission</h1>
-					<p class="md-body-1">Our mission as the Analysis Core is to help researchers in the UCSC Genomics Institute use modern tools to accurately and efficiently analyze large volumes of sequence data.  We build the software that makes this possible (the Development team) and we also are responsible for running the "core" analysis pipelines for projects within the Institute (the Production team).  See our detailed mission statement for more information.</p>
-					<h3 class="md-title">Available Workflows</h3>
-					<p class="md-body-1">We are growing our available pipelines to support projects in the Institute including:</p>
-
+					<h1 class="md-display-1" style="color:#FF6B6B;">About Spinnaker</h1>
+					<p class="md-body-1">Spinnaker is a data submission and validation platform designed to apply arbitrary validation and QC operations on files along with metadata schema validation.  It is used by the Analysis Core to verify uploaded fastq and other file types along with checking minimal metadata standards are adhered to. Files passing validation through Spinnaker are then used for further analysis by the core whereas failed files are indicated.  Submitters can use the Spinnaker web UI and command line client to examine validation reports, correct problems, and resubmit data until they pass validation.</p>
+            	<h3 class="md-title">Leveraging Redwood</h3>
+					<p class="md-body-1">Spinnaker is designed to use <a href="redwood.html">Redwood</a> as both the source of files to validation and also the destination for file validation reports.  Only data passing validation by Spinnaker are eligible for further analysis by the Core and for subsequent inclusion in the <a href="boardwalk.html">Boardwalk</a> data portal.</p>
+            	<!-- <center><img src="img/spinnaker_screenshot1.png" width="1000px"/></center> -->
+            	<h3 class="md-title">Source</h3>
+            	<p class="md-body-1">Spinnaker is open source. The project repositories can be found at:</p>
+            
+<!-- 
+            <table class="table-striped">
+						 	<thead>
+								<tr><th><b>Repository</b></th>
+								<th><b>Description</b></th></tr>
+						 	</thead>
+						 	<tbody>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-spinnaker">https://github.com/BD2KGenomics/dcc-spinnaker</a></td><td>The Spinnaker validation service</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-spinnaker-client">https://github.com/BD2KGenomics/dcc-spinnaker-client</a></td><td>Spinnaker client used by submitters</td></tr>
+						 	</tbody>
+					  </table>
+ -->
+					  
+					  
 					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
-					 <cgl-data-table class="verbose">
+					 <cgl-data-table>
 
 						  <!-- Header row start -->
 						  <cgl-data-table-row>
 								<cgl-data-table-cell>
-									 <span class="md-subhead">Pipeline</span>
+									 <span class="md-subhead">Repository</span>
 								</cgl-data-table-cell>
 								<cgl-data-table-cell>
 									 <span class="md-subhead">Description</span>
@@ -110,56 +127,24 @@
 
 						  <cgl-data-table-row>
 								<cgl-data-table-cell>
-									 RNAseq
+									 <a href="https://github.com/BD2KGenomics/dcc-spinnaker">https://github.com/BD2KGenomics/dcc-spinnaker</a>
 								</cgl-data-table-cell>
 								<cgl-data-table-cell>
-									 RNASeq analysis using RSEM and Kallisto
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									 Whole Exome/Whole Genome - Germline
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 GATK best practices germline pipeline with bcbio
+									 The Spinnaker validation service
 								</cgl-data-table-cell>
 							</cgl-data-table-row>
 							<cgl-data-table-row>
 								<cgl-data-table-cell>
-									Whole Genome - Somatic
+									 <a href="https://github.com/BD2KGenomics/dcc-spinnaker-client">https://github.com/BD2KGenomics/dcc-spinnaker-client</a>
 								</cgl-data-table-cell>
 								<cgl-data-table-cell>
-									 Whole genome somatic workflows from PCAWG including Sanger, DKFZ, and EMBL best practices or bcbio
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									Whole Exome - Somatic
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 Whole exome somatic workflow with bcbio
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									 ProTECT
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 Neoantigen pipeline
+									 Spinnaker client used by submitters
 								</cgl-data-table-cell>
 							</cgl-data-table-row>
 		
 					 </cgl-data-table>
 					</cgl-data-table-container>
-
-
-					<h3 class="md-title">Ordering Analysis</h3>
-					<p class="md-body-1">You can see our current <a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing">Workflow Pricing</a> for information on the costs of analyzing samples with these pipelines. Large batches can be processed at reduced rates, please contact us for more information using the "Submit Analysis Request" below.</p>
-					<center>
-					 	<h3 class="md-title"><a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing" class="unstyled">Current Analysis Workflows & Pricing</a></h3>
-					 	<h3 class="md-title"><a href="http://goo.gl/forms/rGWJ1Kdq9h" class="unstyled">Submit Analysis Request</a></h3>
-					 	<h3 class="md-title"><a href="https://docs.google.com/spreadsheets/d/1R03EV5vH7Moluepb52R3ingso8xIcL352E52XenO5FQ/edit#gid=0" class="unstyled">Submit Workflow Creation Request</a></h3>
-					 </center>
+					
 				</section>
 			</main>
 
@@ -205,6 +190,8 @@
    </body>
 </html>
 
+
+
 <!-- 
 <!DOCTYPE html>
 <html>
@@ -235,7 +222,7 @@
 		<ul class="header text">
 			<li class="dropbtn"><a href="index.html">Home</a></li>
 			<!~~ <li><a href="projects.html">Analysis Dashboard</a></li> ~~>
-			<li><a href="file_browser">File Browser</a></li>
+      <li><a href="file_browser">File Browser</a></li>
       <li><a href="boardwalk.html">Boardwalk</a></li>
       <li><a href="redwood.html">Redwood</a></li>
       <li><a href="spinnaker.html">Spinnaker</a></li>
@@ -247,32 +234,24 @@
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="text" style="margin: 20px">
-				  	<h2>Mission</h2>
-				  	<p>Our mission as the Analysis Core is to help researchers in the UCSC Genomics Institute use modern tools to accurately and efficiently analyze large volumes of sequence data.  We build the software that makes this possible (the Development team) and we also are responsible for running the "core" analysis pipelines for projects within the Institute (the Production team).  See our detailed mission statement for more information.</p>
-				  	<h2>Available Workflows</h2>
-				  	<p>We are growing our available pipelines to support projects in the Institute including:</p>
-				  	<p>
-				 		<table class="table-striped">
+				  	<h2>About Spinnaker</h2>
+				  	<p>Spinnaker is a data submission and validation platform designed to apply arbitrary validation and QC operations on files along with metadata schema validation.  It is used by the Analysis Core to verify uploaded fastq and other file types along with checking minimal metadata standards are adhered to. Files passing validation through Spinnaker are then used for further analysis by the core whereas failed files are indicated.  Submitters can use the Spinnaker web UI and command line client to examine validation reports, correct problems, and resubmit data until they pass validation.</p>
+            <h2>Leveraging Redwood</h2>
+            Spinnaker is designed to use <a href="redwood.html">Redwood</a> as both the source of files to validation and also the destination for file validation reports.  Only data passing validation by Spinnaker are eligible for further analysis by the Core and for subsequent inclusion in the <a href="boardwalk.html">Boardwalk</a> data portal.
+            <h2>Source</h2>
+            <p>Spinnaker is open source. The project repositories can be found at:</p>
+            <center>
+            <table class="table-striped">
 						 	<thead>
-								<tr><th><b>Pipeline</b></th>
+								<tr><th><b>Repository</b></th>
 								<th><b>Description</b></th></tr>
 						 	</thead>
 						 	<tbody>
-								<tr><td>RNAseq</td><td>RNASeq analysis using RSEM and Kallisto</td></tr>
-								<tr><td>Whole Exome/Whole Genome - Germline</td><td>GATK best practices germline pipeline with bcbio</td></tr>
-								<tr><td>Whole Genome - Somatic</td><td>Whole genome somatic workflows from PCAWG including Sanger, DKFZ, and EMBL best practices or bcbio</td></tr>
-								<tr><td>Whole Exome - Somatic</td><td>Whole exome somatic workflow with bcbio</td></tr>
-								<tr><td>ProTECT</td><td>Neoantigen pipeline</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-spinnaker">https://github.com/BD2KGenomics/dcc-spinnaker</a></td><td>The Spinnaker validation service</td></tr>
+								<tr><td><a href="https://github.com/BD2KGenomics/dcc-spinnaker-client">https://github.com/BD2KGenomics/dcc-spinnaker-client</a></td><td>Spinnaker client used by submitters</td></tr>
 						 	</tbody>
-					  	</table>
-					</p>
-					<h2>Ordering Analysis</h2>
-				  	<p>You can see our current <a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing">Workflow Pricing</a> for information on the costs of analyzing samples with these pipelines. Large batches can be processed at reduced rates, please contact us for more information using the "Submit Analysis Request" below.</p>
-				  	<center>
-					 	<h3><a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing" class="unstyled">Current Analysis Workflows & Pricing</a></h3>
-					 	<h3><a href="http://goo.gl/forms/rGWJ1Kdq9h" class="unstyled">Submit Analysis Request</a></h3>
-					 	<h3><a href="https://docs.google.com/spreadsheets/d/1R03EV5vH7Moluepb52R3ingso8xIcL352E52XenO5FQ/edit#gid=0" class="unstyled">Submit Workflow Creation Request</a></h3>
-				  	</center>
+					  </table>
+          </center>
 				</div>
 			</div>
 		</div>
