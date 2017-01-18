@@ -289,56 +289,62 @@
 			  <!-- Header row start -->
 			  <cgl-data-table-row>
 					<cgl-data-table-cell>
+						 <span class="md-subhead">Program</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
 						 <span class="md-subhead">Project</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Donor Id</span>
+						 <span class="md-subhead">Submitter Donor ID</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+						 <span class="md-subhead">Submitter Specimen ID</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
 						 <span class="md-subhead">Specimen Type</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
+						 <span class="md-subhead">Submitter Sample ID</span>
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
 						 <span class="md-subhead">Workflow</span>
-					</cgl-data-table-cell>
-					<cgl-data-table-cell>
-						 <span class="md-subhead">Analysis Type</span>
-					</cgl-data-table-cell>
-					<cgl-data-table-cell>
-						 <span class="md-subhead">File Type</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
 						 <span class="md-subhead">File Name</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">File ID</span>
-					</cgl-data-table-cell>
+                                                 <span class="md-subhead">File ID</span>
+                                        </cgl-data-table-cell>
 
 			  </cgl-data-table-row>
 			  <!-- Header row end -->
 
 			  <cgl-data-table-row ng-repeat="item in hits" class ="wrapword">
 					<cgl-data-table-cell>
+						 {{item['program']}}
+					</cgl-data-table-cell>
+					<cgl-data-table-cell>
 						 {{item['donors'][0]['projectCode']}}
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 {{item['donors'][0]['donorId']}}
-					</cgl-data-table-cell>
-					<cgl-data-table-cell>
-						 {{item['donors'][0]['specimenType'][0]}}
+						 {{item['donors'][0]['submittedDonorId']}}
 					</cgl-data-table-cell>
 					<!-- Workflow is Software-->
 					<cgl-data-table-cell>
-						 {{item['analysisMethod']['software']}}
+						 {{item['donors'][0]['submittedSpecimenId'][0]}}
 					</cgl-data-table-cell> 
 					<cgl-data-table-cell>
-						 {{item['analysisMethod']['analysisType']}}
+						 {{item['donors'][0]['specimenType'][0]}}
 					</cgl-data-table-cell>           
 					<cgl-data-table-cell>
-						 {{item['dataCategorization']['dataType']}}
+						 {{item['donors'][0]['submittedSampleId'][0]}}
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 {{item['fileCopies'][0]['fileName']}}
+						 {{item['analysisMethod']['software']}}
 					</cgl-data-table-cell>
+					<cgl-data-table-cell>
+                                                 {{item['fileCopies'][0]['fileName']}}
+                                        </cgl-data-table-cell>
 					<cgl-data-table-cell>
 						 {{item['id']}}
 					</cgl-data-table-cell>
