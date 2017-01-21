@@ -95,7 +95,7 @@ def get_google_auth(state=None, token=None):
 
 
 @app.route('/')
-@login_required
+#@login_required
 def index():
     return render_template('index.html')
 
@@ -108,8 +108,8 @@ def login():
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline')
     session['oauth_state'] = state
-    #return redirect(url_for('index'))
-    return render_template('login.html', auth_url=auth_url)
+    return redirect(auth_url)
+    #return render_template('login.html', auth_url=auth_url)
 
 
 @app.route('/gCallback')
