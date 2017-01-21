@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+			<title>{% block title %}{% endblock %}</title>
+			<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mystyle.css') }}">
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli">
+			<link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/normalize.min.css') }}">
+			<link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/main.min.css') }}">
+			<link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/bootstrap.min.css') }}">
+			<link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/bootstrap-responsive.min.css') }}">
+			<link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/elasticjs.css') }}">
+		</meta>
+	</head>
+
+        <body>
+            <div class="imgcgl">
+                <div class="imgcontainer">
+                    <a href="https://genomics.soe.ucsc.edu/">
+                        <img src="{{ url_for('static', filename='UCSC-Logo-genomics-web-80.png') }}" alt="University of California Santa Cruz" class="imglogo" style="padding: 10px">
+                    </a>
+                </div>
+                <div class="cglcontainer" style="float: right;">
+                    <a href="https://cgl.genomics.ucsc.edu/" class="text">Computational Genomics Laboratory</a>
+                </div>
+            </div>
+
+            <ul class="header text">
+                <li class="dropbtn"><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('file_browser') }}">File Browser</a></li>
+                <li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="help.html">Help</a></li>
+                {% if logged_in %}
+                <li><a href="{{ url_for('logout') }}">Logout (Github:{{ username }})</a></li>
+                {% else %}
+                <li><a href="{{ github_url }}">Github Login</a></li>
+                {% endif %}
+            </ul>
+
+            {% block content %}
+            {% endblock %}
+
+            <footer class="text">
+                <section style="color: white">UCSC Genomics Institute - Analysis Core
+                    <ul class="header" style="float: right; font-size:50%; padding: 4px;">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </section>
+            </footer>
+        </body>
+</html>
