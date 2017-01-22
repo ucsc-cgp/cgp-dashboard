@@ -90,14 +90,19 @@
               <cc-toolbar-nav-item>
 								<a href="help.html">Help</a>
 							</cc-toolbar-nav-item>
-              <cc-toolbar-nav-item>
               {%- if current_user.is_authenticated -%}
+              <cc-toolbar-nav-item>
               <a href="{{url_for('logout')}}"><img src="{{current_user.avatar}}?sz=20" width="20" height="20" alt="{{current_user.name}}"/>Logout</a>
+              </cc-toolbar-nav-item>
+              <cc-toolbar-nav-item>
+              {%- if current_user.redwood_token != 'None' -%}<a href="/token">Get Token</a>{%- else -%}No Token{%- endif -%}
+              </cc-toolbar-nav-item>
               {%- else -%}
+              <cc-toolbar-nav-item>
               <a href="{{url_for('login')}}" class="btn btn-primary btn-block">Login</a>
               <!--a href="{{url_for('login')}}" class="btn btn-primary btn-block" style="padding: 15px 0;">Login</a-->
-              {%- endif -%}
               </cc-toolbar-nav-item>
+              {%- endif -%}
 						</cc-toolbar-nav>
 						<!-- Nav end -->
 					</md-toolbar-row>
@@ -221,87 +226,3 @@
       </div>
    </body>
 </html>
-
-<!--
-<!DOCTYPE html>
-<html>
-   <head>
-      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-			<link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
-			<link rel="stylesheet" type="text/css" href="mystyle.css">
-			<link rel="stylesheet" href="file_browser/common/css/normalize.min.css">
-			<link rel="stylesheet" href="file_browser/common/css/main.min.css">
-			<link rel="stylesheet" href="file_browser/common/css/bootstrap.min.css">
-			<link rel="stylesheet" href="file_browser/common/css/bootstrap-responsive.min.css">
-			<link rel="stylesheet" href="file_browser/common/css/elasticjs.css">
-			<title>Home</title>
-			<link rel="stylesheet" type="text/css" href="mystyle.css">
-		</meta>
-	</head>
-	<body>
-		<div class="imgcgl">
-			<div class="imgcontainer">
-				<a href="https://genomics.soe.ucsc.edu/">
-					<img src="UCSC-Logo-genomics-web-80.png" alt="University of California Santa Cruz" class="imglogo" style="padding: 10px">
-				</a>
-			</div>
-			<div class="cglcontainer" style="float: right;">
-				<a href="https://cgl.genomics.ucsc.edu/" class="text">Computational Genomics Laboratory</a>
-			</div>
-		</div>
-		<ul class="header text">
-			<li class="dropbtn"><a href="index.html">Home</a></li>
-			<!~~ <li><a href="projects.html">Analysis Dashboard</a></li> ~~>
-			<li><a href="file_browser">File Browser</a></li>
-      <li><a href="boardwalk.html">Boardwalk</a></li>
-      <li><a href="redwood.html">Redwood</a></li>
-      <li><a href="spinnaker.html">Spinnaker</a></li>
-			<!~~  <li><a href="action_service">Action Service</a></li> ~~>
-			<li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
-			<li><a href="about.html">About</a></li>
-			<li><a href="help.html">Help</a></li>
-		</ul>
-		<div class="container-fluid">
-			<div class="row-fluid">
-				<div class="text" style="margin: 20px">
-				  	<h2>Mission</h2>
-				  	<p>Our mission as the Analysis Core is to help researchers in the UCSC Genomics Institute use modern tools to accurately and efficiently analyze large volumes of sequence data.  We build the software that makes this possible (the Development team) and we also are responsible for running the "core" analysis pipelines for projects within the Institute (the Production team).  See our detailed mission statement for more information.</p>
-				  	<h2>Available Workflows</h2>
-				  	<p>We are growing our available pipelines to support projects in the Institute including:</p>
-				  	<p>
-				 		<table class="table-striped">
-						 	<thead>
-								<tr><th><b>Pipeline</b></th>
-								<th><b>Description</b></th></tr>
-						 	</thead>
-						 	<tbody>
-								<tr><td>RNAseq</td><td>RNASeq analysis using RSEM and Kallisto</td></tr>
-								<tr><td>Whole Exome/Whole Genome - Germline</td><td>GATK best practices germline pipeline with bcbio</td></tr>
-								<tr><td>Whole Genome - Somatic</td><td>Whole genome somatic workflows from PCAWG including Sanger, DKFZ, and EMBL best practices or bcbio</td></tr>
-								<tr><td>Whole Exome - Somatic</td><td>Whole exome somatic workflow with bcbio</td></tr>
-								<tr><td>ProTECT</td><td>Neoantigen pipeline</td></tr>
-						 	</tbody>
-					  	</table>
-					</p>
-					<h2>Ordering Analysis</h2>
-				  	<p>You can see our current <a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing">Workflow Pricing</a> for information on the costs of analyzing samples with these pipelines. Large batches can be processed at reduced rates, please contact us for more information using the "Submit Analysis Request" below.</p>
-				  	<center>
-					 	<h3><a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing" class="unstyled">Current Analysis Workflows & Pricing</a></h3>
-					 	<h3><a href="http://goo.gl/forms/rGWJ1Kdq9h" class="unstyled">Submit Analysis Request</a></h3>
-					 	<h3><a href="https://docs.google.com/spreadsheets/d/1R03EV5vH7Moluepb52R3ingso8xIcL352E52XenO5FQ/edit#gid=0" class="unstyled">Submit Workflow Creation Request</a></h3>
-				  	</center>
-				</div>
-			</div>
-		</div>
-		<footer class="text">
-		<section style="color: white">UCSC Genomics Institute - Analysis Core
-			<ul class="header" style="float: right; font-size:50%; padding: 4px;">
-				<li><a href="index.html">Home</a></li>
-				<li><a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a></li>
-				<li><a href="about.html">About</a></li>
-			</ul>
-			</section>
-		</footer>
-	</body>
-</html>
- -->
