@@ -28,18 +28,16 @@ Within an interactive python session:
 
 Environment variables needed:
 
-'''
-# dcc-dashboard
-export GOOGLE_CLIENT_ID=<FILLMEIN>
-export GOOGLE_CLIENT_SECRET=<FILLMEIN>
-export REDWOOD_ADMIN=<FILLMEIN>
-export REDWOOD_ADMIN_PASSWORD=<FILLMEIN>
-export REDWOOD_SERVER=storage.ucsc-cgl.org
-export REDWOOD_ADMIN_PORT=8443
-export DCC_DASHBOARD_HOST=localhost
-export DCC_DASHBOARD_PORT=5000
-export DCC_DASHBOARD_PROTOCOL=https
-'''
+    # dcc-dashboard
+    export GOOGLE_CLIENT_ID=<FILLMEIN>
+    export GOOGLE_CLIENT_SECRET=<FILLMEIN>
+    export REDWOOD_ADMIN=<FILLMEIN>
+    export REDWOOD_ADMIN_PASSWORD=<FILLMEIN>
+    export REDWOOD_SERVER=storage.ucsc-cgl.org
+    export REDWOOD_ADMIN_PORT=8443
+    export DCC_DASHBOARD_HOST=localhost
+    export DCC_DASHBOARD_PORT=5000
+    export DCC_DASHBOARD_PROTOCOL=https
 
 Run it:
 
