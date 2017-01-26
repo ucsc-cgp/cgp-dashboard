@@ -127,7 +127,7 @@ def login():
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
-        hd='ucsc.edu')
+        hd='ucsc.edu', prompt='select_account consent')
     session['oauth_state'] = state
     return redirect(auth_url)
     #return render_template('login.html', auth_url=auth_url)
@@ -160,7 +160,7 @@ def callback():
         #Check if you have the appropriate domain    
         if 'hd' not in jwt or jwt['hd'] != 'ucsc.edu':
             #TODO: Need to work on the flashing message on the UI in case they incorrectly use another email. 
-            flash('You must login with a ucsc.edu account. Please try again')
+            flash('You must login with a ucsc.edu account. Please try again.')
             return redirect(url_for('index'))
 
         google = get_google_auth(token=token)
