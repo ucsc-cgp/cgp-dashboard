@@ -4,12 +4,16 @@ import datetime
 from pprint import pprint
 
 from flask import Flask, url_for, redirect, \
-    render_template, session, request, Response
+    render_template, session, request, Response, \
+    flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
+from oauth2client.client import verify_id_token
+from oauth2client.crypt import AppIdentityError
+
 
 import ssl
 from urllib import urlopen
@@ -122,7 +126,8 @@ def login():
         return redirect(url_for('index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
-        Auth.AUTH_URI, access_type='offline')
+        Auth.AUTH_URI, access_type='offline',
+        hd='ucsc.edu')
     session['oauth_state'] = state
     return redirect(auth_url)
     #return render_template('login.html', auth_url=auth_url)
@@ -139,6 +144,7 @@ def callback():
         return redirect(url_for('login'))
     else:
         google = get_google_auth(state=session['oauth_state'])
+        jwt = {}
         try:
             token = google.fetch_token(
                 Auth.TOKEN_URI,
@@ -146,6 +152,17 @@ def callback():
                 authorization_response=request.url)
         except HTTPError:
             return 'HTTPError occurred.'
+        #Testing the token verification step.
+        try:
+            jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
+        except AppIdentityError:
+            return 'Could not verify token.'
+        #Check if you have the appropriate domain    
+        if 'hd' not in jwt or jwt['hd'] != 'ucsc.edu':
+            #TODO: Need to work on the flashing message on the UI in case they incorrectly use another email. 
+            flash('You must login with a ucsc.edu account. Please try again')
+            return redirect(url_for('index'))
+
         google = get_google_auth(token=token)
         resp = google.get(Auth.USER_INFO)
         if resp.status_code == 200:
@@ -175,7 +192,8 @@ def get_redwood_token(user):
     password = os.environ['REDWOOD_ADMIN_PASSWORD']
     server = os.environ['REDWOOD_SERVER']
     server_port = os.environ['REDWOOD_ADMIN_PORT']
-    json_str = urlopen(str("https://"+username+":"+password+"@"+server+":"+server_port+"/users/"+user.email+"/tokens"), context=ctx).read()
+    username_email = (user.email).split('@')[0]
+    json_str = urlopen(str("https://"+username+":"+password+"@"+server+":"+server_port+"/users/"+username_email+"/tokens"), context=ctx).read()
     try:
         json_struct = json.loads(json_str)
         token_str = json_struct['tokens'][0]['access_token']
