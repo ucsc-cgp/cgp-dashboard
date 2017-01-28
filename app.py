@@ -19,6 +19,7 @@ import ssl
 from urllib import urlopen
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+#prod_basedir = os.path.dirname(__file__) #TEST
 
 """App Configuration"""
 
@@ -35,7 +36,8 @@ class Auth:
         DCC_DASHBOARD_PORT = os.environ['DCC_DASHBOARD_PORT']
     if 'DCC_DASHBOARD_PROTOCOL' in os.environ.keys():
         DCC_DASHBOARD_PROTOCOL = os.environ['DCC_DASHBOARD_PROTOCOL']
-    REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+':'+DCC_DASHBOARD_PORT+'/gCallback'
+#    REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+':'+DCC_DASHBOARD_PORT+'/gCallback'
+    REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+'/gCallback'
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
@@ -64,7 +66,7 @@ config = {
 
 """APP creation and configuration"""
 app = Flask(__name__)
-app.config.from_object(config['dev'])
+app.config.from_object(config['prod'])
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
@@ -121,7 +123,7 @@ def token():
         return redirect(url_for('login'))
 
 @app.route('/login')
-def login():
+def login(): 
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     google = get_google_auth()
@@ -207,3 +209,6 @@ def get_redwood_token(user):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+	app.run() #Quit the debu and added Threaded
