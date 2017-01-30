@@ -90,3 +90,4 @@ ENV/
 # project files
 ssl.*
 test.db
+prod.db

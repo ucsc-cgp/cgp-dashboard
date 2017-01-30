@@ -162,7 +162,7 @@ def callback():
         #Check if you have the appropriate domain    
         if 'hd' not in jwt or jwt['hd'] != 'ucsc.edu':
             #TODO: Need to work on the flashing message on the UI in case they incorrectly use another email. 
-            flash('You must login with a ucsc.edu account. Please try again.')
+            flash('You must login with a ucsc.edu account. Please try again.', 'error')
             return redirect(url_for('index'))
 
         google = get_google_auth(token=token)
