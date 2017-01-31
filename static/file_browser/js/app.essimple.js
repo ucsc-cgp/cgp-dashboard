@@ -2,7 +2,10 @@
 
 //Deleted all the old code, this talks to the API service
 
-var MyAPI_Connector = angular.module('MyAPI_Connector', []);
+var MyAPI_Connector = angular.module('MyAPI_Connector', [], function($interpolateProvider){
+   $interpolateProvider.startSymbol('{-');
+   $interpolateProvider.endSymbol('-}');
+});
 
 //Parameter variable
 var config = {
@@ -22,7 +25,7 @@ var configManifest = {
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/');
+         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/');
       }
    }
 });
@@ -31,7 +34,7 @@ MyAPI_Connector.factory('myService', function($http){
 MyAPI_Connector.factory('myParams', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/', config);
+         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/', config);
       }
    }
 });
@@ -40,7 +43,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
@@ -49,7 +52,7 @@ MyAPI_Connector.factory('myManifest', function($http){
  MyAPI_Connector.factory('myParams_pie', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/piecharts', config);
+         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/piecharts', config);
       }
    }
 });
