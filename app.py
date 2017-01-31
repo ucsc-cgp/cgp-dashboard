@@ -113,6 +113,11 @@ def index():
 def html_rend(name):
     return render_template(name+'.html')
 
+@app.route('/file_browser/')
+#@login_required
+def html_rend_file_browser():
+    return redirect(url_for('html_rend', name='file_browser'))
+
 @app.route('/token')
 def token():
     if current_user.is_authenticated:
