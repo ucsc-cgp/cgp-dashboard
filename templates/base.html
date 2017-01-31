@@ -91,8 +91,8 @@
 							</cc-toolbar-nav-item>
 							<cc-toolbar-nav-item {% block page_About %}{% endblock  %}>
 								<a href="about.html">About</a>
-							</cc-toolbar-nav-item {% block page_Help %}{% endblock  %}>
-              <cc-toolbar-nav-item>
+							</cc-toolbar-nav-item>
+              						<cc-toolbar-nav-item {% block page_Help %}{% endblock  %}>
 								<a href="help.html">Help</a>
 							</cc-toolbar-nav-item>
               {%- if current_user.is_authenticated -%}
