@@ -200,7 +200,7 @@ def get_redwood_token(user):
     server = os.environ['REDWOOD_SERVER']
     server_port = os.environ['REDWOOD_ADMIN_PORT']
     username_email = (user.email).split('@')[0]
-    json_str = urlopen(str("https://"+username+":"+password+"@"+server+":"+server_port+"/users/"+username_email+"/tokens"), context=ctx).read()
+    json_str = urlopen(str("https://"+username+":"+password+"@"+server+":"+server_port+"/users/"+user.email+"/tokens"), context=ctx).read()
     try:
         json_struct = json.loads(json_str)
         token_str = json_struct['tokens'][0]['access_token']
