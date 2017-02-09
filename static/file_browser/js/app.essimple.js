@@ -43,7 +43,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('https://ucsc-cgl.org/api/v1/repository/files/exportFull', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
@@ -158,10 +158,9 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    //Make a call to the API for Manifest file
    var get_myManifest = function(){
       myManifest.data().then(function(data){
-         var file = new File([data.data], {type: "text/plain;charset=utf-8"})
-         saveAs(file, 'manifest.tsv')
+         var file = new File([data.data], {type: "text/plain;charset=utf-8"});
+         saveAs(file, 'manifest.tsv');
          return data;
-         console.log("at get_myManifest");
          //return;
       });
    }
