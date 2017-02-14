@@ -16,7 +16,8 @@ def application(req_environ, start_response):
        'REDWOOD_ADMIN_PORT',
        'DCC_DASHBOARD_HOST',
        'DCC_DASHBOARD_PORT',
-       'DCC_DASHBOARD_PROTOCOL'
+       'DCC_DASHBOARD_PROTOCOL',
+       'DCC_DASHBOARD_SERVICE'
     ]
     for key in ENV_VAR:
        os.environ[key] = req_environ.get(key, '')
