@@ -16,11 +16,12 @@
 					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.2 redwood-download /dcc/data/manifest.tsv /dcc/data/</p>
 					<p class="md-body-1">This will download the data in the current directory.</p>
 					<h3 class="md-title">Upload via Spinnaker</h3>
-					<p class="md-body-1">Create a manifest that links your metdata and data. Your manifest.tsv should be a TSV based on this <a href="https://docs.google.com/spreadsheets/d/1xuPS8ogphvvNrdJ8gRDlqFf-9fLQh9Pj1Zgx1mnUyeA/edit#gid=0">template</a>. </p>
+					<p class="md-body-1">Create a manifest that links your metdata and data. Your manifest.tsv should be a TSV based on this <a href="https://docs.google.com/spreadsheets/d/1xuPS8ogphvvNrdJ8gRDlqFf-9fLQh9Pj1Zgx1mnUyeA/edit#gid=0">template</a>. You can hover over the column names to see more information.</p>
 					<p class="md-body-1">You need to include file paths to your upload files that start with /dcc/data since that's the location used in the docker run below. </p>
 					<p class="md-body-1">You should create a directory where you want to have your files for upload (assumed to be pwd), place your manifest.tsv in this directory along with all your files for upload, and then execute the following:</p>
 					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.2 spinnaker-upload /dcc/data/manifest.tsv</p>
 					<p class="md-body-1">Once completed, you will find a receipt file (spinnaker/output_metadata/receipt.tsv) which you should save. It provides various IDs assigned to your donor, specimen, sample and file that make it much easier to find/audit later.</p>
+					<p class="md-body-1">In case your upload failed and need to re-upload your files, make sure you edit the 'Workflow Version' entry by increasing it by 0.0.1. For example, if you previously uploaded a file with workflow version 1.0.1, you would modify the entry in the TSV file so the workflow version is 1.0.2 instead.</p>
 					<p class="md-body-1">NOTE: Uploads can take a long time and our feedback on the command line needs to be improved. You may use dstat to monitor network usage to ensure uploads are in progress.</p>
 					<h3 class="md-title">Downloading Metadata</h3>
                <p class="md-body-1">You can get the latest Metadata dump by clicking <a href="{{url_for('static', filename='validated.jsonl.gz')}}" target="_blank">here</a>. </p>
