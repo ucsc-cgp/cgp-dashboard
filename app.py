@@ -111,6 +111,10 @@ def index():
 @app.route('/<name>.html')
 #@login_required
 def html_rend(name):
+    #data = {'dev': 'hello'}
+    data = os.environ['DCC_DASHBOARD_SERVICE']
+    if name=='file_browser':
+        return render_template(name+'.html', data=data)
     return render_template(name+'.html')
 
 @app.route('/file_browser/')
@@ -121,7 +125,7 @@ def html_rend_file_browser():
 @app.route('/token')
 def token():
     if current_user.is_authenticated:
-        # this is where I would retrieve te token, encode it, pass it along.
+        # this is where I would retrieve the token, encode it, pass it along.
         token = current_user.redwood_token
         return Response(token, mimetype='text/plain', headers={"Content-disposition": "attachment; filename=token.txt"})
     else:
@@ -199,7 +203,6 @@ def get_redwood_token(user):
     password = os.environ['REDWOOD_ADMIN_PASSWORD']
     server = os.environ['REDWOOD_SERVER']
     server_port = os.environ['REDWOOD_ADMIN_PORT']
-    username_email = (user.email).split('@')[0]
     json_str = urlopen(str("https://"+username+":"+password+"@"+server+":"+server_port+"/users/"+user.email+"/tokens"), context=ctx).read()
     try:
         json_struct = json.loads(json_str)
@@ -216,4 +219,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-	app.run() #Quit the debu and added Threaded
+	app.run(host='0.0.0.0', port=80) #Quit the debu and added Threaded

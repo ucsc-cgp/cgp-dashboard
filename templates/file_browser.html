@@ -9,6 +9,9 @@
          <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script>
 
          <!-- project specific files -->
+         <script> 
+              myVar = {{data|tojson}}
+         </script>
          <script src="{{url_for('static', filename='file_browser/js/app.essimple.js')}}"></script>
 
          <!-- manifest download -->
