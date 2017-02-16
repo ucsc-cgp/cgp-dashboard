@@ -7,18 +7,18 @@
 					<h1 class="md-display-1" style="color:#FF6B6B;">Help</h1>
 					<h3 class="md-title">Setting up the Client</h3>
 					<p class="md-body-1">You can download the Client using docker. To download the client, use from the command line:</p>
-					<p class="cgl-code">docker pull quay.io/ucsc_cgl/core-client:1.0.3</p>
+					<p class="cgl-code">docker pull quay.io/ucsc_cgl/core-client:1.0.4</p>
 					<h3 class="md-title">Getting the token</h3>
-					<p class="md-body-1">Please login using your UCSC Google account (your @ucsc.edu address) and download your Redwood token via the "Get Token" link.  If you see "No Token" after login please contact <a href="mailto:broconno@ucsc.edu">Brian O'Connor</a> from your UCSC email account and request one.</p>
+					<p class="md-body-1">Please login using your UCSC Google account (your @ucsc.edu address) and download your Redwood token via the "Get Token" link.  If you see "No Token" after login please contact <a href="mailto:broconno@ucsc.edu">Brian O'Connor</a> from your UCSC email account and request one.</p> 
+					<p class="md-body-1">Treat your token as you would a credit card number. Do not share or send your token around including electronic means such as e-mail, GitHub, etc. In case your token is compromised, please contact <a href="mailto:broconno@ucsc.edu">Brian O'Connor</a> as soon as possible.</p>
 					<h3 class="md-title">Perform Bulk Download via Manifest</h3>
-					<p class="md-body-1">This assumes the current working directory (pwd) has a manifest, like the ones you can download from the <a href="file_browser.html">file browser.</a> You can use either the <span class="cgl-code">ACCESS_TOKEN</span> or the <span class="cgl-code">ACCESS_TOKEN_FILE</span> to do the download. <span class="cgl-code">ACCESS_TOKEN</span> requires you to explicitely write the token, while <span class="cgl-code">ACCESS_TOKEN_FILE</span> requires the path to the file with the token. The commands below will then download the files to the current working directory.</p>
+					<p class="md-body-1">This assumes the current working directory (pwd) has a manifest, like the ones you can download from the <a href="file_browser.html">file browser.</a> You can use either the <span class="cgl-code">ACCESS_TOKEN</span> or the <span class="cgl-code">ACCESS_TOKEN_FILE</span> to do the download. <span class="cgl-code">ACCESS_TOKEN</span> requires you to explicitely write the token or reference it as an environmental variable, while <span class="cgl-code">ACCESS_TOKEN_FILE</span> requires the token file name to be specified, and the path to the folder containing the token to be mounted. The commands below will then download the files to the current working directory.</p>
 
 					<p class="md-body-1">NOTE: make sure you have enough space in pwd!</p>
 					<p class="md-body-1">To use the <span class="cgl-code">ACCESS_TOKEN</span> use this command:</p>
-					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.3 redwood-download /dcc/data/manifest.tsv /dcc/data/</p>
-					<p class="md-body-1">If you want to instead download using a token file with <span class="cgl-code">ACCESS_TOKEN_FILE</span>, you can use the command below.</p>
-					<p class="md-body-1">NOTE: make sure your token is within your current directory!</p>
-					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN_FILE=&lt;path/to/token/file&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.3 redwood-download /dcc/data/manifest.tsv /dcc/data/</p>
+					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.4 redwood-download /dcc/data/manifest.tsv /dcc/data/</p>
+					<p class="md-body-1">If you want to instead download using a token file with <span class="cgl-code">ACCESS_TOKEN_FILE</span>, you can use the command below:</p>
+					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN_FILE=&lt;file_name&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data -v &lt;path/to/token/folder&gt;:/dcc/token  quay.io/ucsc_cgl/core-client:1.0.4 redwood-download /dcc/data/manifest.tsv /dcc/data/</p>
 
 					<p class="md-body-1">Using any of the commands above will download the data in the current directory.</p>
 					<h3 class="md-title">Upload via Spinnaker</h3>
@@ -89,9 +89,9 @@
 					<p class="md-body-1">You need to include file paths to your upload files that start with /dcc/data since that's the location used in the docker run below. Columns <span class="md-body-2">Donor UUID, Specimen UUID, Sample UUID, Upload File ID, Data Bundle ID,</span> and <span class="md-body-2">Metadata.json</span> <u>should be left blank! </u></p>
 					<p class="md-body-1">You should create a directory where you want to have your files for upload (assumed to be pwd), place your manifest.tsv in this directory along with all your files for upload, and then execute either of the following:</p>
 					<p class="md-body-1">If you want to type the token (<span class="cgl-code">ACCESS_TOKEN</span>), use the command below</p>
-					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.3 spinnaker-upload /dcc/data/manifest.tsv</p>
-					<p class="md-body-1">If you want to use a file with the token (<span class="cgl-code">ACCESS_TOKEN_FILE</span>), use the command below. Remember that your token file should be within your working directory!</p>
-                                        <p class="cgl-code">docker run --rm -e ACCESS_TOKEN_FILE=&lt;path/to/token/file&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.3 spinnaker-upload /dcc/data/manifest.tsv</p>
+					<p class="cgl-code">docker run --rm -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data quay.io/ucsc_cgl/core-client:1.0.4 spinnaker-upload /dcc/data/manifest.tsv</p>
+					<p class="md-body-1">If you want to use a file with the token (<span class="cgl-code">ACCESS_TOKEN_FILE</span>), use the command below. Remember to specify the absolute path to the folder containing your token file!</p>
+                                        <p class="cgl-code">docker run --rm -e ACCESS_TOKEN_FILE=&lt;file_name&gt; -e REDWOOD_ENDPOINT=storage.ucsc-cgl.org -v `pwd`:/dcc/data -v &lt;path/to/token/folder&gt;:/dcc/token  quay.io/ucsc_cgl/core-client:1.0.4 spinnaker-upload /dcc/data/manifest.tsv</p>
 					<p class="md-body-1">Once completed, you will find a receipt file (spinnaker/output_metadata/receipt.tsv) which you should save. It provides various IDs assigned to your donor, specimen, sample and file that make it much easier to find/audit later.</p>
 					<p class="md-body-1">In case your upload failed and need to re-upload your files, make sure you edit the 'Workflow Version' entry by increasing it by 0.0.1. For example, if you previously uploaded a file with workflow version 1.0.1, you would modify the entry in the TSV file so the workflow version is 1.0.2 instead.</p>
 					<p class="md-body-1">NOTE: Uploads can take a long time and our feedback on the command line needs to be improved. You may use dstat to monitor network usage to ensure uploads are in progress.</p>
