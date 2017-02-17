@@ -34,4 +34,5 @@ RUN rm /app/uwsgi.ini
 ADD ./uwsgi/uwsgi.ini app/
 #Make the working directory /app
 WORKDIR /app
+
 CMD ["/usr/bin/supervisord"]
