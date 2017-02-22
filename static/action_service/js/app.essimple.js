@@ -1,67 +1,33 @@
 'use strict';
 
-//Deleted all the old code, this talks to the API service
+//Set MyAPI_Connector
+var MyAPI_Connector = angular.module('MyAPI_Connector', [], function($interpolateProvider){
+   $interpolateProvider.startSymbol('{-');
+   $interpolateProvider.endSymbol('-}');
+});
 
-var MyAPI_Connector = angular.module('MyAPI_Connector', ["ngTextTruncate"]);
-
-//Parameter variable
-var config = {
-   params:{
-      filters: null
-
-   }
-}
-var my_filters = {'file':{}};
-var configManifest = {
-   params:{
-      filters: null
-   }
-}
-
-//Set up the factory, whatever that means
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/action_service/js/action_index.jsonl');
+         return $http.get('https://dev.ucsc-cgl.org/api/v1/action/service');
       }
    }
 });
-
-//Factory with parameters
-MyAPI_Connector.factory('myParams', function($http){
-   return{
-      data: function(){
-         return $http.get('http://ucsc-cgl.org/action_service/js/action_index.jsonl');
-      }
-   }
-});
-
-
 
 //Controller for the page
-MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService, myParams){
-   //Variables to be used to populate the page
-   $scope.hits = [];
-   $scope.results = [];
-   $scope.longText = "";
-   
-   //Assign the termFacets and hits to the scope variables
-   var assign_Hits_Facets = function(data){
-   	console.log(data);
-      $scope.results = data.data;
-      $scope.hits = data.data.data;
-   }
+MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService){
+   $scope.results = []; 
+
    //Get a regular default call to the API
    var get_myService = function(){
       myService.data().then(function(data){
-         assign_Hits_Facets(data);
+         $scope.results = data.data;
          //get_myPaging(data);
          //Call the pie charts initially //////TEST
          return;
       });
    }
    
-   //Call the regular service to populate the webpage initially
    get_myService();
 });
 
