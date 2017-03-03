@@ -86,9 +86,14 @@
 							<cc-toolbar-nav-item {% block page_Spinnaker %}{% endblock  %}>
 								<a href="spinnaker.html">Spinnaker</a>
 							</cc-toolbar-nav-item>
-                                                        <cc-toolbar-nav-item {% block page_Action %}{% endblock  %}>
+							{%- if current_user.is_authenticated -%}
+							<cc-toolbar-nav-item {% block page_Action %}{% endblock  %}>
                                                                 <a href="action_service.html">Action Service</a>
                                                         </cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_Invoicing %}{% endblock  %}>
+								<a href="invoicing_service.html">Invoicing Service</a>
+							</cc-toolbar-nav-item>
+							{%- endif -%}
 							<cc-toolbar-nav-item {% block page_Wiki %}{% endblock  %}>
 								<a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a>
 							</cc-toolbar-nav-item>
