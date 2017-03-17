@@ -57,10 +57,10 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
           $scope.costData = result;
           $scope.invoices = result.data.map(function(invoice) {
               invoice.selected = false;
-              drawProjectChart();
-              drawStackedChart()
               return invoice;
           });
+         drawProjectChart();
+         drawStackedChart();
       });
    };
 
@@ -107,7 +107,9 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    $scope.unviewDetails = function () {
       $scope.viewingDetails = false;
       $scope.activeInvoice = null;
-      drawProjectChart();
+      retrieveInvoice($scope.currentProject);
+//       drawProjectChart();
+//       drawStackedChart();
    }
   
    $scope.welcome = function(){
@@ -128,11 +130,7 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    $scope.piedata = function(){
       var loopPromises = [];
       var myItem = $scope.currentProject;
-      var deferred = $q.defer();
-      loopPromises.push(deferred.promise);
-      setTimeout(function () {
          var costtemp = $scope.invoices;
-         //console.log($scope.invoices);
          
          //pie
          var ccost = 0;
@@ -172,15 +170,10 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
          pieTemp.push("Storage Cost");
          pieTemp.push(scost);
          pieTemp2.push(pieTemp);
-         deferred.resolve();
          for (var i=0; i<pieTemp2.length; i++){
             pieArrAnalysis.push(pieTemp2[i]);
          }
-         return pieArrAnalysis;
-      }, 1000);
-
-      $q.all(loopPromises).then(function () {
-      });	
+         return pieArrAnalysis;	
    }
    
    //pie chart maker
@@ -189,61 +182,57 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    google.charts.setOnLoadCallback(drawProjectChart);
    function drawProjectChart() {
       $scope.piedata();
-      setTimeout(function () {
-         var data = new google.visualization.DataTable();
-         data.addColumn('string', 'Type');
-         data.addColumn('number', 'Number');
-         console.log(pieArrAnalysis);
-         data.addRows(pieArrAnalysis);
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Type');
+      data.addColumn('number', 'Number');
+      console.log(pieArrAnalysis);
+      data.addRows(pieArrAnalysis);
 
-         var options = {
-            title: 'Overall Storage and Compute Cost',
-            width: 200,
-            height: 200,
-            legend: 'none',
-            fontName: 'Helvetica Neue',
-            slices: {
-               0: { color: '#1A535C' },
-               1: { color: '#4CC9C0' },
-               2: { color: '#FF6B6B' },
-               3: { color: '#FFA560' },
-               4: { color: '#113871' },
-               5: { color: '#5C83D0' },
-               6: { color: '#FFE66D' }
-            }
-         };
+      var options = {
+         title: 'Overall Storage and Compute Cost',
+         width: 200,
+         height: 200,
+         legend: 'none',
+         fontName: 'Helvetica Neue',
+         slices: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
+      };
 
-         chart = new google.visualization.PieChart(document.getElementById('piechartProject'));
+      chart = new google.visualization.PieChart(document.getElementById('piechartProject'));
 
-         chart.draw(data, options);
-      }, 2000);
+      chart.draw(data, options);
    }  
    
    //Stacked bar chart
    function drawStackedChart(){
-      setTimeout(function () {
-         console.log(pieArrStack)
-         var data = google.visualization.arrayToDataTable(pieArrStack);
-         var options = {
-            width: 400,
-            height: 200,
-            legend: { position: 'top', maxLines: 3 },
-            bar: { groupWidth: '75%' },
-            isStacked: true,
-            series: {
-               0: { color: '#1A535C' },
-               1: { color: '#4CC9C0' },
-               2: { color: '#FF6B6B' },
-               3: { color: '#FFA560' },
-               4: { color: '#113871' },
-               5: { color: '#5C83D0' },
-               6: { color: '#FFE66D' }
-            }
-         };
-         chart = new google.visualization.ColumnChart(document.getElementById('stackedchart'));
+      console.log(pieArrStack)
+      var data = google.visualization.arrayToDataTable(pieArrStack);
+      var options = {
+         width: 400,
+         height: 200,
+         legend: { position: 'top', maxLines: 3 },
+         bar: { groupWidth: '75%' },
+         isStacked: true,
+         series: {
+            0: { color: '#1A535C' },
+            1: { color: '#4CC9C0' },
+            2: { color: '#FF6B6B' },
+            3: { color: '#FFA560' },
+            4: { color: '#113871' },
+            5: { color: '#5C83D0' },
+            6: { color: '#FFE66D' }
+         }
+      };
+      chart = new google.visualization.ColumnChart(document.getElementById('stackedchart'));
 
-         chart.draw(data, options);
-      }, 2000);
+      chart.draw(data, options);
    }
 
 

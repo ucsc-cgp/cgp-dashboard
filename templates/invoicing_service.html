@@ -91,7 +91,14 @@
 		   </div>
 		   
 		   <div ng-if="!welcoming">
-
+         <center>
+         <br>
+         <table>
+            <!-- font needs to be changed to Roboto -->
+            <td id="piechartProject"></td>
+            <td id="stackedchart"></td>
+         </table>
+         </center>
         <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
             <cgl-data-table class="verbose">
 
@@ -144,20 +151,23 @@
 
             </cgl-data-table>
         </cgl-data-table-container>
-         <center>
-         <br>
-         <table ng-init="piedata()">
-            <!-- font needs to be changed to Roboto -->
-            <td id="piechartProject"></td>
-         </table>
-         </center>
+
          
         </div>
         
         </div>
 
         <div ng-if="viewingDetails">
-            <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+         <center>
+         <br>
+         <table>
+            <!-- font needs to be changed to Roboto -->
+            <td id="piechartProject"></td>
+            <td id="stackedchart"></td>
+            <td><button md-raised-button class="cgl-turquoise" ng-click="printPage()">Print this page</button></td>
+         </table>
+         </center>
+                <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
                 <cgl-data-table class="verbose">
 
                     <!-- Header row start -->
