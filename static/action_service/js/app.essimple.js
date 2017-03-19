@@ -9,7 +9,7 @@ var MyAPI_Connector = angular.module('MyAPI_Connector', [], function($interpolat
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('https://dev.ucsc-cgl.org/api/v1/action/service');
+         return $http.get('https://'+myVar+'/api/v1/action/service');
       }
    }
 });

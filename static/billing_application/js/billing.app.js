@@ -1,6 +1,6 @@
 'use strict';
 
-var SERVER_URL = "https://dev.ucsc-cgl.org/api/v1/"
+var SERVER_URL = "https://"+myVar+"/api/v1/"
 var BillingAPI_Connector = angular.module('BillingAPI_Connector', [], function($interpolateProvider){
    $interpolateProvider.startSymbol('{-');
    $interpolateProvider.endSymbol('-}');
@@ -123,6 +123,15 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    
    $scope.printPage = function(){
       window.print();
+   }
+   
+   $scope.getTotal = function(){
+      $scope.total = 0;
+      for(var i = 0; i < $scope.activeInvoice.by_analysis.itemized_compute_costs.length; i++){
+         var item = $scope.activeInvoice.by_analysis.itemized_compute_costs[i];
+         $scope.total += quantizeString(item.cost,2);
+      }
+      console.log($scope.total);
    }
 
    //pie charts

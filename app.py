@@ -113,9 +113,16 @@ def index():
 def html_rend(name):
     #data = {'dev': 'hello'}
     data = os.environ['DCC_DASHBOARD_SERVICE']
+    data1 = os.environ['DCC_INVOICING_SERVICE']
+    data2 = os.environ['DCC_ACTION_SERVICE']
     if name=='file_browser':
         return render_template(name+'.html', data=data)
-    return render_template(name+'.html')
+    if name=='invoicing_service' or name=='invoicing_service1':
+        return render_template(name+'.html', data=data1)
+    if name=='action_service':
+        return render_template(name+'.html', data=data2)
+    return render_template(name+'.html')    
+
 
 @app.route('/file_browser/')
 #@login_required

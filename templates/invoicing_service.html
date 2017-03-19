@@ -10,6 +10,11 @@
     <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.js')}}"></script>
     <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script>
 
+         <!-- project specific files -->
+         <script> 
+              myVar = {{data|tojson}}
+         </script>
+
     <!-- project specific files -->
     <script src="{{url_for('static', filename='billing_application/js/billing.app.js')}}"></script>
     
@@ -94,7 +99,6 @@
          <center>
          <br>
          <table>
-            <!-- font needs to be changed to Roboto -->
             <td id="piechartProject"></td>
             <td id="stackedchart"></td>
          </table>
@@ -161,7 +165,6 @@
          <center>
          <br>
          <table>
-            <!-- font needs to be changed to Roboto -->
             <td id="piechartProject"></td>
             <td id="stackedchart"></td>
             <td><button md-raised-button class="cgl-turquoise" ng-click="printPage()">Print this page</button></td>
@@ -213,6 +216,28 @@
                         </cgl-data-table-cell>
                         <cgl-data-table-cell>
                             ${- quantizeString(analysis.cost,2) -}
+                        </cgl-data-table-cell>
+                    </cgl-data-table-row>
+                    
+                    <cgl-data-table-row ng-init="getTotal()" style="border-style: solid; border-width: 5px;">
+                        <cgl-data-table-cell>
+                            
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                         
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                         
+                        </cgl-data-table-cell>
+                        
+                        <cgl-data-table-cell>
+                        
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                           Total:
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                           ${- total -}
                         </cgl-data-table-cell>
                     </cgl-data-table-row>
 
