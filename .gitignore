@@ -86,3 +86,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# project files
+ssl.*
+test.db
+prod.db

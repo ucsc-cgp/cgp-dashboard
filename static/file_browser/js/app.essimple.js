@@ -1,8 +1,15 @@
 'use strict';
 
 //Deleted all the old code, this talks to the API service
+function myFunc(vars) {
+    console.log(vars);
+    return vars
+}
 
-var MyAPI_Connector = angular.module('MyAPI_Connector', []);
+var MyAPI_Connector = angular.module('MyAPI_Connector', [], function($interpolateProvider){
+   $interpolateProvider.startSymbol('{-');
+   $interpolateProvider.endSymbol('-}');
+});
 
 //Parameter variable
 var config = {
@@ -22,7 +29,7 @@ var configManifest = {
 MyAPI_Connector.factory('myService', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/');
+         return $http.get('https://'+myVar+'/api/v1/repository/files/');
       }
    }
 });
@@ -31,7 +38,7 @@ MyAPI_Connector.factory('myService', function($http){
 MyAPI_Connector.factory('myParams', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/', config);
+         return $http.get('https://'+myVar+'/api/v1/repository/files/', config);
       }
    }
 });
@@ -40,7 +47,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('https://'+myVar+'/api/v1/repository/files/exportFull', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
@@ -49,7 +56,7 @@ MyAPI_Connector.factory('myManifest', function($http){
  MyAPI_Connector.factory('myParams_pie', function($http){
    return{
       data: function(){
-         return $http.get('http://ucsc-cgl.org/api/v1/repository/files/piecharts', config);
+         return $http.get('https://'+myVar+'/api/v1/repository/files/piecharts', config);
       }
    }
 });
@@ -155,10 +162,9 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    //Make a call to the API for Manifest file
    var get_myManifest = function(){
       myManifest.data().then(function(data){
-         var file = new File([data.data], {type: "text/plain;charset=utf-8"})
-         saveAs(file, 'manifest.tsv')
+         var file = new File([data.data], {type: "text/plain;charset=utf-8"});
+         saveAs(file, 'manifest.tsv');
          return data;
-         console.log("at get_myManifest");
          //return;
       });
    }

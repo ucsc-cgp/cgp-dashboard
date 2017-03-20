@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title  %} Spinnaker  {% endblock %}
+{% block page_Spinnaker  %} class="active" {% endblock  %}
+{% block content %}
+			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">About Spinnaker</h1>
+					<p class="md-body-1">Spinnaker is a data submission and validation platform designed to apply arbitrary validation and QC operations on files along with metadata schema validation.  It is used by the Analysis Core to verify uploaded fastq and other file types along with checking minimal metadata standards are adhered to. Files passing validation through Spinnaker are then used for further analysis by the core whereas failed files are indicated.  Submitters can use the Spinnaker web UI and command line client to examine validation reports, correct problems, and resubmit data until they pass validation.</p>
+            	<h3 class="md-title">Leveraging Redwood</h3>
+					<p class="md-body-1">Spinnaker is designed to use <a href="redwood.html">Redwood</a> as both the source of files to validation and also the destination for file validation reports.  Only data passing validation by Spinnaker are eligible for further analysis by the Core and for subsequent inclusion in the <a href="boardwalk.html">Boardwalk</a> data portal.</p>
+		<h3 class="md-title">Spinnaker</h3>
+		<p class="md-body-1">View a demo of Spinnaker 2.0 here:
+			<center>
+			<h3 class="md-title">
+			 <a href="http://spinnaker.medbook.io:5000/">Spinnaker 2.0 Demo</a>
+			</h3>
+			</center>
+		</p>            	
+		<center><img src="{{url_for('static', filename='img/spinnaker_screenshot1.png')}}" width="1000px"/></center>
+            	<h3 class="md-title">Source</h3>
+            	<p class="md-body-1">Spinnaker is open source. The project repositories can be found at:</p>
+            		  
+					  
+					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+					 <cgl-data-table>
+
+						  <!-- Header row start -->
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Repository</span>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Description</span>
+								</cgl-data-table-cell>
+						  </cgl-data-table-row>
+						  <!-- Header row end -->
+
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-spinnaker">https://github.com/BD2KGenomics/dcc-spinnaker</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 The Spinnaker validation service
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-spinnaker-client">https://github.com/BD2KGenomics/dcc-spinnaker-client</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Spinnaker client used by submitters
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+		
+					 </cgl-data-table>
+					</cgl-data-table-container>
+					
+				</section>
+			</main>
+{% endblock %}
