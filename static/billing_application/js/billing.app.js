@@ -34,6 +34,7 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    $scope.welcoming = true;
    var pieArrAnalysis =[];
    var pieArrStack = [];
+   $scope.total = "";
    
    myProjects.getProjects().then(
       function (result) {
@@ -102,6 +103,7 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    $scope.viewDetails = function (invoice_index) {
       $scope.viewingDetails = true;
       $scope.activeInvoice = $scope.invoices[invoice_index];
+      $scope.getTotal();
    }
   
    $scope.unviewDetails = function () {
@@ -126,12 +128,12 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
    }
    
    $scope.getTotal = function(){
-      $scope.total = 0;
+      $scope.total = "";
+      var item = 0;
       for(var i = 0; i < $scope.activeInvoice.by_analysis.itemized_compute_costs.length; i++){
-         var item = $scope.activeInvoice.by_analysis.itemized_compute_costs[i];
-         $scope.total += quantizeString(item.cost,2);
+         item = parseFloat($scope.activeInvoice.by_analysis.itemized_compute_costs[i].cost) + item;
       }
-      console.log($scope.total);
+      $scope.total = $scope.quantizeString(item.toString(),2);
    }
 
    //pie charts
