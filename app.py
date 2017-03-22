@@ -121,7 +121,7 @@ def html_rend(name):
 #        return render_template(name+'.html', data=data1)
          return redirect(url_for('invoicing_service'))
     if name=='action_service':
-        return render_template(name+'.html', data=data2)
+        return redirect(url_for('action_service'))
     return render_template(name+'.html')    
 
 @app.route('/invoicing_service')
@@ -129,6 +129,12 @@ def html_rend(name):
 def invoicing_service():
     data1 = os.environ['DCC_INVOICING_SERVICE']
     return render_template('invoicing_service.html', data=data1)
+
+@app.route('/action_service')
+@login_required
+def action_service():
+    data1 = os.environ['DCC_ACTION_SERVICE']
+    return render_template('action_service.html', data=data1)
 
 @app.route('/file_browser/')
 #@login_required
