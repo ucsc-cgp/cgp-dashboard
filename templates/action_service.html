@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block ng_app %} ng-app="MyAPI_Connector"{% endblock %}
+{% block body_ng_controller %} ng-controller="API_Controller"{% endblock %}
+{% block title  %} Action Service  {% endblock %}
+{% block page_Action  %} class="active"  {% endblock %}
+{% block meta  %}
+
+         <!-- project dependency libs -->
+         <script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
+         <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.js')}}"></script>
+         <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script>
+
+         <!-- project specific files -->
+         <script> 
+              myVar = {{data|tojson}}
+         </script>
+
+         <!-- project specific files -->
+         <script src="{{url_for('static', filename='action_service/js/app.essimple.js')}}"></script>
+{% endblock %}
+
+{% block header  %}
+{{ super() }}
+         <md-toolbar class="subheader" style="position:relative"> <!-- Material Design-based toolbar, note "subheader" CSS class -->
+                        <md-toolbar-row> <!-- Required for correct alignment of child elements -->
+                                <span class="md-title">Action Service</span>
+                        </md-toolbar-row>
+                        </md-toolbar>
+{% endblock  %}
+
+{% block style  %}
+        <style>
+                /* Need to make pretty on smaller screens */
+                /* table edits */
+                /* wrapword important for long strings in table */
+                .wrapword{
+                        white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+                        white-space: -pre-wrap;      /* Opera 4-6 */
+                        white-space: -o-pre-wrap;    /* Opera 7 */
+                        white-space: pre-wrap;       /* css-3 */
+                        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+                        white-space: -webkit-pre-wrap; /* Newer versions of Chrome/Safari*/
+                        word-break: break-all;
+                        white-space: normal;
+                }
+                /* 
+                cgl-data-table-cell{
+                        white-space: normal;
+                        word-wrap: break-word;
+                        padding-right: .5em;
+                        padding-left: .5em;
+                        line-height: 100%;
+                        width: 100%;
+                }
+ */
+
+                /* facet chooser edits */
+                ul{
+                        list-style: none;
+                }
+                .nav-header{
+                        padding-top: 1em;
+                }
+                .nav{
+                        word-wrap: break-word;
+                        padding-right: .5em;
+                }
+
+        </style>
+{% endblock %}
+
+{% block content %}
+
+<br><br>
+                 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+                 <cgl-data-table class="verbose">
+
+                          <!-- Header row start -->
+                          <cgl-data-table-row>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Project</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Program</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Workflow</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Workflow Version</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Submitter Donor ID</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Status</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Submitter Specimen Type</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Submitter Specimen ID</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Consonance UUID</span>
+                                        </cgl-data-table-cell>
+
+                          </cgl-data-table-row>
+                          <!-- Header row end -->
+
+                          <cgl-data-table-row ng-repeat="item in results" class ="wrapword">
+                                        <cgl-data-table-cell>
+                                                 {- item['project'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['program'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['workflow_name'] -}
+                                        </cgl-data-table-cell>
+                                        <!-- Workflow is Software-->
+                                        <cgl-data-table-cell>
+                                                 {- item['workflow_version'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['submitter_donor_id'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['status'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['submitter_specimen_type'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['submitter_specimen_id'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['consonance_job_uuid'] -}
+                                        </cgl-data-table-cell>
+
+                          </cgl-data-table-row>
+
+                 </cgl-data-table>
+                </cgl-data-table-container>
+
+{% endblock %}

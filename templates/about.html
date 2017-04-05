@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title  %} About  {% endblock %}
+{% block page_About  %} class="active" {% endblock  %}
+{% block content %}
+ 			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">About the Analysis Core</h1>
+					<p class="md-body-1">Our model is to work side-by-side with researchers to design and build analysis pipelines and cloud infrastructure as part of their larger projects.  To that end, we work with researchers while writing grant proposals to ensure adequate computational resources are included for new projects.  Following funding, we scale up our analysis on commercial or academic clouds to ensure projects receive their analyzed data as fast as possible.</p>
+
+					<h1 class="md-display-1" style="color:#FF6B6B;">Staff</h1>
+
+							<div class="layout-row layout-padding" style="padding-left:0px">
+								<div class="flex-25" style="padding-left:0px">
+									<img src="{{url_for('static', filename='img/CGL_Team_Pics_Brian-OConnor.jpg')}}" width="60%"/>
+									<p class="md-subhead" style="line-height:16px; margin-bottom:5px;"><b> Brian O’Connor </b></p>
+									<div style="width:80%"> <span class="md-body-2" style="color:#FF6B6B">Technical Director of the Analysis Core</span>		
+									</div>
+								</div>
+								<div class="flex-75" style="padding:0px">
+									<p class="md-body-1" style="margin-top:0px"> Dr. Brian O’Connor is the Technical Director of the UCSC Genomics Institute Analysis Core. He focuses on the development and deployment of large-scale, cloud-based systems for analyzing genomics data. This includes the Toil workflow execution platform, which is designed to run genomic pipelines on a wide range of cloud environments including AWS, Azure, Google and OpenStack, and ADAM, a distributed genomics platform developed in collaboration with UC Berkeley. He is also the co-chair of the Containers and Workflows task team of the Global Alliance for Genomics and Health (GA4GH) where he works on tool and workflow container standards. Brian recently joined UCSC from the Ontario Institute for Cancer Research (OICR) where his previous projects included leading the technical implementation of cloud-based analysis systems for the PanCancer Analysis of Whole Genomes (PCAWG) effort, the creation of the Dockstore project (http://dockstore.org), and the development of the International Cancer Genome Consortium’s Data Portal (http://dcc.icgc.org). </p>
+								</div>
+							</div>
+
+							<div class="layout-row layout-padding" style="padding-left:0px">
+								<div class="flex-25" style="padding-left:0px">
+									<img src="{{url_for('static', filename='img/CGL_Team_Pics_Walt_Shands.jpg')}}" width="60%"/>
+									<p class="md-subhead" style="line-height:16px; margin-bottom:5px;"><b> Walter Shands </b></p>
+									<div style="width:80%"> <span class="md-body-2" style="color:#FF6B6B">Senior Software Engineer</span>		
+									</div>
+								</div>
+								<div class="flex-75" style="padding:0px">
+									<p class="md-body-1" style="margin-top:0px"> Walt Shands is currently pursuing his Ph.D in Bioinformatics from the University of Montana. He previously worked at Intel for 18 years and received his undergraduate and master's degree from the Columbia University in Computer Science. His work involves BCBio, RNA-Seq and infrastructure. He has a black belt in Akido.</p>
+								</div>
+							</div>
+
+							<div class="layout-row layout-padding" style="padding-left:0px">
+								<div class="flex-25" style="padding-left:0px">
+									<img src="{{url_for('static', filename='img/CGL_Team_Pics_CJ.png')}}" width="60%"/>
+									<p class="md-subhead" style="line-height:16px; margin-bottom:5px;"><b> Christopher Ketchum </b></p>
+									<div style="width:80%"> <span class="md-body-2" style="color:#FF6B6B">Software Engineer</span>		
+									</div>
+								</div>
+								<div class="flex-75" style="padding:0px">
+									<p class="md-body-1" style="margin-top:0px"> CJ Ketchum holds a B.A. in Computer Science from UCSC. He primarily works on Toil and related projects for the Analysis Core, continuing the work he did as an undergraduate research assistant for the Genomics Institute. His interests include functional programming, cloud computing, and big data.</p>
+								</div>
+							</div>
+
+
+							<div class="layout-row layout-padding" style="padding-left:0px">
+								<div class="flex-25" style="padding-left:0px">
+									<img src="{{url_for('static', filename='img/CGL_Team_Pics_Carlos_Espinosa.jpg')}}" width="60%"/>
+									<p class="md-subhead" style="line-height:16px; margin-bottom:5px;"><b> Carlos Espinosa </b></p>
+									<div style="width:80%"> <span class="md-body-2" style="color:#FF6B6B">Web Developer</span>		
+									</div>
+								</div>
+								<div class="flex-75" style="padding:0px">
+									<p class="md-body-1" style="margin-top:0px"> Carlos Espinosa graduated from UCSC with a double major in Computer Science and Molecular, Cell, and Developmental Biology. His work includes the web service that powers the File Browser. Outside of work, Carlos enjoys reading and listening to classical music.</p>
+								</div>
+							</div>
+
+
+
+				</section>
+			</main>
+{% endblock %}
+

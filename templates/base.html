@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html {% block ng_app %} {% endblock %}>
+        <head>
+	{% block head  %}
+     	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        <title>{% block title  %}{% endblock  %}</title>
+
+        <!-- clever canary files -->
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/styles.css">
+         <link rel="stylesheet" href="https://clevercanary.github.io/ucsc-cgl-style-guide/styles/docs.css">
+         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+         <!-- favicon -->
+         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-57x57.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-114x114.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-72x72.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-144x144.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="60x60" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-60x60.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-120x120.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-76x76.png" />
+         <link rel="apple-touch-icon-precomposed" sizes="152x152" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/apple-touch-icon-152x152.png" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-196x196.png" sizes="196x196" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-96x96.png" sizes="96x96" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-32x32.png" sizes="32x32" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-16x16.png" sizes="16x16" />
+         <link rel="icon" type="image/png" href="https://clevercanary.github.io/ucsc-cgl-style-guide/images/favicon/favicon-128.png" sizes="128x128" />
+         <meta name="msapplication-TileColor" content="#FFFFFF" />
+         <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+         <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+         <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+         <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+         <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+		{% block meta  %}{% endblock %}
+                </meta>
+
+        <script>
+         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+                ga('create', 'UA-90660352-1', 'auto');
+                ga('send', 'pageview');
+        </script>
+	{% endblock %}
+	</head>
+
+        {% block style  %}{% endblock %}
+
+        <body {% block body_ng_controller %} {% endblock %}>
+	<div class="cgl-site layout-column layout-fill">
+	<header>
+	{% block header  %}
+					<md-toolbar> <!-- Material Design-based toolbar -->
+					<md-toolbar-row> <!-- Required for correct alignment of child elements -->
+						<img src="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@1x.png" srcset="https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@2x.png 2x, https://clevercanary.github.io/ucsc-cgl-style-guide/images/logos/ucsc-gi/logo-ucsc-gi@3x.png 3x"> <!-- Use srcset to specify responsive images -->
+
+						<!-- Hamburger start -->
+						<button md-icon-button menu-open>
+							<span class="md-button-wrapper">
+								<md-icon role="img" class="material-icons">menu</md-icon>
+							</span>
+						</button>
+						<button md-icon-button menu-close>
+							<span class="md-button-wrapper">
+								<md-icon role="img" class="material-icons">close</md-icon>
+							</span>
+						</button>
+						<!-- Hamburger end -->
+
+						<!-- Nav start -->
+						<cc-toolbar-nav>
+							<cc-toolbar-nav-item {% block page_Analysis %}{% endblock  %}>
+								<a href="index.html">Home</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_File %}{% endblock  %} >
+								<a href="file_browser.html">Browser</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_Boardwalk %}{% endblock  %}>
+								<a href="boardwalk.html">Boardwalk</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_Redwood %}{% endblock  %}>
+								<a href="redwood.html">Redwood</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_Spinnaker %}{% endblock  %}>
+								<a href="spinnaker.html">Spinnaker</a>
+							</cc-toolbar-nav-item>
+							{%- if current_user.is_authenticated -%}
+							<cc-toolbar-nav-item {% block page_Action %}{% endblock  %}>
+                        <a href="action_service.html">Action</a>
+                     </cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_Invoicing %}{% endblock  %}>
+								<a href="invoicing_service.html">Invoicing</a>
+							</cc-toolbar-nav-item>
+							{%- endif -%}
+							<cc-toolbar-nav-item {% block page_Wiki %}{% endblock  %}>
+								<a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a>
+							</cc-toolbar-nav-item>
+							<cc-toolbar-nav-item {% block page_About %}{% endblock  %}>
+								<a href="about.html">About</a>
+							</cc-toolbar-nav-item>
+              						<cc-toolbar-nav-item {% block page_Help %}{% endblock  %}>
+								<a href="help.html">Help</a>
+							</cc-toolbar-nav-item>
+              {%- if current_user.is_authenticated -%}
+              <cc-toolbar-nav-item>
+              <a href="{{url_for('logout')}}"><img src="{{current_user.avatar}}?sz=20" width="20" height="20" alt="{{current_user.name}}"/>Logout</a>
+              </cc-toolbar-nav-item>
+              <cc-toolbar-nav-item>
+              {%- if current_user.redwood_token != 'None' -%}<a href="/token">Get Token</a>{%- else -%}No Token{%- endif -%}
+              </cc-toolbar-nav-item>
+              {%- else -%}
+              <cc-toolbar-nav-item>
+              <a href="{{url_for('login')}}" class="btn btn-primary btn-block">Login</a>
+              <!--a href="{{url_for('login')}}" class="btn btn-primary btn-block" style="padding: 15px 0;">Login</a-->
+              </cc-toolbar-nav-item>
+              {%- endif -%}
+						</cc-toolbar-nav>
+						<!-- Nav end -->
+					</md-toolbar-row>
+				</md-toolbar>
+              <!-- Testing flash statements  -->
+              	{%- with messages = get_flashed_messages(with_categories=true) -%}
+                	{%- if messages -%}
+			<div class="layout-row color-patches">
+                	<div class='flashes flex-100 color-patch cgl-peach' align="center">
+                	{%- for category, message in messages -%}
+                  	<span class="{{ category }} md-body-2"><strong>Error: {{message}}</strong></span>
+                	{%- endfor -%}
+                	</div></div>
+                	{%- endif -%}
+             	{%- endwith -%}
+        {% endblock %}
+	</header>
+	{% block content  %}
+	
+	{% endblock %}
+	<footer>
+        {% block footer  %}
+				 <div class="cgl-links layout-column layout-gt-sm-row layout-padding">
+
+					  <!-- Top row, left-hand links on small + devices -->
+					  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+							<cgl-footer-nav-item>
+								 <a href="https://www.ucsc.edu">UCSC</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								 <a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
+							</cgl-footer-nav-item>
+					  </cgl-footer-nav>
+
+					  <!-- Top row, right-hand links on small + devices -->
+					  <cgl-footer-nav class="layout-column layout-gt-sm-row">
+							<cgl-footer-nav-item>
+								<a href="mailto:broconno@ucsc.edu" target="_top">Email</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								<a href="https://www.facebook.com/UCSCGenomicsInstitute/?fref=ts">Facebook</a>
+							</cgl-footer-nav-item>
+							<cgl-footer-nav-item>
+								<a href="https://twitter.com/ucscgenomics">Twitter</a>
+							</cgl-footer-nav-item>
+					  </cgl-footer-nav>
+
+				 </div>
+
+				 <!-- Copyright row -->
+				 <div class="cgl-disclaimer layout-column layout-gt-sm-row">
+					  <span>Copyright © 2016, The Regents of the University of California, Santa Cruz.</span>&nbsp; <span> All Rights Reserved. Apache-2.0 licence.</span>
+				 </div>
+
+        {% endblock %}
+	</footer>
+	<script type="text/javascript" src="https://clevercanary.github.io/ucsc-cgl-style-guide/scripts/cgl-hamburger.component.js"></script>
+	</div>
+        </body>
+</html>
+

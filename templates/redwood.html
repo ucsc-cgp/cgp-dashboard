@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title  %} Redwood  {% endblock %}
+{% block page_Redwood  %} class="active" {% endblock  %}
+{% block content %}
+			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">About Redwood</h1>
+					<p class="md-body-1">Redwood is a cloud-agnostic object storage + metadata system designed to store genomic data and metadata files.  The storage backend is based on the <a href="https://github.com/icgc-dcc/dcc-storage">ICGC Storage System</a> which affords support of both Amazon S3 and Ceph object stores.  Layered on top of the backend is a metadata standard based on JSON Schema which is used to model the biospecimen, clinical metadata, phenotypic information, etc for a given file.  Redwood includes indexing technologies that aggregates metadata into a searchable index, which is used by a variety of systems to track, search, and mine information stored in the system.</p>
+            	<h3 class="md-title">Supporting Spinnaker and Boardwalk</h3>
+					<p class="md-body-1">Redwood is a key component of the Analysis Core's infrastructure.  It provides the backend for storing all project metadata and data files in multiple cloud environments.  <a href="spinnaker.html">Spinnaker</a> uses Redwood as the source for files needing validation along with persistence of validation reports. <a href="boardwalk.html">Boardwalk</a> uses the metadata and data indexes built using Redwood in its faceted File Browser search interface.</p>
+					<h3 class="md-title">Source</h3>
+            	<p class="md-body-1">Redwood is open source. The project repositories can be found at:</p>
+
+
+					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+					 <cgl-data-table>
+
+						  <!-- Header row start -->
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Repository</span>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Description</span>
+								</cgl-data-table-cell>
+						  </cgl-data-table-row>
+						  <!-- Header row end -->
+
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-metadata">https://github.com/BD2KGenomics/dcc-metadata</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Metadata service
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-storage">https://github.com/BD2KGenomics/dcc-storage</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Core storage service
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									<a href="https://github.com/BD2KGenomics/dcc-metadata-schemas">https://github.com/BD2KGenomics/dcc-metadata-schemas</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 	Metadata schemas
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									<a href="https://github.com/BD2KGenomics/dcc-metadata-indexer">https://github.com/BD2KGenomics/dcc-metadata-indexer</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Indexer generates Elasticsearch indexes from contents in Redwood
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-redwood-client">https://github.com/BD2KGenomics/dcc-redwood-client</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Redwood client
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+		
+					 </cgl-data-table>
+					</cgl-data-table-container>
+					
+				</section>
+			</main>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title  %} Analysis Core  {% endblock %}
+{% block page_Analysis %} class="active" {% endblock  %}
+{% block content %}
+ 			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">Mission</h1>
+					<p class="md-body-1">Our mission as the Analysis Core is to help researchers in the UCSC Genomics Institute use modern tools to accurately and efficiently analyze large volumes of sequence data.  We build the software that makes this possible (the Development team) and we also are responsible for running the "core" analysis pipelines for projects within the Institute (the Production team). <!--  See our detailed mission statement for more information. --> </p>
+					<h3 class="md-title">Available Workflows</h3>
+					<p class="md-body-1">We are growing our available pipelines to support projects in the Institute including:</p>
+
+					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+					 <cgl-data-table class="verbose">
+
+						  <!-- Header row start -->
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Pipeline</span>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Description</span>
+								</cgl-data-table-cell>
+						  </cgl-data-table-row>
+						  <!-- Header row end -->
+
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 RNAseq
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 RNASeq analysis using RSEM and Kallisto
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 Whole Exome/Whole Genome - Germline
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 GATK best practices germline pipeline with bcbio
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									Whole Genome - Somatic
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Whole genome somatic workflows from PCAWG including Sanger, DKFZ, and EMBL best practices or bcbio
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									Whole Exome - Somatic
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Whole exome somatic workflow with bcbio
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 ProTECT
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 Neoantigen pipeline
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+
+					 </cgl-data-table>
+					</cgl-data-table-container>
+
+
+					<h3 class="md-title">Ordering Analysis</h3>
+					<p class="md-body-1">You can see our current <a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing">Workflow Pricing</a> for information on the costs of analyzing samples with these pipelines. Large batches can be processed at reduced rates, please contact us for more information using the "Submit Analysis Request" below.</p>
+					<center>
+					 	<h3 class="md-title"><a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing" class="unstyled">Current Analysis Workflows & Pricing</a></h3>
+					 	<h3 class="md-title"><a href="http://goo.gl/forms/rGWJ1Kdq9h" class="unstyled">Submit Analysis Request</a></h3>
+					 	<h3 class="md-title"><a href="https://docs.google.com/spreadsheets/d/1R03EV5vH7Moluepb52R3ingso8xIcL352E52XenO5FQ/edit#gid=0" class="unstyled">Submit Workflow Creation Request</a></h3>
+					 </center>
+				</section>
+			</main>
+
+{% endblock %}

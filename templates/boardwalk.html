@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title  %} Boardwalk  {% endblock %}
+{% block page_Boardwalk  %} class="active" {% endblock  %}
+{% block content %}
+ 			<main class="layout-column layout-padding flex">
+				<section class="snap-960">
+					<h1 class="md-display-1" style="color:#FF6B6B;">About Boardwalk</h1>
+					<p class="md-body-1">Boardwalk is a portal being developed by the Analysis Core at the UCSC Genomics Institute.  It is designed to use modern Javascript web technologies and fast indexing technologies based on Elasticsearch to provide a fast and beautiful user interface.  The portal is currently provides a faceted file browser and is used by the institute to display all files produced and managed by the Core.  This includes standard file types for genomics research such as fastq, bam, and vcf.</p>
+            	<h3 class="md-title">Support for Redwood</h3>
+					<p class="md-body-1">The boardwalk file browser works closely with the Redwood storage system.  Files selected in the portal are then presented to the end user as a manifest file which can be used with the Redwood client to download results (provided the user is authorized to download this data).  The production version of the Boardwalk File Browser can be seen <a href="file_browser.html">here</a>.</p>
+					<h3 class="md-title">Advanced Browser</h3>
+					<p class="md-body-1">The next generation of Boardwalk can be seen here: 
+					<center>
+					<h3 class="md-title">	
+<!--						<a href="http://ucsc-boardwalk-prod.us-west-2.elasticbeanstalk.com/boardwalk">Boardwalk 2.0 Demo</a>
+-->
+						<a href="boardwalk">Boardwalk 2.0 Demo</a>
+					</h3>
+					</center>
+					</p>
+            	<p class="md-body-1">Current development efforts are extending the Boardwalk platform beyond file browsing. We are exploring improved UIs beyond the limited single-panel faceted metaphor to support a large number of facets, as required by datasets with rich metadata and phenotypic information.  The backend is also being extended to support searching on data types beyond individual files.  This effort looks to model various data types such as donor, specimen, samples, variants, expression data, and other genomic data types.  This work will increase the number of searchable data types in the portal and provide the basis for the integration of advanced, real-time analytical tools.</p>
+				  	<center><img src="{{url_for('static', filename='img/boardwalk_screenshot1.png')}}" width="1000px"/></center>
+
+
+					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+					 <cgl-data-table>
+
+						  <!-- Header row start -->
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Repository</span>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 <span class="md-subhead">Description</span>
+								</cgl-data-table-cell>
+						  </cgl-data-table-row>
+						  <!-- Header row end -->
+
+						  <cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-dashboard-service">https://github.com/BD2KGenomics/dcc-dashboard-service</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									The web service for Boardwalk
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							<cgl-data-table-row>
+								<cgl-data-table-cell>
+									 <a href="https://github.com/BD2KGenomics/dcc-dashboard">https://github.com/BD2KGenomics/dcc-dashboard</a>
+								</cgl-data-table-cell>
+								<cgl-data-table-cell>
+									 The Boardwalk web UI
+								</cgl-data-table-cell>
+							</cgl-data-table-row>
+							
+					 </cgl-data-table>
+					</cgl-data-table-container>
+					
+				</section>
+			</main>
+{% endblock %}

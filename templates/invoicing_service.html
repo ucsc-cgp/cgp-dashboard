@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% block ng_app %} ng-app="BillingAPI_Connector"{% endblock %}
+{% block body_ng_controller %} ng-controller="billing_controller"{% endblock %}
+{% block title  %} Invoicing Service  {% endblock %}
+{% block page_Invoicing  %} class="active"  {% endblock %}
+{% block meta  %}
+
+    <!-- project dependency libs -->
+	 <script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
+    <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.js')}}"></script>
+    <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script>
+
+         <!-- project specific files -->
+         <script> 
+              myVar = {{data|tojson}}
+         </script>
+
+    <!-- project specific files -->
+    <script src="{{url_for('static', filename='billing_application/js/billing.app.js')}}"></script>
+    
+    <!-- pie chart -->
+    <script src="{{url_for('static', filename='file_browser/common/js/loader.js')}}"></script>
+{% endblock %}
+
+{% block style  %}
+	<style>
+    .wrapword{
+        white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        white-space: pre-wrap;       /* css-3 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        white-space: -webkit-pre-wrap; /* Newer versions of Chrome/Safari*/
+        word-break: break-all;
+        white-space: normal;
+    }
+
+    ul{
+        list-style: none;
+    }
+    .nav-header{
+        padding-top: 1em;
+    }
+    .nav{
+        word-wrap: break-word;
+        padding-right: .5em;
+    }
+    </style>
+{% endblock %}
+
+{% block header  %}
+{{ super() }}
+	<md-toolbar class="subheader" style="position:relative"> <!-- Material Design-based toolbar, note "subheader" CSS class -->
+		<md-toolbar-row> <!-- Required for correct alignment of child elements -->
+			<span class="md-title">Workflow and Project Invoicing</span>
+		</md-toolbar-row>
+	</md-toolbar>
+{% endblock  %}
+
+{% block content %}
+
+<div ng-cloak class="layout-row color-patches cgl-site flex">
+    <div class="flex-20 nav color-patch cgl-green">
+        <ul>
+            <li class="nav-header md-body-2">Project Selection</li>
+            <form ng-repeat="project in projects">
+            	 <label>
+                <input type="radio" ng-model="currentProject" ng-change="selectProject(project.project_name); welcome();" ng-value="project['project_name']"/>
+                <span class="md-body-1">{- project['project_name'] -}</spane>
+                </label>
+            </form>
+            
+            <br>
+            <div ng-if="viewingDetails">
+                <button md-raised-button class="cgl-turquoise" ng-click="unviewDetails()">
+                    Back to Project View
+                </button>
+            </div>
+
+            <!--
+            <li class="nav-header md-body-2">Invoice Selection</li>
+            <div ng-repeat="invoice in invoices">
+                <input type="checkbox" ng-model="invoice.selected" ng-click="selectInvoice($index)">
+                <span>{- invoice.month_of -}</span>
+                </input>
+            </div>
+            -->
+        </ul>
+    </div>
+    <div class="flex-80">
+        <div ng-if="!viewingDetails">
+         
+         <div ng-if="welcoming">
+		  		<center><p class="md-title" style="color:#1A535C">Please select a project on the left hand side of the screen.</p></center>
+		  		
+		   </div>
+		   
+		   <div ng-if="!welcoming">
+         <center>
+         <br>
+         <table>
+            <td id="piechartProject"></td>
+            <td id="stackedchart"></td>
+         </table>
+         </center>
+        <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+            <cgl-data-table class="verbose">
+
+                <!-- Header row start -->
+                <cgl-data-table-row>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">Project</span>
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">Date</span>
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">Total Cost</span>
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">Compute Cost</span>
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">Storage Cost</span>
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <span class="md-subhead">View Details</span>
+                    </cgl-data-table-cell>
+
+
+                </cgl-data-table-row>
+                <!-- Header row end -->
+
+                <cgl-data-table-row ng-repeat="invoice in invoices" class ="wrapword">
+                    <cgl-data-table-cell>
+                        {- invoice['project'] -}
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        {- invoice['month_of'] -}
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        ${- invoice['cost'] -}
+                    </cgl-data-table-cell>
+                    <!-- Workflow is Software-->
+                    <cgl-data-table-cell>
+                        ${- invoice['compute_cost'] -}
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        ${- invoice['storage_cost'] -}
+                    </cgl-data-table-cell>
+                    <cgl-data-table-cell>
+                        <href ng-click="viewDetails($index)" style="color:#1A535C" onmouseover="this.style.color='#4CC9C0'" onmouseout="this.style.color='#1A535C'" >View Details</href>
+                    </cgl-data-table-cell>
+                </cgl-data-table-row>
+
+            </cgl-data-table>
+        </cgl-data-table-container>
+
+         
+        </div>
+        
+        </div>
+
+        <div ng-if="viewingDetails">
+         <center>
+         <br>
+         <table>
+            <td id="piechartProject"></td>
+            <td id="stackedchart"></td>
+            <td><button md-raised-button class="cgl-turquoise" ng-click="printPage()">Print this page</button></td>
+         </table>
+         </center>
+                <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
+                <cgl-data-table class="verbose">
+
+                    <!-- Header row start -->
+                    <cgl-data-table-row>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Donor</span>
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Specimen</span>
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Sample</span>
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Workflow</span>
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Workflow Version</span>
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            <span class="md-subhead">Compute Cost</span>
+                        </cgl-data-table-cell>
+
+                    </cgl-data-table-row>
+                    <!-- Header row end -->
+
+                    <cgl-data-table-row ng-repeat="analysis in activeInvoice.by_analysis.itemized_compute_costs" class ="wrapword">
+                        <cgl-data-table-cell>
+                            {- analysis['donor'] -}
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            {- analysis['specimen'] -}
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            {- analysis['sample'] -}
+                        </cgl-data-table-cell>
+                        <!-- Workflow is Software-->
+                        <cgl-data-table-cell>
+                            {- analysis['workflow'] -}
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            {- analysis['version'] -}
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                            ${- quantizeString(analysis.cost,2) -}
+                        </cgl-data-table-cell>
+                    </cgl-data-table-row>
+                    
+                    <cgl-data-table-row ng-init="getTotal()" style="border-style: solid; border-width: 5px;">
+                        <cgl-data-table-cell>
+                            
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                         
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                         
+                        </cgl-data-table-cell>
+                        
+                        <cgl-data-table-cell>
+                        
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                           Total:
+                        </cgl-data-table-cell>
+                        <cgl-data-table-cell>
+                           ${- total -}
+                        </cgl-data-table-cell>
+                    </cgl-data-table-row>
+
+                </cgl-data-table>
+            </cgl-data-table-container>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
