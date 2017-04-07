@@ -1,0 +1,69 @@
+/*!
+ * UCSC Genomics Institute - CGL
+ * https://cgl.genomics.ucsc.edu/
+ *
+ * Style documentation-specific styles.
+ */
+/*!
+ * UCSC Genomics Institute - CGL
+ * https://cgl.genomics.ucsc.edu/
+ *
+ * Global variables.
+ */
+/**
+ * CGL-specific colors
+ **/
+/**
+ * Material Design media break points
+ **/
+/**
+ * Bootstrap-style well (add background and padding to element)
+ */
+.cgl-well {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 3px;
+  margin: 0.8em 0 1.6em;
+  padding: 0.8rem 1.6rem; }
+
+/**
+ * Color patches
+ */
+.color-patches.boxes {
+  display: flex;
+  -webkit-flex-flow: row;
+  justify-content: space-between;
+  line-height: 30px;
+  margin-bottom: 1.6rem;
+  padding: 0; }
+.color-patches .color-patch {
+  color: #ffffff; }
+  .color-patches .color-patch.box {
+    align-items: center;
+    display: flex;
+    flex: 1 0 auto;
+    height: auto;
+    justify-content: center;
+    margin: 0.5rem;
+    text-align: center; }
+    .color-patches .color-patch.box:before {
+      content: '';
+      float: left;
+      padding-top: 100%; }
+  .color-patches .color-patch.light {
+    color: rgba(0, 0, 0, 0.54); }
+  .color-patches .color-patch.cgl-blue-dark {
+    background-color: #113871; }
+  .color-patches .color-patch.cgl-green {
+    background-color: #1A535C; }
+  .color-patches .color-patch.cgl-green-light {
+    background-color: #F7FFF7; }
+  .color-patches .color-patch.cgl-orange {
+    background-color: #FFA560; }
+  .color-patches .color-patch.cgl-peach {
+    background-color: #FF6B6B; }
+  .color-patches .color-patch.cgl-purple {
+    background-color: #5C83D0; }
+  .color-patches .color-patch.cgl-turquoise {
+    background-color: #4CC9C0; }
+  .color-patches .color-patch.cgl-yellow {
+    background-color: #FFE66D; }

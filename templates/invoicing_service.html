@@ -35,6 +35,7 @@
         white-space: normal;
     }
 
+/* 
     ul{
         list-style: none;
     }
@@ -45,6 +46,7 @@
         word-wrap: break-word;
         padding-right: .5em;
     }
+ */
     </style>
 {% endblock %}
 
@@ -60,12 +62,12 @@
 {% block content %}
 
 <div ng-cloak class="layout-row color-patches cgl-site flex">
-    <div class="flex-20 nav color-patch cgl-green">
-        <ul>
-            <li class="nav-header md-body-2">Project Selection</li>
+    <div class="flex-20 cgl-facet-nav color-patch cgl-green">
+        <ul class="cgl-facet-ul">
+            <li class="cgl-facet-nav-header md-body-2">Project Selection</li>
             <form ng-repeat="project in projects">
             	 <label>
-                <input type="radio" ng-model="currentProject" ng-change="selectProject(project.project_name); welcome();" ng-value="project['project_name']"/>
+                <input type="radio" ng-model="currentProject" ng-change="selectProject(project.project_name); welcome(); unviewDetails();" ng-value="project['project_name']"/>
                 <span class="md-body-1">{- project['project_name'] -}</spane>
                 </label>
             </form>
@@ -91,7 +93,7 @@
         <div ng-if="!viewingDetails">
          
          <div ng-if="welcoming">
-		  		<center><p class="md-title" style="color:#1A535C">Please select a project on the left hand side of the screen.</p></center>
+		  		<p class="md-title" style="color:#1A535C; text-align:center;">Please select a project on the left hand side of the screen.</p>
 		  		
 		   </div>
 		   
@@ -219,7 +221,7 @@
                         </cgl-data-table-cell>
                     </cgl-data-table-row>
                     
-                    <cgl-data-table-row ng-init="getTotal()" style="border-style: solid; border-width: 5px;">
+                    <cgl-data-table-row ng-init="getTotal()" style="border-style: solid; border-top:5px solid rgba(0, 0, 0, 0.12); border-bottom:5px solid rgba(0, 0, 0, 0.12); border-left: none; border-right: none;">
                         <cgl-data-table-cell>
                             
                         </cgl-data-table-cell>
@@ -243,7 +245,9 @@
 
                 </cgl-data-table>
             </cgl-data-table-container>
-            
+            <div ng-if="total == 0">
+               <p class = "md-body-1" style="text-align:center;"> There are no costs associated with this project for this given month. </p>
+            </div>
         </div>
     </div>
 </div>
