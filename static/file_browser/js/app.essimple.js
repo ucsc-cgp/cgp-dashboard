@@ -77,6 +77,9 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    $scope.nextPages = true;
    $scope.backPages = true;
    $scope.gpages = [];
+   //for the ordering
+   $scope.sortby = "";
+   $scope.order = "desc";
    //for the manifest file
    $scope.numHits = 0;
    $scope.manData;
@@ -250,7 +253,12 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       console.log($scope.poutof);
       if($scope.offset == 1){
          $scope.backPages = false;
-         $scope.nextPages = true;
+         if($scope.offset == $scope.poutof){
+            $scope.nextPages = false;
+         }
+         else{
+            $scope.nextPages = true;
+         }
       }
       else if($scope.offset == $scope.poutof){
          $scope.nextPages = false;
@@ -282,7 +290,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       for(var i=startPage; i<endPage+1; i++){
          $scope.gpages.push(i);
       }
-      console.log($scope.gpages);
+      //console.log($scope.gpages);
       //refresh(0);
    }
    //Whenever Next or Back is clicked:
@@ -305,7 +313,31 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       config['params']['from'] = (goToPage*$scope.pageSize) - $scope.pageSize +1;
       get_myParams();
       verify();
-   }   
+   }
+   
+   //switch from asc to desc order
+   $scope.setorder = function(header){
+      if ($scope.sortby == header){
+         if($scope.order == "desc"){
+            $scope.order = "asc";
+         }
+         else{
+            $scope.order = "desc";
+         }
+      }
+      else{
+         $scope.order = "desc";
+      }
+      console.log(header);
+      $scope.sortby = header;
+      $scope.setpage(1);
+      config['params']['sort'] = header;
+      config['params']['order'] = $scope.order;
+      console.log(config);
+      get_myParams();
+      verify();
+   }
+   
    
    //download Manifest file
    $scope.downloadfile = function(){
