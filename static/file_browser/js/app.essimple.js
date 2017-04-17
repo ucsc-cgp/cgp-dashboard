@@ -76,6 +76,10 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    $scope.pageSize = 0;
    $scope.nextPages = true;
    $scope.backPages = true;
+   $scope.gpages = [];
+   //for the ordering
+   $scope.sortby = "";
+   $scope.order = "desc";
    //for the manifest file
    $scope.numHits = 0;
    $scope.manData;
@@ -99,7 +103,6 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       $scope.poutof = data.data.pagination.pages;
       $scope.pageSize = data.data.pagination.size;
       verify();
-      //refresh(0);
    }
    //Holds the Manifest data
    var get_myManData = function(data){
@@ -215,6 +218,8 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          //Delete the unchecked filters and call again the web service
          delete checked_boxes[facet+item];
          deleting_Facet(facet, item);
+         //Delete the from field in the config structure
+         delete config['params']['from'];
          var size = 0;
          for (var key in field_dict){
             my_filters['file'][key] = {'is': field_dict[key]}; 
@@ -248,7 +253,12 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       console.log($scope.poutof);
       if($scope.offset == 1){
          $scope.backPages = false;
-         $scope.nextPages = true;
+         if($scope.offset == $scope.poutof){
+            $scope.nextPages = false;
+         }
+         else{
+            $scope.nextPages = true;
+         }
       }
       else if($scope.offset == $scope.poutof){
          $scope.nextPages = false;
@@ -258,6 +268,30 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          $scope.nextPages = true;
          $scope.backPages = true;
       }
+      var startPage, endPage;
+      if ($scope.poutof <= 10) {
+         // less than 10 total pages so show all
+         startPage = 1;
+         endPage = $scope.poutof;
+      } else {
+         // more than 10 total pages so calculate start and end pages
+         if ($scope.offset <= 6) {
+             startPage = 1;
+             endPage = 10;
+         } else if ($scope.offset + 4 >= $scope.poutof) {
+             startPage = $scope.poutof - 9;
+             endPage = $scope.poutof;
+         } else {
+             startPage = $scope.offset - 5;
+             endPage = $scope.offset + 4;
+         }
+      }
+      $scope.gpages=[];
+      for(var i=startPage; i<endPage+1; i++){
+         $scope.gpages.push(i);
+      }
+      //console.log($scope.gpages);
+      //refresh(0);
    }
    //Whenever Next or Back is clicked:
    $scope.refresh = function(pcount){
@@ -269,6 +303,41 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       get_myParams();
       verify();
    }
+   
+   //set page whenever gpage is clicked
+   $scope.setpage = function(pcount){
+      var goToPage = pcount;
+      //console.log($scope.offset);
+      //Set the parameters to call next batch of items
+      verify();
+      config['params']['from'] = (goToPage*$scope.pageSize) - $scope.pageSize +1;
+      get_myParams();
+      verify();
+   }
+   
+   //switch from asc to desc order
+   $scope.setorder = function(header){
+      if ($scope.sortby == header){
+         if($scope.order == "desc"){
+            $scope.order = "asc";
+         }
+         else{
+            $scope.order = "desc";
+         }
+      }
+      else{
+         $scope.order = "desc";
+      }
+      console.log(header);
+      $scope.sortby = header;
+      $scope.setpage(1);
+      config['params']['sort'] = header;
+      config['params']['order'] = $scope.order;
+      console.log(config);
+      get_myParams();
+      verify();
+   }
+   
    
    //download Manifest file
    $scope.downloadfile = function(){
@@ -420,4 +489,3 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    }  
 
 });
-

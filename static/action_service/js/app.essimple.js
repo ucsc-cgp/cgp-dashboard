@@ -14,9 +14,24 @@ MyAPI_Connector.factory('myService', function($http){
    }
 });
 
+//for paging
+// MyAPI_Connector.filter('startFrom', function() {
+//    return function(input, start) {
+//       start = +start; //parse to int
+//       return input.slice(start);
+//    }
+// });
+
 //Controller for the page
 MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService){
    $scope.results = []; 
+   
+//for paging
+//    $scope.currentPage = 0;
+//    $scope.pageSize = 10;
+//    $scope.numberOfPages=function(){
+//       return Math.ceil($scope.results.length/$scope.pageSize);                
+//    }
 
    //Get a regular default call to the API
    var get_myService = function(){
@@ -30,4 +45,6 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
    
    get_myService();
 });
+
+
 

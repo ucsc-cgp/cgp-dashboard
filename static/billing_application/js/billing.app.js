@@ -134,6 +134,7 @@ BillingAPI_Connector.controller('billing_controller', function($scope, $http, $c
          item = parseFloat($scope.activeInvoice.by_analysis.itemized_compute_costs[i].cost) + item;
       }
       $scope.total = $scope.quantizeString(item.toString(),2);
+      console.log($scope.total);
    }
 
    //pie charts
