@@ -21,6 +21,10 @@
 
          <!-- pie chart -->
          <script src="{{url_for('static', filename='file_browser/common/js/loader.js')}}"></script>
+         
+         <!-- icons for sorting buttons -->
+         <link rel="stylesheet" href="{{ url_for('static', filename='file_browser/common/css/font-awesome.min.css') }}">
+         
 {% endblock %}
 
 {% block style  %}  
@@ -50,7 +54,7 @@
  */
 	
 		/* facet chooser edits */
-		ul{
+/*		ul{
 			list-style: none;
 		}
 		.nav-header{
@@ -60,7 +64,7 @@
 			word-wrap: break-word;
 			padding-right: .5em;
 		}
-	
+*/	
 	</style>
 {% endblock %}
 
@@ -76,51 +80,51 @@
 {% block content %}
    <div class="md-body-1">
 		<div class="layout-row color-patches cgl-site flex">
-			<div class="flex-20 nav color-patch cgl-green">
-				<ul>
-					<li class="nav-header md-body-2">Center</li>
+			<div class="flex-20 cgl-facet-nav color-patch cgl-green">
+				<ul class="cgl-facet-ul">
+					<li class="cgl-facet-nav-header md-body-2">Center</li>
 					<div ng-repeat="item in results.centerName.terms">
 						<input type="checkbox" ng-checked="hasCheck('center_name', item['term'])" ng-click="checking('center_name', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 
-					<li class="nav-header md-body-2">Program</li>
+					<li class="cgl-facet-nav-header md-body-2">Program</li>
 					<div ng-repeat="item in results.program.terms">
 						<input type="checkbox" ng-checked="hasCheck('program', item['term'])" ng-click="checking('program', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 
-					<li class="nav-header md-body-2">Project</li>
+					<li class="cgl-facet-nav-header md-body-2">Project</li>
 					<div ng-repeat="item in results.projectCode.terms">
 						<input type="checkbox" ng-checked="hasCheck('project', item['term'])" ng-click="checking('project', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 
-					<li class="nav-header md-body-2">Workflow</li>
+					<li class="cgl-facet-nav-header md-body-2">Workflow</li>
 					<div ng-repeat="item in results.workFlow.terms">
 						<input type="checkbox" ng-checked="hasCheck('workflow', item['term'])" ng-click="checking('workflow', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 
-					<li class="nav-header md-body-2">Analysis Type</li>
+					<li class="cgl-facet-nav-header md-body-2">Analysis Type</li>
 					<div ng-repeat="item in results.analysisType.terms">
 						<input type="checkbox" ng-checked="hasCheck('analysis_type', item['term'])"  ng-click="checking('analysis_type', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 				
-					<li class="nav-header md-body-2">Specimen Type</li>
+					<li class="cgl-facet-nav-header md-body-2">Specimen Type</li>
 					<div ng-repeat="item in results.specimenType.terms">
 						<input type="checkbox" ng-checked="hasCheck('specimen_type', item['term'])" ng-click="checking('specimen_type', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
 						</input>
 					</div>
 
-					<li class="nav-header md-body-2">File Type</li>
+					<li class="cgl-facet-nav-header md-body-2">File Type</li>
 					<div ng-repeat="item in results.fileFormat.terms">
 						<input type="checkbox" ng-checked="hasCheck('file_type', item['term'])" ng-click="checking('file_type', item['term'])">
 							{- item['term'] -} <span class="md-body-1">{- item['count'] -}</span>
@@ -148,32 +152,149 @@
 			  <!-- Header row start -->
 			  <cgl-data-table-row>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Program</span>
+						<span class="md-subhead" ng-click="setorder('program')"> 
+                     Program 
+                     <span ng-show="sortby!='program'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='program'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Project</span>
+						<span class="md-subhead" ng-click="setorder('project')">
+						   Project
+                     <span ng-show="sortby!='project'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='project'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>					
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Submitter Donor ID</span>
+						<span class="md-subhead" ng-click="setorder('submittedDonorId')">
+						   Submitter Donor ID 
+						   <span ng-show="sortby!='submittedDonorId'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='submittedDonorId'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Submitter Specimen ID</span>
+						<span class="md-subhead" ng-click="setorder('submittedSpecimenId')">
+						   Submitter Specimen ID
+						   <span ng-show="sortby!='submittedSpecimenId'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='submittedSpecimenId'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Specimen Type</span>
+						<span class="md-subhead" ng-click="setorder('specimen_type')">
+						   Specimen Type
+							<span ng-show="sortby!='specimen_type'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='specimen_type'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Submitter Sample ID</span>
+						<span class="md-subhead" ng-click="setorder('submittedSampleId')">
+						Submitter Sample ID
+						<span ng-show="sortby!='submittedSampleId'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='submittedSampleId'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">Workflow</span>
+						<span class="md-subhead" ng-click="setorder('software')">
+						Workflow
+						<span ng-show="sortby!='software'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='software'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-						 <span class="md-subhead">File Name</span>
+						<span class="md-subhead" ng-click="setorder('title')">
+						File Name
+						<span ng-show="sortby!='title'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='title'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-                                                 <span class="md-subhead">File ID</span>
-                                        </cgl-data-table-cell>
+                  <span class="md-subhead" ng-click="setorder('file_id')">
+                  File ID
+                  <span ng-show="sortby!='file_id'">
+                        <i class="fa fa-sort" aria-hidden="true"></i> 
+                     </span>
+                     <span ng-show="sortby=='file_id'">
+                        <span ng-show="order=='desc'">
+                           <i class="fa fa-sort-desc" aria-hidden="true"></i> 
+                        </span>
+                        <span ng-show="order=='asc'">
+                           <i class="fa fa-sort-asc" aria-hidden="true"></i> 
+                        </span>
+                     </span>
+						</span>
+               </cgl-data-table-cell>
 
 			  </cgl-data-table-row>
 			  <!-- Header row end -->
@@ -202,8 +323,8 @@
 						 {- item['analysisMethod']['software'] -}
 					</cgl-data-table-cell>
 					<cgl-data-table-cell>
-                                                 {- item['fileCopies'][0]['fileName'] -}
-                                        </cgl-data-table-cell>
+                   {- item['fileCopies'][0]['fileName'] -}
+               </cgl-data-table-cell>
 					<cgl-data-table-cell>
 						 {- item['id'] -}
 					</cgl-data-table-cell>
@@ -215,10 +336,38 @@
 
 						<center>
 							<div>
-								<button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);" ng-show="backPages"> {- back -} </span></button>
-									<span placeholder="{- next -}"> <button md-raised-button class="cgl-turquoise" ng-show="nextPages" ng-click="refresh(1);">{- next -} </button>
-										<span class="md-caption">Page: {- offset -} {- of -} {- poutof -}</span>
-									</span>
+							
+							   <!-- ng-if statements are to keep pages from moving too much.  -->
+							   <span ng-if="!backPages" style="visibility:hidden">
+							      <button md-raised-button class="cgl-turquoise" ng-click="setpage(1);"> First </button>
+								   <button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);"> {- back -} </button>
+								</span>
+							   <span ng-if="backPages">
+							      <button md-raised-button class="cgl-turquoise" ng-click="setpage(1);"> First </button>
+								   <button md-raised-button class="cgl-turquoise" ng-click="refresh(-1);"> {- back -} </button>
+								</span>
+								
+								<span ng-repeat="page in gpages"> 
+								   <href ng-click="setpage(page)">
+								      <span ng-show="page==offset" style="color:#113871; font-weight: bold; text-decoration: underline"> {- page -}</span>
+								      <span ng-show="page!=offset" style="color:#1A535C; cursor:pointer" onmouseover="this.style.color='#4CC9C0'" onmouseout="this.style.color='#1A535C'"> {- page -} </span>
+								      </href>
+								</span>
+								<span ng-if="!nextPages" style="visibility:hidden">
+									<button md-raised-button class="cgl-turquoise" ng-click="refresh(1);">{- next -} </button>
+									<button md-raised-button class="cgl-turquoise" ng-click="setpage(poutof);"> Last </span></button>
+									<br>
+									<br>
+									<span class="md-caption">Page: {- offset -} {- of -} {- poutof -}</span>
+								</span>
+								<span ng-if="nextPages">
+									<button md-raised-button class="cgl-turquoise" ng-click="refresh(1);">{- next -} </button>
+									<button md-raised-button class="cgl-turquoise" ng-click="setpage(poutof);"> Last </span></button>
+									<br>
+									<br>
+									<span class="md-caption">Page: {- offset -} {- of -} {- poutof -}</span>
+								</span>
+								
 								<button md-raised-button class="cgl-turquoise" ng-click="downloadfile();"><b>Download Manifest</b></button>
 							</div>
 						</center>

@@ -7,8 +7,8 @@
 
          <!-- project dependency libs -->
          <script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
-         <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.js')}}"></script>
-         <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script>
+         <!-- <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.js')}}"></script> -->
+         <!-- <script src="{{url_for('static', filename='file_browser/elasticsearch-js/elasticsearch.angular.js')}}"></script> -->
 
          <!-- project specific files -->
          <script> 
@@ -109,6 +109,8 @@
                           <!-- Header row end -->
 
                           <cgl-data-table-row ng-repeat="item in results" class ="wrapword">
+                          <!-- | startFrom:currentPage*pageSize | limitTo:pageSize   -->                        
+                          
                                         <cgl-data-table-cell>
                                                  {- item['project'] -}
                                         </cgl-data-table-cell>
@@ -143,4 +145,16 @@
                  </cgl-data-table>
                 </cgl-data-table-container>
 
+                <!-- paging see: http://jsfiddle.net/2ZzZB/56/ -->
+<!-- 
+                <button md-raised-button class="cgl-turquoise" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                    Previous
+                </button>
+                {- currentPage+1 -}/{- numberOfPages() -}
+                <button md-raised-button class="cgl-turquoise" ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                    Next
+                </button>
+ -->
+
 {% endblock %}
+
