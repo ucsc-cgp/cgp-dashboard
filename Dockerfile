@@ -27,6 +27,8 @@ RUN apt-get update && apt-get install -y supervisor \
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Add app code
+#COPY . /app
+RUN echo "Adding Copy"
 COPY . /app
 #Remove the current uwsgi.ini
 RUN rm /app/uwsgi.ini
