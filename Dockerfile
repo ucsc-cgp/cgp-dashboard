@@ -1,8 +1,8 @@
 FROM nginx:1.10
 # upgrade pip and install required python packages
 RUN apt-get update
-RUN apt-get install -y build-essential libssl-dev libffi-dev python-dev
-RUN apt-get install -y python-pip
+RUN apt-get install -y build-essential libpq-dev libssl-dev libffi-dev python-dev
+RUN apt-get install -y python-pip postgresql
 RUN pip install -U pip
 RUN pip install uwsgi
 RUN pip install --upgrade cffi
