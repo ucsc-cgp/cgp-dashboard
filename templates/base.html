@@ -16,7 +16,7 @@
          <link rel="apple-touch-icon-precomposed" sizes="57x57" href="{{url_for('static', filename='img/favicon/apple-touch-icon-57x57.png')}}" />
          <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{url_for('static', filename='img/favicon/apple-touch-icon-114x114.png')}}" />
          <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{url_for('static', filename='img/favicon/apple-touch-icon-72x72.png')}}" />
-         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{url_for('static', filename='img/favicon/apple-touch-icon-144x144.png"')}}" />
+         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{url_for('static', filename='img/favicon/apple-touch-icon-144x144.png')}}" />
          <link rel="apple-touch-icon-precomposed" sizes="60x60" href="{{url_for('static', filename='img/favicon/apple-touch-icon-60x60.png')}}" />
          <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{url_for('static', filename='img/favicon/apple-touch-icon-120x120.png')}}" />
          <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{url_for('static', filename='img/favicon/apple-touch-icon-76x76.png')}}" />
@@ -124,11 +124,18 @@
               	{%- with messages = get_flashed_messages(with_categories=true) -%}
                 	{%- if messages -%}
 			<div class="layout-row color-patches">
-                	<div class='flashes flex-100 color-patch cgl-peach' align="center">
                 	{%- for category, message in messages -%}
-                  	<span class="{{ category }} md-body-2"><strong>Error: {{message}}</strong></span>
+                        	{%- if category == "error"  -%}
+				<div class='flashes flex-100 color-patch cgl-peach' align="center">
+	                  		<span class="{{ category }} md-body-2"><strong>Error: {{message}}</strong></span>
+				</div>
+				{%- elif category == "success"  -%}
+                                <div class='flashes flex-100 color-patch cgl-turquoise' align="center">
+                                        <span class="{{ category }} md-body-2"><strong>Success: {{message}}</strong></span>
+                                </div>
+				{% endif %}
                 	{%- endfor -%}
-                	</div></div>
+                	</div>
                 	{%- endif -%}
              	{%- endwith -%}
         {% endblock %}
