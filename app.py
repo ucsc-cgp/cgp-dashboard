@@ -5,7 +5,7 @@ from pprint import pprint
 
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
-    flash
+    flash, get_flashed_messages
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
@@ -56,7 +56,7 @@ class DevConfig(Config):
 class ProdConfig(Config):
     """Production config"""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, "prod.db")
+    SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@login-db/{}'.format(os.getenv("L_POSTGRES_USER"), os.getenv("L_POSTGRES_PASSWORD"), os.getenv("L_POSTGRES_DB"))
 
 config = {
     "dev": DevConfig,
@@ -211,6 +211,10 @@ def callback():
             db.session.add(user)
             db.session.commit()
             login_user(user)
+            #Empty flashed messages
+            get_flashed_messages()
+            #Set a new success flash message
+            flash('You are now logged in!', 'success')
             return redirect(url_for('index'))
         return 'Could not fetch your information.'
 
