@@ -115,13 +115,16 @@ def html_rend(name):
     data = os.environ['DCC_DASHBOARD_SERVICE']
     data1 = os.environ['DCC_INVOICING_SERVICE']
     data2 = os.environ['DCC_ACTION_SERVICE']
+    coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0-alpha')
+    redwoodHost = os.getenv('REDWOOD_HOST', 'ucsc-cgl.org')
     if name=='file_browser':
         return render_template(name+'.html', data=data)
     if name=='invoicing_service' or name=='invoicing_service1':
-#        return render_template(name+'.html', data=data1)
-         return redirect(url_for('invoicing_service'))
+        return redirect(url_for('invoicing_service'))
     if name=='action_service':
         return redirect(url_for('action_service'))
+    if name=='help':
+        return render_template(name+'.html', coreClientVersion=coreClientVersion, redwoodHost=redwoodHost)
     return render_template(name+'.html')    
 
 @app.route('/invoicing_service')
