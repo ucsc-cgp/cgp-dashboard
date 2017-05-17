@@ -81,7 +81,7 @@
                                                  <span class="md-subhead">Started</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 <span class="md-subhead">Last Updated</span>
+                                                 <span class="md-subhead">Status &amp; Last Updated</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  <span class="md-subhead">Status</span>
@@ -108,9 +108,6 @@
                                                  <span class="md-subhead">Workflow</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 <span class="md-subhead">Workflow Version</span>
-                                        </cgl-data-table-cell>
-                                        <cgl-data-table-cell>
                                                  <span class="md-subhead">Consonance UUID</span>
                                         </cgl-data-table-cell>
 
@@ -121,13 +118,12 @@
                           <!-- | startFrom:currentPage*pageSize | limitTo:pageSize   -->                        
 
                                         <cgl-data-table-cell>
+                                                 <br>
                                                  {- item['start_time'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
+                                                 {- item['status'] -} <br>
                                                  {- item['last_updated'] -}
-                                        </cgl-data-table-cell>
-                                        <cgl-data-table-cell>
-                                                 {- item['status'] -}
                                         </cgl-data-table-cell>                          
                                         <cgl-data-table-cell>
                                                  {- item['program'] -}
@@ -148,10 +144,7 @@
                                                  {- item['submitter_sample_id'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 {- item['workflow_name'] -}
-                                        </cgl-data-table-cell>
-                                        <!-- Workflow is Software-->
-                                        <cgl-data-table-cell>
+                                                 {- item['workflow_name'] -} <br>
                                                  {- item['workflow_version'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
