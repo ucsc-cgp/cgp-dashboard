@@ -78,28 +78,31 @@
                           <!-- Header row start -->
                           <cgl-data-table-row>
                                         <cgl-data-table-cell>
+                                                 <span class="md-subhead">Started</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Status &amp; Last Updated</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
                                                  <span class="md-subhead">Project</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  <span class="md-subhead">Program</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 <span class="md-subhead">Workflow</span>
-                                        </cgl-data-table-cell>
-                                        <cgl-data-table-cell>
-                                                 <span class="md-subhead">Workflow Version</span>
-                                        </cgl-data-table-cell>
-                                        <cgl-data-table-cell>
                                                  <span class="md-subhead">Submitter Donor ID</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 <span class="md-subhead">Status</span>
+                                                 <span class="md-subhead">Submitter Specimen ID</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  <span class="md-subhead">Submitter Specimen Type</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 <span class="md-subhead">Submitter Specimen ID</span>
+                                                 <span class="md-subhead">Submitter Sample ID</span>
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 <span class="md-subhead">Workflow</span>
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  <span class="md-subhead">Consonance UUID</span>
@@ -110,31 +113,36 @@
 
                           <cgl-data-table-row ng-repeat="item in results" class ="wrapword">
                           <!-- | startFrom:currentPage*pageSize | limitTo:pageSize   -->                        
-                          
+
                                         <cgl-data-table-cell>
-                                                 {- item['project'] -}
+                                                 <br>
+                                                 {- item['start_time'] -}
                                         </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['status'] -} <br>
+                                                 {- item['last_updated'] -}
+                                        </cgl-data-table-cell>                          
                                         <cgl-data-table-cell>
                                                  {- item['program'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 {- item['workflow_name'] -}
-                                        </cgl-data-table-cell>
-                                        <!-- Workflow is Software-->
-                                        <cgl-data-table-cell>
-                                                 {- item['workflow_version'] -}
+                                                 {- item['project'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  {- item['submitter_donor_id'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 {- item['status'] -}
+                                                 {- item['submitter_specimen_id'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  {- item['submitter_specimen_type'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
-                                                 {- item['submitter_specimen_id'] -}
+                                                 {- item['submitter_sample_id'] -}
+                                        </cgl-data-table-cell>
+                                        <cgl-data-table-cell>
+                                                 {- item['workflow_name'] -} <br>
+                                                 {- item['workflow_version'] -}
                                         </cgl-data-table-cell>
                                         <cgl-data-table-cell>
                                                  {- item['consonance_job_uuid'] -}
