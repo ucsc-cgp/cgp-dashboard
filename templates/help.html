@@ -97,7 +97,7 @@
 		
 					<p class="md-body-1">Once completed, you will find a receipt file (<span class="cgl-code">$(pwd)/outputs/receipt.tsv</span>) which you should save. It provides various IDs assigned to your donor, specimen, sample and file that make it much easier to find/audit later.</p>
 					<p class="md-body-1">In case your upload failed and need to re-upload your files, make sure you edit the 'Workflow Version' entry by increasing it by 0.0.1. For example, if you previously uploaded a file with workflow version 1.0.1, you would modify the entry in the TSV file so the workflow version is 1.0.2 instead. In addition, make sure you save the generated receipt somewhere safe for your records, and delete the generated 'outputs' folder.</p>
-					<p class="md-body-1">NOTE: Uploads can take a long time and our feedback on the command line needs to be improved. You may use dstat to monitor network usage to ensure uploads are in progress.</p>
+					<p class="md-body-1">NOTE: You may use dstat to monitor network usage to ensure uploads are in progress.</p>
 					<h3 class="md-title">Downloading Metadata</h3>
                <p class="md-body-1">You can get the latest validated Metadata dump by clicking <a href="{{url_for('static', filename='zip/validated.jsonl.gz')}}" target="_blank">here</a>. </p>
                <p class="md-body-1">You can get the latest file browser index dump by clicking <a href="{{url_for('static', filename='zip/fb_index.jsonl.gz')}}" target="_blank">here</a>. </p>
