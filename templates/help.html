@@ -87,7 +87,6 @@
 </cgl-data-table-container>
 					<p class="md-body-1">You need to include file paths to your upload files that start with /samples since that's the location used in the docker run below. Columns <span class="md-body-2">Donor UUID, Specimen UUID, Sample UUID, Upload File ID, Data Bundle ID,</span> and <span class="md-body-2">Metadata.json</span> <u>should be left blank! </u> Workflow Version should be <span class="md-body-2">1.0.0</span></p>
 					<p class="md-body-1">You should create a sub-directory called <span class="cgl-code">samples</span> under your current working directory (pwd) with your files to be uploaded. Your manifest.tsv should be in your current working directory (pwd). Then execute the following:</p>
-					<p class="md-body-1">If you want to type the token (<span class="cgl-code">ACCESS_TOKEN</span>), use the command below</p>
 			
                                         <p class="cgl-code">docker run --rm -it -e ACCESS_TOKEN=&lt;access_token&gt; -e REDWOOD_ENDPOINT={{redwoodHost}}
                                                                 -v $(pwd)/&lt;my_manifest_file.tsv&gt;:/dcc/manifest.tsv

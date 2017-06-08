@@ -115,8 +115,8 @@ def html_rend(name):
     data = os.environ['DCC_DASHBOARD_SERVICE']
     data1 = os.environ['DCC_INVOICING_SERVICE']
     data2 = os.environ['DCC_ACTION_SERVICE']
-    coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0-alpha')
-    redwoodHost = os.getenv('REDWOOD_HOST', 'ucsc-cgl.org')
+    coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
+    redwoodHost = os.getenv('REDWOOD_HOST', 'ucsc-cgp.org')
     if name=='file_browser':
         return render_template(name+'.html', data=data)
     if name=='invoicing_service' or name=='invoicing_service1':
@@ -160,7 +160,7 @@ def login():
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
-        hd='ucsc.edu', prompt='select_account consent')
+        prompt='select_account consent')
     session['oauth_state'] = state
     return redirect(auth_url)
     #return render_template('login.html', auth_url=auth_url)
@@ -191,10 +191,10 @@ def callback():
         except AppIdentityError:
             return 'Could not verify token.'
         #Check if you have the appropriate domain    
-        if 'hd' not in jwt or jwt['hd'] != 'ucsc.edu':
-            #TODO: Need to work on the flashing message on the UI in case they incorrectly use another email. 
-            flash('You must login with a ucsc.edu account. Please try again.', 'error')
-            return redirect(url_for('index'))
+        #Commenting this section out to let anyone with a google account log in. 
+        #if 'hd' not in jwt or jwt['hd'] != 'ucsc.edu':
+        #    flash('You must login with a ucsc.edu account. Please try again.', 'error')
+        #    return redirect(url_for('index'))
 
         google = get_google_auth(token=token)
         resp = google.get(Auth.USER_INFO)
