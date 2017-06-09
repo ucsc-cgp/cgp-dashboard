@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title  %} Analysis Core  {% endblock %}
 {% block page_Analysis %} class="active" {% endblock  %}
+{% block meta  %} 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+{% endblock %}
 {% block content %}
  			<main class="layout-column layout-padding flex">
 				<section class="snap-960">
@@ -66,6 +70,11 @@
 
 					 </cgl-data-table>
 					</cgl-data-table-container>
+
+					<h3 class="md-title">Current Burndown Chart</h3>
+					<p class="md-body-1">Below is a burndown chart </p>
+					<!--Canvas insertion -->
+					<canvas id="bdChart" width="600" height="400"></canvas>
 
 
 					<h3 class="md-title">Ordering Analysis</h3>
