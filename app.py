@@ -125,7 +125,7 @@ def html_rend(name):
         return redirect(url_for('action_service'))
     if name=='help':
         return render_template(name+'.html', coreClientVersion=coreClientVersion, redwoodHost=redwoodHost)
-    if name=='index'
+    if name=='index':
         return render_template(name+'.html')#Need to somehow pass time and data through here for the chart.
     return render_template(name+'.html')    
 

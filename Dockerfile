@@ -37,4 +37,6 @@ ADD ./uwsgi/uwsgi.ini app/
 #Make the working directory /app
 WORKDIR /app
 
+#Make log directory
+RUN mkdir /app/log
 CMD ["/usr/bin/supervisord"]
