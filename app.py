@@ -9,6 +9,8 @@ from flask import Flask, url_for, redirect, \
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Search
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
@@ -71,6 +73,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
+es_service = os.environ.get("ES_SERVICE", "localhost")
+es = Elasticsearch(['http://'+es_service+':9200/'])
 
 """ DB Models """
 class User(db.Model, UserMixin):
@@ -102,6 +106,9 @@ def get_google_auth(state=None, token=None):
         redirect_uri=Auth.REDIRECT_URI,
         scope=Auth.SCOPE)
     return oauth
+
+def query_es():
+    pass
 
 @app.route('/')
 #@login_required
