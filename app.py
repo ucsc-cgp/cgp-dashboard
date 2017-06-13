@@ -135,6 +135,8 @@ GET burn_idx/_search
   }
 }
     """
+    s = Search(using=es, index=burn_idx) \
+        .query("regexp")
     pass
 
 @app.route('/')
