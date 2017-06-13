@@ -108,7 +108,33 @@ def get_google_auth(state=None, token=None):
     return oauth
 
 def query_es():
-    
+    """
+GET burn_idx/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "regexp": {
+            "experimentalStrategy": "[rR][nN][aA][-][Ss][Ee][Qq]"
+          }
+        },{
+          "regexp":{
+            "software": "[Ss]pinnaker"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "filtered_jobs":{
+      "cardinality": {
+        "field": "repoDataBundleId"
+      }
+    }
+  }
+}
+    """
     pass
 
 @app.route('/')
