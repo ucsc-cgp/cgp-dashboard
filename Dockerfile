@@ -45,6 +45,7 @@ RUN chmod 0644 /etc/cron.d/bd-cron
 RUN lockfile cron.lock
 #Make cron.sh executable
 RUN chmod a+x cron.sh
+RUN chmod a+x bdPlots.py
 
 #Make log directory
 RUN mkdir /app/log
