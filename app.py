@@ -107,7 +107,7 @@ def get_google_auth(state=None, token=None):
         scope=Auth.SCOPE)
     return oauth
 
-def query_es_rna_seq():
+def query_es_rna_seq(index, params):
     """
 GET burn_idx/_search
 {
@@ -137,9 +137,14 @@ GET burn_idx/_search
     """
     #Construct the above query:
     #Search part;
-    s = Search(using=es, index='burn_idx') \
+#    s = Search(using=es, index='burn_idx') \
+#        .query("regexp", experimentalStrategy="[rR][nN][aA][-][Ss][Ee][Qq]") \
+#        .query("regexp", software="[Ss]pinnaker")
+    #You can pass on the params as **params
+    s = Search(using=es, index=index) \
         .query("regexp", experimentalStrategy="[rR][nN][aA][-][Ss][Ee][Qq]") \
         .query("regexp", software="[Ss]pinnaker")
+
     #Aggregations part;
     s.aggs.metric("filtered_jobs", 'cardinality', field="repoDataBundleId", precision_threshold="40000")
     #Execute the query
