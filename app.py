@@ -107,7 +107,7 @@ def get_google_auth(state=None, token=None):
         scope=Auth.SCOPE)
     return oauth
 
-def query_es_rna_seq(index, params):
+def query_es_rna_seq(es_object, index, query_params, cardinality):
     """
 GET burn_idx/_search
 {
@@ -134,22 +134,19 @@ GET burn_idx/_search
     }
   }
 }
+    Pass a list of tuples? 
+    [('regexp', 'experimentalStrategy', '[my][pattern]'), (...)...]
+    reduce('function', 'iterate', 'initializer')
     """
-    #Construct the above query:
-    #Search part;
-#    s = Search(using=es, index='burn_idx') \
-#        .query("regexp", experimentalStrategy="[rR][nN][aA][-][Ss][Ee][Qq]") \
-#        .query("regexp", software="[Ss]pinnaker")
-    #You can pass on the params as **params
-    s = Search(using=es, index=index) \
-        .query("regexp", experimentalStrategy="[rR][nN][aA][-][Ss][Ee][Qq]") \
-        .query("regexp", software="[Ss]pinnaker")
-
-    #Aggregations part;
-    s.aggs.metric("filtered_jobs", 'cardinality', field="repoDataBundleId", precision_threshold="40000")
+    #Create search obejct
+    s = Search(using=es_object, index=index)
+    #Add the queries
+    s = reduce(lambda s,x: s.query(x[0], **{x[1]:x[2]}), query_params, s)
+    #Add the aggregates
+    s.aggs.metric("filtered_jobs", 'cardinality', field=cardinality, 
+                  precision_threshold="40000")
     #Execute the query
     response = s.execute()
-    #Return the number of valid rna-seq jobs (to-do + done)
     return response.aggregations.filtered_jobs.value
 
 @app.route('/')
@@ -173,9 +170,14 @@ def html_rend(name):
     if name=='action_service':
         return redirect(url_for('action_service'))
     if name=='help':
-        return render_template(name+'.html', coreClientVersion=coreClientVersion, redwoodHost=redwoodHost)
+        return render_template(name+'.html', 
+                               coreClientVersion=coreClientVersion, 
+                               redwoodHost=redwoodHost)
     if name=='index':
-        return render_template(name+'.html')#Need to somehow pass time and data through here for the chart.
+        allJobsQuery = [("regexp", "experimentalStrategy", "[rR][nN][aA][-][Ss][Ee][Qq]"),
+                        ("regexp", "software", "[Ss]pinnaker")]
+        query_es_rna_seq(es, 'burn_idx', allJobsQuery, "repoDataBundleId")
+        return render_template(name+'.html', allJobsQuery=allJobsQuery)
     return render_template(name+'.html')    
 
 @app.route('/invoicing_service')
