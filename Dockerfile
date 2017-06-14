@@ -2,6 +2,8 @@ FROM nginx:1.10
 # upgrade pip and install required python packages
 RUN apt-get update
 RUN apt-get install -y build-essential libpq-dev libssl-dev libffi-dev python-dev
+#Install procmail to install the lock
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install procmail
 RUN apt-get install -y python-pip postgresql
 RUN pip install -U pip
 RUN pip install uwsgi
@@ -36,6 +38,13 @@ RUN rm /app/uwsgi.ini
 ADD ./uwsgi/uwsgi.ini app/
 #Make the working directory /app
 WORKDIR /app
+#Add cron.txt to /etc/cron
+ADD cron.txt /etc/cron.d/bd-cron
+RUN chmod 0644 /etc/cron.d/bd-cron
+#Make a lockfile for the cronjob
+RUN lockfile cron.lock
+#Make cron.sh executable
+RUN chmod a+x cron.sh
 
 #Make log directory
 RUN mkdir /app/log
