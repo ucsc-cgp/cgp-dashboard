@@ -3,7 +3,7 @@
 from app import query_es_rna_seq
 from datetime import datetime, timedelta
 from elasticsearch import Elasticsearch
-from models import Burndown
+from models import Burndown, get_all
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
@@ -36,6 +36,6 @@ old_entries = datetime.today().replace(second=0, microsecond=0) - timedelta(minu
 s.query(Burndown).filter(Burndown.captured_date <= old_entries).delete()
 # Commit Changes to the DB
 s.commit()
-print [(str(x.total_jobs), x.captured_date) for x in s.query(Burndown).all()]
+print [(str(x.total_jobs), x.captured_date) for x in get_all()]
 print "Total Jobs: {} Finished Jobs: {}".format(total_jobs, finished_jobs)
 print "Hello World"
