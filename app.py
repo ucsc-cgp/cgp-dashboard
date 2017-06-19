@@ -10,6 +10,7 @@ from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
+from models import Burndown, get_all
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
@@ -163,6 +164,17 @@ GET burn_idx/_search
     # Execute the query
     response = s.execute()
     return response.aggregations.filtered_jobs.value
+
+
+def burndown():
+    """
+    Method for parsing the plot points and
+    returning them as appropriate.
+    """
+    total_jobs = [int(x.total_jobs) for x in get_all()]
+    finished_jobs = [int(x.finished_jobs) for x in get_all()]
+    captured_dates = [x.captured_date for x in get_all()]
+    return (total_jobs, finished_jobs, captured_dates)
 
 
 @app.route('/')

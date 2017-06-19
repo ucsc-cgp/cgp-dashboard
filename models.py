@@ -40,5 +40,5 @@ def get_all():
     session = sessionmaker()
     session.configure(bind=engine)
     s = session()
-    q = s.query(Burndown).order_by(Burndown.captured_date.desc()).all()
+    q = s.query(Burndown).order_by(Burndown.captured_date.asc()).all()
     return q
