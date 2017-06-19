@@ -9,7 +9,7 @@ var BurndownAPI_Connector = angular.module('BurndownAPI_Connector', ["chart.js"]
    $interpolateProvider.endSymbol('-}');
 });
 
-BillingAPI_Connector.controller('burndown_controller', function($scope) {
+BurndownAPI_Connector.controller('burndown_controller', function($scope) {
    $scope.labels = timeStamps;
    $scope.series = ['All Jobs', 'Finished Jobs'];
    $scope.data = [allJobs, completedJobs];

@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block ng_app %} ng-app="BurndownAPI_Connector"{% endblock %}
-{% block body_ng_controller %} ng-controller="billing_controller"{% endblock %}
+{% block body_ng_controller %} ng-controller="burndown_controller"{% endblock %}
 {% block title  %} Analysis Core  {% endblock %}
 {% block page_Analysis %} class="active" {% endblock  %}
 {% block meta  %} 
+	<script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
 	<script>
 		total_jobs = {{total_jobs|tojson}}
 		finished_jobs = {{finished_jobs|tojson}}
@@ -14,7 +16,7 @@
 			 return moment().hour(hours).minute(minutes).format(timeFormat);
 		}
 		captured_dates = [{% for item in captured_dates %}
-					newDateString( {{item.hour}}, {{item.minute}} );
+					newDateString( {{item.hour}}, {{item.minute}} ),
 				 {% endfor %}]
 	</script>
 	<script src="{{url_for('static', filename='burndown_chart/burndown.app.js')}}"></script>

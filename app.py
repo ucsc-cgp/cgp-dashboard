@@ -182,7 +182,7 @@ def index():
     """
     Render the main page.
     """
-    return render_template('index.html')
+    return html_rend('index')
 
 
 @app.route('/<name>.html')
