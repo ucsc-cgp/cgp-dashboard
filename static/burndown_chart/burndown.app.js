@@ -15,5 +15,25 @@ BillingAPI_Connector.controller('burndown_controller', function($scope) {
    $scope.data = [allJobs, completedJobs];
    $scope.onClick = function (points, evt) {
       console.log(points, evt);
+   };
+   $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+
+   $scope.options = {
+      scales: {
+         yAxes: [
+            {
+               id: 'y-axis-1',
+               type: 'linear',
+               display: true,
+               position: 'left'
+            },
+            {
+               id: 'y-axis-2',
+               type: 'linear',
+               display: true,
+               position: 'right'
+            }
+         ]
+      }
    }
-})
+});

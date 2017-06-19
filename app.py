@@ -10,7 +10,7 @@ from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from models import Burndown, get_all
+from models import get_all
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
@@ -168,7 +168,7 @@ GET burn_idx/_search
 
 def burndown():
     """
-    Method for parsing the plot points and
+    Helper method for parsing the plot points and
     returning them as appropriate.
     """
     total_jobs = [int(x.total_jobs) for x in get_all()]
@@ -206,11 +206,14 @@ def html_rend(name):
                                coreClientVersion=coreClientVersion,
                                redwoodHost=redwoodHost)
     if name == 'index':
-        allJobsQuery = [("regexp", "experimentalStrategy",
-                        "[rR][nN][aA][-][Ss][Ee][Qq]"),
-                        ("regexp", "software", "[Ss]pinnaker")]
-        query_es_rna_seq(es, 'burn_idx', allJobsQuery, "repoDataBundleId")
-        return render_template(name + '.html', allJobsQuery=allJobsQuery)
+        plot_points = burndown()
+        total_jobs = plot_points[0]
+        finished_jobs = plot_points[1]
+        captured_dates = plot_points[2]
+        return render_template(name + '.html',
+                               total_jobs=total_jobs,
+                               finished_jobs=finished_jobs,
+                               captured_dates=captured_dates)
     return render_template(name + '.html')
 
 

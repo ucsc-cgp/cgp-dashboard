@@ -1,9 +1,23 @@
 {% extends "base.html" %}
+{% block ng_app %} ng-app="BurndownAPI_Connector"{% endblock %}
+{% block body_ng_controller %} ng-controller="billing_controller"{% endblock %}
 {% block title  %} Analysis Core  {% endblock %}
 {% block page_Analysis %} class="active" {% endblock  %}
 {% block meta  %} 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+	<script>
+		total_jobs = {{total_jobs|tojson}}
+		finished_jobs = {{finished_jobs|tojson}}
+		var timeFormat = 'hh:mm:ss';
+		function newDateString(hours, minutes) {
+			 return moment().hour(hours).minute(minutes).format(timeFormat);
+		}
+		captured_dates = [{% for item in captured_dates %}
+					newDateString( {{item.hour}}, {{item.minute}} );
+				 {% endfor %}]
+	</script>
+	<script src="{{url_for('static', filename='burndown_chart/burndown.app.js')}}"></script>
 {% endblock %}
 {% block content %}
  			<main class="layout-column layout-padding flex">
@@ -74,7 +88,10 @@
 					<h3 class="md-title">Current Burndown Chart</h3>
 					<p class="md-body-1">Below is a burndown chart </p>
 					<!--Canvas insertion -->
-					<canvas id="bdChart" width="600" height="400"></canvas>
+					<canvas id="line" class="chart chart-line" chart-data="data" 
+					chart-labels="labels" chart-series="series" chart-options="options"
+					chart-dataset-override="datasetOverride" chart-click="onClick">
+					</canvas>	
 
 
 					<h3 class="md-title">Ordering Analysis</h3>
