@@ -32,10 +32,14 @@ session.configure(bind=engine)
 s = session()
 s.add(plot)
 # Delete old entries
-old_entries = datetime.today().replace(second=0, microsecond=0) - timedelta(minutes=4) #CHANGE TO PER HOUR
+old_entries = datetime.today().replace(second=0,
+                                       microsecond=0) - timedelta(days=1)
 s.query(Burndown).filter(Burndown.captured_date <= old_entries).delete()
 # Commit Changes to the DB
 s.commit()
-print [(str(x.total_jobs), str(x.finished_jobs), x.captured_date, "{}:{}".format(x.captured_date.hour, x.captured_date.minute)) for x in get_all()]
+print [(str(x.total_jobs),
+        str(x.finished_jobs),
+        x.captured_date,
+        "{}:{}".format(x.captured_date.hour,
+                       x.captured_date.minute)) for x in get_all()]
 print "Total Jobs: {} Finished Jobs: {}".format(total_jobs, finished_jobs)
-print "Hello World"

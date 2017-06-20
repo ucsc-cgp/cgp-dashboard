@@ -124,7 +124,7 @@ def get_google_auth(state=None, token=None):
 
 
 def query_es_rna_seq(es_object, index, query_params, cardinality):
-    """
+    """Returns the cardinality based from the inputs
 GET burn_idx/_search
 {
   "query": {
@@ -150,9 +150,10 @@ GET burn_idx/_search
     }
   }
 }
-    Pass a list of tuples?
-    [('regexp', 'experimentalStrategy', '[my][pattern]'), (...)...]
-    reduce('function', 'iterate', 'initializer')
+    es_object -- the es object to query against
+    index -- the name of the index to query on
+    query_params -- tuple with form (query type, field, value)
+    cardinality -- field to get the cardinality from
     """
     # Create search obejct
     s = Search(using=es_object, index=index)
