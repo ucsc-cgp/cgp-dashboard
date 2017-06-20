@@ -45,7 +45,7 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
                   min: 0,
                   beginAtZero: true,
                   callback: function(value, index, values) {
-                     if (Math.floor(value) === value) {
+                     if (value % 1 === 0) {
                         return value;
                      }
                   }

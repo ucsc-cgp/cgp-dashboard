@@ -12,12 +12,11 @@ es_service = os.environ.get("ES_SERVICE", "localhost")
 es = Elasticsearch(['http://'+es_service+':9200/'])
 
 # Query the coordinates from ES
-software = "[Ss]pinnaker"
 myQuery = [("regexp", "experimentalStrategy", "[rR][nN][aA][-][Ss][Ee][Qq]"),
-           ("regexp", "software", software)]
+           ("regexp", "software", "[Ss]pinnaker")]
 total_jobs = query_es_rna_seq(es, 'burn_idx', myQuery, "repoDataBundleId")
-software = "quay.io\/ucsc_cgl\/rnaseq-cgl-pipeline"
-print myQuery
+myQuery = [("regexp", "experimentalStrategy", "[rR][nN][aA][-][Ss][Ee][Qq]"),
+           ("regexp", "software", "quay.io\/ucsc_cgl\/rnaseq-cgl-pipeline")]
 finished_jobs = query_es_rna_seq(es, 'burn_idx', myQuery, "repoDataBundleId")
 # Create the plot point
 plot = Burndown(total_jobs=total_jobs, finished_jobs=finished_jobs)
