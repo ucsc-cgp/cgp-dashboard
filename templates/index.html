@@ -13,7 +13,7 @@
 		finished_jobs = {{finished_jobs|tojson}}
 		var timeFormat = 'hh:mm a';
 		function newDateString(hours, minutes) {
-			 return moment().hour(hours).minute(minutes).format(timeFormat);
+			 return moment.utc().hour(hours).minute(minutes).format(timeFormat).local();
 		}
 		captured_dates = [{% for item in captured_dates %}
 					newDateString( {{item.hour}}, {{item.minute}} ),
