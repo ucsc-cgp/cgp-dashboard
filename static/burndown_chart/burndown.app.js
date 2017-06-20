@@ -25,13 +25,31 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
                id: 'y-axis-1',
                type: 'linear',
                display: true,
-               position: 'left'
+               position: 'left',
+               ticks: {
+                  min: 0,
+                  beginAtZero: true,
+                  callback: function(value, index, values) {
+                     if (value % 1 === 0) {
+                        return value;
+                     }
+                  }
+               }
             },
             {
                id: 'y-axis-2',
                type: 'linear',
                display: true,
-               position: 'right'
+               position: 'right',
+               ticks: {
+                  min: 0,
+                  beginAtZero: true,
+                  callback: function(value, index, values) {
+                     if (Math.floor(value) === value) {
+                        return value;
+                     }
+                  }
+               }
             }
          ]
       }

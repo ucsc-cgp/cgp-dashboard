@@ -11,7 +11,7 @@
 	<script>
 		total_jobs = {{total_jobs|tojson}}
 		finished_jobs = {{finished_jobs|tojson}}
-		var timeFormat = 'hh:mm:ss';
+		var timeFormat = 'hh:mm';
 		function newDateString(hours, minutes) {
 			 return moment().hour(hours).minute(minutes).format(timeFormat);
 		}
