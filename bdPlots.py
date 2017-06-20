@@ -17,6 +17,7 @@ myQuery = [("regexp", "experimentalStrategy", "[rR][nN][aA][-][Ss][Ee][Qq]"),
            ("regexp", "software", software)]
 total_jobs = query_es_rna_seq(es, 'burn_idx', myQuery, "repoDataBundleId")
 software = "quay.io\/ucsc_cgl\/rnaseq-cgl-pipeline"
+print myQuery
 finished_jobs = query_es_rna_seq(es, 'burn_idx', myQuery, "repoDataBundleId")
 # Create the plot point
 plot = Burndown(total_jobs=total_jobs, finished_jobs=finished_jobs)
@@ -36,6 +37,6 @@ old_entries = datetime.today().replace(second=0, microsecond=0) - timedelta(minu
 s.query(Burndown).filter(Burndown.captured_date <= old_entries).delete()
 # Commit Changes to the DB
 s.commit()
-print [(str(x.total_jobs), x.captured_date, "{}:{}".format(x.captured_date.hour, x.captured_date.minute)) for x in get_all()]
+print [(str(x.total_jobs), str(x.finished_jobs), x.captured_date, "{}:{}".format(x.captured_date.hour, x.captured_date.minute)) for x in get_all()]
 print "Total Jobs: {} Finished Jobs: {}".format(total_jobs, finished_jobs)
 print "Hello World"
