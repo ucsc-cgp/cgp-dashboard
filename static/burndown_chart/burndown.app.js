@@ -16,7 +16,7 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
    $scope.onClick = function (points, evt) {
       console.log(points, evt);
    };
-   $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+   $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
 
    $scope.options = {
       scales: {
@@ -35,23 +35,13 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
                      }
                   }
                }
-            },
-            {
-               id: 'y-axis-2',
-               type: 'linear',
-               display: true,
-               position: 'right',
-               ticks: {
-                  min: 0,
-                  beginAtZero: true,
-                  callback: function(value, index, values) {
-                     if (value % 1 === 0) {
-                        return value;
-                     }
-                  }
-               }
             }
          ]
-      }
-   }
+      },
+      elements: {
+         line: {
+            tension: 0
+         }
+      } 
+   };
 });
