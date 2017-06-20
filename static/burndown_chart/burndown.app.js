@@ -13,6 +13,7 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
    $scope.labels = timeStamps;
    $scope.series = ['All Jobs', 'Finished Jobs'];
    $scope.data = [allJobs, completedJobs];
+   $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
    $scope.onClick = function (points, evt) {
       console.log(points, evt);
    };
