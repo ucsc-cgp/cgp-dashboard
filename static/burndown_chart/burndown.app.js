@@ -20,6 +20,10 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }];
 
    $scope.options = {
+      title: {
+         display: true,
+         text: 'RNA-Seq'
+      },
       scales: {
          yAxes: [
             {
@@ -46,7 +50,7 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
             {
                scaleLabel: {
                   display: true,
-                  labelString: 'Timestamp (UTC)'
+                  labelString: 'Timestamp'
                }
             }
          ]
