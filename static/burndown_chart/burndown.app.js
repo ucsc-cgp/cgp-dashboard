@@ -27,6 +27,10 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
                type: 'linear',
                display: true,
                position: 'left',
+               scaleLabel: {
+                  display: true,
+                  labelString: 'Number of Jobs'
+               },
                ticks: {
                   min: 0,
                   beginAtZero: true,
@@ -35,6 +39,14 @@ BurndownAPI_Connector.controller('burndown_controller', function($scope) {
                         return value;
                      }
                   }
+               }
+            }
+         ],
+         xAxes: [
+            {
+               scaleLabel: {
+                  display: true,
+                  labelString: 'Timestamp (UTC)'
                }
             }
          ]
