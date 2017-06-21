@@ -1,6 +1,26 @@
 {% extends "base.html" %}
+{% block ng_app %} ng-app="BurndownAPI_Connector"{% endblock %}
+{% block body_ng_controller %} ng-controller="burndown_controller"{% endblock %}
 {% block title  %} Analysis Core  {% endblock %}
 {% block page_Analysis %} class="active" {% endblock  %}
+{% block meta  %} 
+	<script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+	<script>
+		total_jobs = {{total_jobs|tojson}}
+		finished_jobs = {{finished_jobs|tojson}}
+		var timeFormat = 'hh:mm a';
+		function newDateString(hours, minutes) {
+			return moment.utc().hour(hours).minute(minutes).local().format(timeFormat);
+		}
+		captured_dates = [{% for item in captured_dates %}
+					newDateString( {{item.hour}}, {{item.minute}} ),
+				 {% endfor %}]
+	</script>
+	<script src="{{url_for('static', filename='burndown_chart/burndown.app.js')}}"></script>
+{% endblock %}
 {% block content %}
  			<main class="layout-column layout-padding flex">
 				<section class="snap-960">
@@ -66,6 +86,15 @@
 
 					 </cgl-data-table>
 					</cgl-data-table-container>
+
+					<h3 class="md-title">Burndown Chart</h3>
+					<p class="md-body-1">Total number of existing jobs vs number of completed jobs.</p>
+					<!--Canvas insertion -->
+					<canvas id="line" class="chart chart-line" chart-data="data" 
+					chart-labels="labels" chart-series="series" chart-options="options"
+					chart-dataset-override="datasetOverride" chart-click="onClick"
+					chart-colors="colors">
+					</canvas>	
 
 
 					<h3 class="md-title">Ordering Analysis</h3>
