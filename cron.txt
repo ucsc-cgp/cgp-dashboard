@@ -1,3 +1,3 @@
 # This is the cron job that will fill out the database with the plot points for the burndown chart.
-*/1 * * * * root env - `cat /root/env.txt` /usr/bin/flock -w 0 /app/cron.lock /app/bdPlots.py > /app/log/cronjob.log  2>&1
+30 * * * * root env - `cat /root/env.txt` /usr/bin/flock -w 0 /app/cron.lock /app/bdPlots.py > /app/log/cronjob.log  2>&1
 
