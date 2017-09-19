@@ -4,10 +4,11 @@ import datetime
 
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
-    flash, get_flashed_messages
+    flash, get_flashed_messages, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from decode_cookie import decodeFlaskCookie
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from models import get_all
@@ -184,6 +185,31 @@ def index():
     Render the main page.
     """
     return html_rend('index')
+
+
+@app.route('/check_session/<cookie>/<secret>')
+def check_session(cookie, secret):
+    if secret != os.getenv('SECRET_KEY', 'somethingsecret'):
+        return json.dumps({"error": "secret key does not match"})
+    else:
+        decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+        try:
+            assert (decoded_cookie.viewkeys()
+                    >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
+            assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+                decoded_cookie['user_id'])
+            logged_user = User.query.get(int(decoded_cookie['user_id']))
+            response = {
+                'email': logged_user.email,
+                'name': logged_user.name,
+                'avatar': logged_user.avatar,
+                'redwood_token': logged_user.redwood_token
+            }
+        except AssertionError as e:
+            response = {
+                'error': e.message
+            }
+        return jsonify(response)
 
 
 @app.route('/<name>.html')
