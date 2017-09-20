@@ -208,7 +208,7 @@ def check_session(cookie):
         try:
             bearer, auth_token = parse_token()
             assert bearer == "Bearer", "Authorization must start with Bearer"
-            assert auth_token == os.getenv("LOG_IN_TOKEN", 'ITS_A_SECRET')
+            assert auth_token == os.getenv("LOG_IN_TOKEN", 'ITS_A_SECRET!')
         except AssertionError as e:
             response = {
                 'error': e.message
