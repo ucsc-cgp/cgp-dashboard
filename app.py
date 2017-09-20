@@ -176,7 +176,7 @@ def burndown():
     total_jobs = [int(x.total_jobs) for x in get_all()]
     finished_jobs = [int(x.finished_jobs) for x in get_all()]
     captured_dates = [x.captured_date for x in get_all()]
-    return (total_jobs, finished_jobs, captured_dates)
+    return total_jobs, finished_jobs, captured_dates
 
 
 @app.route('/')
@@ -187,11 +187,34 @@ def index():
     return html_rend('index')
 
 
-@app.route('/check_session/<cookie>/<secret>')
-def check_session(cookie, secret):
-    if secret != os.getenv('SECRET_KEY', 'somethingsecret'):
-        return json.dumps({"error": "secret key does not match"})
+def parse_token():
+    """
+    Parses the Authorization token from the request header
+    :return: the bearer and token string
+    """
+    authorization_header = request.headers.get("Authorization", None)
+    assert authorization_header is not None, "No Authorization header in the request"
+    parts = authorization_header.split()
+    # Return the bearer and token string
+    return parts[0], parts[1]
+
+
+@app.route('/check_session/<cookie>')
+def check_session(cookie):
+    if not request.headers.get("Authorization", None):
+        return jsonify({"error": "No Authorization header in the request"})
     else:
+        # Make sure the auth token is the right one
+        try:
+            bearer, auth_token = parse_token()
+            assert bearer == "Bearer", "Authorization must start with Bearer"
+            assert auth_token == os.getenv("LOG_IN_TOKEN", 'ITS_A_SECRET')
+        except AssertionError as e:
+            response = {
+                'error': e.message
+            }
+            return jsonify(response)
+        # Now look at the cookie
         decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
         try:
             assert (decoded_cookie.viewkeys()
