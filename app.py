@@ -175,7 +175,7 @@ def burndown():
     total_jobs = [int(x.total_jobs) for x in get_all()]
     finished_jobs = [int(x.finished_jobs) for x in get_all()]
     captured_dates = [x.captured_date for x in get_all()]
-    return (total_jobs, finished_jobs, captured_dates)
+    return total_jobs, finished_jobs, captured_dates
 
 
 @app.route('/')

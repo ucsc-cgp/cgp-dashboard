@@ -28,6 +28,8 @@ def initialize_table():
     session = sessionmaker()
     session.configure(bind=engine)
     Base.metadata.create_all(engine)
+    session.close_all()
+    engine.dispose()
 
 
 def get_all():
@@ -41,4 +43,6 @@ def get_all():
     session.configure(bind=engine)
     s = session()
     q = s.query(Burndown).order_by(Burndown.captured_date.asc()).all()
+    session.close_all()
+    engine.dispose()
     return q
