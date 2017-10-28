@@ -43,6 +43,6 @@ def get_all():
     session.configure(bind=engine)
     s = session()
     q = s.query(Burndown).order_by(Burndown.captured_date.asc()).all()
-    session.close_all()
-    engine.dispose()
+    # session.close_all()
+    # engine.dispose()
     return q
