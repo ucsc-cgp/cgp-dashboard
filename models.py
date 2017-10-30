@@ -29,6 +29,8 @@ def initialize_table():
     session = sessionmaker()
     session.configure(bind=engine)
     Base.metadata.create_all(engine)
+    # We have sleep here because it appears that the call to create call is non-blocking
+    # so we need to wait a little bit for the subprocess to create the table.
     sleep(5)
     session.close_all()
     engine.dispose()
