@@ -247,6 +247,11 @@ def html_rend_file_browser():
     return redirect(url_for('html_rend', name='file_browser'))
 
 
+@app.route('/boardwalk')
+def boardwalk():
+    return redirect(url_for('boardwalk'))
+
+
 @app.route('/token')
 def token():
     """
