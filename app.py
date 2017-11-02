@@ -215,6 +215,8 @@ def html_rend(name):
                                total_jobs=total_jobs,
                                finished_jobs=finished_jobs,
                                captured_dates=captured_dates)
+    if name == 'boardwalk':
+        return boardwalk()
     return render_template(name + '.html')
 
 
