@@ -6,6 +6,7 @@ from sqlalchemy import Column, DateTime,\
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from time import sleep
 
 Base = declarative_base()
 
@@ -28,6 +29,11 @@ def initialize_table():
     session = sessionmaker()
     session.configure(bind=engine)
     Base.metadata.create_all(engine)
+    # We have sleep here because it appears that the call to create call is non-blocking
+    # so we need to wait a little bit for the subprocess to create the table.
+    sleep(5)
+    session.close_all()
+    engine.dispose()
 
 
 def get_all():
@@ -40,5 +46,8 @@ def get_all():
     session = sessionmaker()
     session.configure(bind=engine)
     s = session()
-    q = s.query(Burndown).order_by(Burndown.captured_date.asc()).all()
-    return q
+    query_object = s.query(Burndown).order_by(Burndown.captured_date.asc()).all()
+    query_list = [x for x in query_object]
+    session.close_all()
+    engine.dispose()
+    return query_list

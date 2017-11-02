@@ -43,3 +43,7 @@ print [(str(x.total_jobs),
         "{}:{}".format(x.captured_date.hour,
                        x.captured_date.minute)) for x in get_all()]
 print "Total Jobs: {} Finished Jobs: {}".format(total_jobs, finished_jobs)
+
+session.close_all()
+engine.dispose()
+
