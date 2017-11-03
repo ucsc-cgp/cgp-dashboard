@@ -215,6 +215,8 @@ def html_rend(name):
                                total_jobs=total_jobs,
                                finished_jobs=finished_jobs,
                                captured_dates=captured_dates)
+    if name == 'boardwalk':
+        return boardwalk()
     return render_template(name + '.html')
 
 
@@ -245,6 +247,11 @@ def html_rend_file_browser():
     to the file browser page.
     """
     return redirect(url_for('html_rend', name='file_browser'))
+
+
+@app.route('/boardwalk')
+def boardwalk():
+    return redirect(url_for('boardwalk'))
 
 
 @app.route('/token')
