@@ -4,10 +4,11 @@ import datetime
 
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
-    flash, get_flashed_messages
+    flash, get_flashed_messages, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from decode_cookie import decodeFlaskCookie
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from models import get_all
@@ -175,7 +176,7 @@ def burndown():
     total_jobs = [int(x.total_jobs) for x in get_all()]
     finished_jobs = [int(x.finished_jobs) for x in get_all()]
     captured_dates = [x.captured_date for x in get_all()]
-    return (total_jobs, finished_jobs, captured_dates)
+    return total_jobs, finished_jobs, captured_dates
 
 
 @app.route('/')
@@ -184,6 +185,54 @@ def index():
     Render the main page.
     """
     return html_rend('index')
+
+
+def parse_token():
+    """
+    Parses the Authorization token from the request header
+    :return: the bearer and token string
+    """
+    authorization_header = request.headers.get("Authorization", None)
+    assert authorization_header is not None, "No Authorization header in the request"
+    parts = authorization_header.split()
+    # Return the bearer and token string
+    return parts[0], parts[1]
+
+
+@app.route('/check_session/<cookie>')
+def check_session(cookie):
+    if not request.headers.get("Authorization", None):
+        return jsonify({"error": "No Authorization header in the request"})
+    else:
+        # Make sure the auth token is the right one
+        try:
+            bearer, auth_token = parse_token()
+            assert bearer == "Bearer", "Authorization must start with Bearer"
+            assert auth_token == os.getenv("LOG_IN_TOKEN", 'ITS_A_SECRET!')
+        except AssertionError as e:
+            response = {
+                'error': e.message
+            }
+            return jsonify(response)
+        # Now look at the cookie
+        decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+        try:
+            assert (decoded_cookie.viewkeys()
+                    >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
+            assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+                decoded_cookie['user_id'])
+            logged_user = User.query.get(int(decoded_cookie['user_id']))
+            response = {
+                'email': logged_user.email,
+                'name': logged_user.name,
+                'avatar': logged_user.avatar,
+                'redwood_token': logged_user.redwood_token
+            }
+        except AssertionError as e:
+            response = {
+                'error': e.message
+            }
+        return jsonify(response)
 
 
 @app.route('/<name>.html')
@@ -215,6 +264,8 @@ def html_rend(name):
                                total_jobs=total_jobs,
                                finished_jobs=finished_jobs,
                                captured_dates=captured_dates)
+    if name == 'boardwalk':
+        return boardwalk()
     return render_template(name + '.html')
 
 
@@ -245,6 +296,11 @@ def html_rend_file_browser():
     to the file browser page.
     """
     return redirect(url_for('html_rend', name='file_browser'))
+
+
+@app.route('/boardwalk')
+def boardwalk():
+    return redirect(url_for('boardwalk'))
 
 
 @app.route('/token')
