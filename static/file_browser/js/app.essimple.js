@@ -47,7 +47,7 @@ MyAPI_Connector.factory('myParams', function($http){
 MyAPI_Connector.factory('myManifest', function($http){
    return{
       data: function(){
-         return $http.get('https://'+myVar+'/api/v1/repository/files/exportFull', config); //Have to fix the filter system variable. It needs the specific verbose
+         return $http.get('https://'+myVar+'/api/v1/repository/files/export', config); //Have to fix the filter system variable. It needs the specific verbose
       }
    }
 });
