@@ -19,7 +19,8 @@ from oauth2client.crypt import AppIdentityError
 
 
 import ssl
-from urllib import urlopen
+from urllib import urlencode, urlopen
+import urllib2
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -238,7 +239,32 @@ def check_session(cookie):
 @app.route('/export_to_firecloud')
 @login_required
 def export_to_firecloud():
-
+    """
+    Creates and returns a manifest based on the filters pased on
+    to this endpoint
+    parameters:
+        - name: filters
+          in: query
+          type: string
+          description: Filters to be applied when generating the manifest
+        - name: workspace
+          in: query
+          type: string
+          description: The name of the FireCloud workspace to create
+        - name: namespace
+          in: query
+          type: string
+          description: The namespace of the FireCloud workspace to create
+    :return:
+    """
+    workspace = request.args.get('workspace');
+    if workspace is None:
+        return "Missing workspace query parameter", 400
+    namespace = request.args.get('namespace')
+    if namespace is None:
+        return "Missing namespace query parameter", 400
+    # filters are optional
+    filters = request.args.get('filters')
     cookie = request.cookies.get('session')
     decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
     try:
@@ -247,15 +273,18 @@ def export_to_firecloud():
         assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
             decoded_cookie['user_id'])
         logged_user = User.query.get(int(decoded_cookie['user_id']))
-        response = {
-            'email': logged_user.email,
-            'access_token': logged_user.access_token
-        }
+        access_token = logged_user.access_token
+        params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
+        url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
+                                                                    os.getenv('DCC_DASHBOARD_HOST'),params)
+        req = urllib2.Request(url, headers={'Authorization': "Bearer {}".format(access_token)})
+        response = urllib2.urlopen(req)
+        return response.read()
     except AssertionError as e:
         response = {
             'error': e.message
         }
-    return jsonify(response)
+        return jsonify(response)
 
 
 @app.route('/<name>.html')
