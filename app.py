@@ -235,6 +235,29 @@ def check_session(cookie):
         return jsonify(response)
 
 
+@app.route('/export_to_firecloud')
+@login_required
+def export_to_firecloud():
+
+    cookie = request.cookies.get('session')
+    decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+    try:
+        assert (decoded_cookie.viewkeys()
+                >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
+        assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+            decoded_cookie['user_id'])
+        logged_user = User.query.get(int(decoded_cookie['user_id']))
+        response = {
+            'email': logged_user.email,
+            'access_token': logged_user.access_token
+        }
+    except AssertionError as e:
+        response = {
+            'error': e.message
+        }
+    return jsonify(response)
+
+
 @app.route('/<name>.html')
 def html_rend(name):
     """
