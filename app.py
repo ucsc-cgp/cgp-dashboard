@@ -199,6 +199,16 @@ def parse_token():
     # Return the bearer and token string
     return parts[0], parts[1]
 
+def google_access_token(request):
+    cookie = request.cookies.get('session')
+    decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+    assert (decoded_cookie.viewkeys()
+            >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
+    assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+        decoded_cookie['user_id'])
+    logged_user = User.query.get(int(decoded_cookie['user_id']))
+    access_token = logged_user.access_token
+    return access_token
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -265,15 +275,8 @@ def export_to_firecloud():
         return "Missing namespace query parameter", 400
     # filters are optional
     filters = request.args.get('filters')
-    cookie = request.cookies.get('session')
-    decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
     try:
-        assert (decoded_cookie.viewkeys()
-                >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
-        assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
-            decoded_cookie['user_id'])
-        logged_user = User.query.get(int(decoded_cookie['user_id']))
-        access_token = logged_user.access_token
+        access_token = google_access_token(request)
         params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
         url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
                                                                     os.getenv('DCC_DASHBOARD_HOST'),params)
@@ -285,6 +288,20 @@ def export_to_firecloud():
             'error': e.message
         }
         return jsonify(response)
+
+@app.route('/proxy_firecloud')
+@login_required
+def proxy_firecloud():
+    path = request.args.get('path')
+    if path is None:
+        return "Missing path query parameter", 400
+    access_token = google_access_token(request)
+    url = "{}/{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org/'), path)
+    headers = request.headers
+    headers['Authorization'] = {'Authorization': "Bearer {}".format(access_token)}
+    req = urllib2.Request(url, headers=headers)
+    response = urllib2.urlopen(req)
+    return response.read()
 
 
 @app.route('/<name>.html')
