@@ -289,19 +289,27 @@ def export_to_firecloud():
         }
         return jsonify(response)
 
-@app.route('/proxy_firecloud')
+@app.route('/proxy_firecloud', methods=['GET'])
 @login_required
 def proxy_firecloud():
     path = request.args.get('path')
     if path is None:
         return "Missing path query parameter", 400
+    pathParam = path if path.startswith('/') else '/' + path
     access_token = google_access_token(request)
-    url = "{}/{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org/'), path)
-    headers = request.headers
-    headers['Authorization'] = {'Authorization': "Bearer {}".format(access_token)}
-    req = urllib2.Request(url, headers=headers)
-    response = urllib2.urlopen(req)
-    return response.read()
+    url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
+    headers = {'Authorization': 'Bearer {}'.format(access_token)}
+    for header in ['Accept', 'Accept-Language']:
+        val = request.headers[header]
+        if val is not None:
+            headers[header] = val
+    try:
+        req = urllib2.Request(url, headers=headers)
+        response = urllib2.urlopen(req)
+        return response.read()
+    except urllib2.HTTPError as e:
+        resp = {'url': url, 'headers': headers}
+        return jsonify(resp), e.code
 
 
 @app.route('/<name>.html')
