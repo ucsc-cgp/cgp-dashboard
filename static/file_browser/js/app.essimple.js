@@ -52,6 +52,17 @@ MyAPI_Connector.factory('myManifest', function($http){
    }
 });
 
+
+
+//Factory for the Xena manifest endpoint. 
+MyAPI_Connector.factory('myXenaManifest', function($http){
+   return{
+      data: function(){
+         return $http.get('https://'+myVar+'/api/v1/repository/files/Xenaexport', config); //Have to fix the filter system variable. It needs the specific verbose
+      }
+   }
+});
+
 //Factory for the piechart endpoint:
  MyAPI_Connector.factory('myParams_pie', function($http){
    return{
@@ -63,7 +74,7 @@ MyAPI_Connector.factory('myManifest', function($http){
 
 
 //Controller for the page
-MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService, myParams, myManifest, myParams_pie){
+MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, myService, myParams, myManifest, myXenaManifest, myParams_pie){
    //Variables to be used to populate the page
    $scope.hits = [];
    $scope.results = [];
@@ -171,7 +182,17 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          //return;
       });
    }
-   
+  
+   //Make a call to the API for XenaManifest file
+   var get_myXenaManifest = function(){
+      myXenaManifest.data().then(function(data){
+         var file = new File([data.data], {type: "text/plain;charset=utf-8"});
+         saveAs(file, 'Xenamanifest.tsv');
+         return data;
+         //return;
+      });
+   } 
+
    //adds facet, for clicking multiple facets
    var adding_Facet = function(facet, item){
       if (!(facet in field_dict)){
@@ -344,7 +365,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       //configManifest = config;
       var number_size = config['params']['size'];
       config['params']['size'] = $scope.numHits;
-      
+ 
       console.log(config);
       console.log(configManifest);
       //verify();
@@ -357,7 +378,27 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       config['params']['size'] = number_size;
       verify();
    }
-   
+ 
+   //download Xena Manifest file
+   $scope.downloadxenafile = function(){
+      //configManifest = config;
+      var number_size = config['params']['size'];
+      config['params']['size'] = $scope.numHits;
+      console.log(config);
+      console.log(configManifest);
+      //verify();
+      console.log("calling get_myXenaManifest");
+      get_myXenaManifest();
+      console.log("after calling get_myXenaManifest");
+      //console.log("calling makingXenaManifest()");
+      //makingManifest();
+      //console.log("after calling makingXenaManifest()");
+      config['params']['size'] = number_size;
+      console.log("Calling Verify")
+      verify();
+      console.log("CalledVerify")
+   }
+ 
    // turns pie data into array format
    $scope.piedata = function(){
    	console.log($scope.results_pie);
