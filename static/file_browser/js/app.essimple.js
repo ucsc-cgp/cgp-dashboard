@@ -369,14 +369,17 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       console.log(configManifest);
       //verify();
       console.log("constructing href");
+      //set proper href ending depending on filter parameters
       if (config.params.filters == null){
       var filtercode = ''
       } else {
       var filtercode = '?filters=' + encodeURIComponent(JSON.stringify(config.params.filters));
       }
+      //construct href
       var href = 'https://'+myVar+'/api/v1/repository/files/xenaexport' + filtercode;
       console.log("after constructing href");
       console.log("opening Xena window");
+      //open Xena window with proper href file
       window.open('http://dev.xenabrowser.net/heatmap/?manifest=' + href,'_blank' );
       console.log("after opening Xena Window");
       config['params']['size'] = number_size;
