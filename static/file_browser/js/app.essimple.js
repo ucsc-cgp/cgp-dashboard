@@ -376,7 +376,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       var filtercode = '?filters=' + encodeURIComponent(JSON.stringify(config.params.filters));
       }
       //construct href
-      var href = 'https://'+myVar+'/api/v1/repository/files/xenaexport' + filtercode;
+      var href = encodeURIComponent('https://'+myVar+'/api/v1/repository/files/xenaexport' + filtercode);
       console.log("after constructing href");
       console.log("opening Xena window");
       //open Xena window with proper href file
