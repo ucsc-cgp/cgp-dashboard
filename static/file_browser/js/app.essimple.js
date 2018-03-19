@@ -325,6 +325,7 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
          else{
             $scope.order = "desc";
          }
+
       }
       else{
          $scope.order = "desc";
@@ -368,28 +369,18 @@ MyAPI_Connector.controller('API_Controller', function($scope, $http, $compile, m
       console.log(configManifest);
       //verify();
       console.log("constructing href");
-      var href = 'https://'+myVar+'/api/v1/repository/files/Xenaexport?params=' + encodeURIComponent(JSON.stringify(config.params));
+      if (config.params.filters == null){
+      var filtercode = ''
+      } else {
+      var filtercode = '?filters=' + encodeURIComponent(JSON.stringify(config.params.filters));
+      }
+      var href = 'https://'+myVar+'/api/v1/repository/files/xenaexport' + filtercode;
       console.log("after constructing href");
       console.log("opening Xena window");
-      window.open('https://dev.xenabrowser.net?manifest=' + href,'_blank' );
+      window.open('http://dev.xenabrowser.net/heatmap/?manifest=' + href,'_blank' );
       console.log("after opening Xena Window");
       config['params']['size'] = number_size;
       verify();
-      //var number_size = config['params']['size'];
-      //config['params']['size'] = $scope.numHits;
-      //console.log(config);
-      //console.log(configManifest);
-      //verify();
-      //console.log("calling get_myXenaManifest");
-      //get_myXenaManifest();
-      //console.log("after calling get_myXenaManifest");
-      //console.log("calling makingXenaManifest()");
-      //makingManifest();
-      //console.log("after calling makingXenaManifest()");
-      //config['params']['size'] = number_size;
-      //console.log("Calling Verify")
-      //verify();
-      //console.log("CalledVerify")
    }
  
    // turns pie data into array format
