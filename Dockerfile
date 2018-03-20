@@ -38,14 +38,6 @@ RUN rm /app/uwsgi.ini
 ADD ./uwsgi/uwsgi.ini app/
 #Make the working directory /app
 WORKDIR /app
-#Add cron.txt to /etc/cron
-ADD cron.txt /etc/cron.d/bd-cron
-RUN chmod 0644 /etc/cron.d/bd-cron
-#Make a lockfile for the cronjob
-RUN lockfile cron.lock
-#Make cron.sh executable
-RUN chmod a+x cron.sh
-RUN chmod a+x bdPlots.py
 
 #Make log directory
 RUN mkdir /app/log

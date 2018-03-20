@@ -19,7 +19,8 @@ from oauth2client.crypt import AppIdentityError
 
 
 import ssl
-from urllib import urlopen
+from urllib import urlencode, urlopen
+import urllib2
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -44,7 +45,7 @@ class Auth:
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
-    SCOPE = ['profile', 'email']
+    SCOPE = ['profile', 'email', 'https://www.googleapis.com/auth/devstorage.full_control']
 
 
 class Config:
@@ -82,8 +83,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
-es_service = os.environ.get("ES_SERVICE", "localhost")
-es = Elasticsearch(['http://'+es_service+':9200/'])
 
 
 """ DB Models """
@@ -96,7 +95,6 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100), nullable=True)
     avatar = db.Column(db.String(200))
     access_token = db.Column(db.String(5000))
-    redwood_token = db.Column(db.String(5000))
     tokens = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
@@ -168,17 +166,6 @@ GET burn_idx/_search
     return response.aggregations.filtered_jobs.value
 
 
-def burndown():
-    """
-    Helper method for parsing the plot points and
-    returning them as appropriate.
-    """
-    total_jobs = [int(x.total_jobs) for x in get_all()]
-    finished_jobs = [int(x.finished_jobs) for x in get_all()]
-    captured_dates = [x.captured_date for x in get_all()]
-    return total_jobs, finished_jobs, captured_dates
-
-
 @app.route('/')
 def index():
     """
@@ -198,6 +185,16 @@ def parse_token():
     # Return the bearer and token string
     return parts[0], parts[1]
 
+def google_access_token(request):
+    cookie = request.cookies.get('session')
+    decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+    assert (decoded_cookie.viewkeys()
+            >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
+    assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+        decoded_cookie['user_id'])
+    logged_user = User.query.get(int(decoded_cookie['user_id']))
+    access_token = logged_user.access_token
+    return access_token
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -225,14 +222,79 @@ def check_session(cookie):
             response = {
                 'email': logged_user.email,
                 'name': logged_user.name,
-                'avatar': logged_user.avatar,
-                'redwood_token': logged_user.redwood_token
+                'avatar': logged_user.avatar
             }
         except AssertionError as e:
             response = {
                 'error': e.message
             }
         return jsonify(response)
+
+
+@app.route('/export_to_firecloud')
+@login_required
+def export_to_firecloud():
+    """
+    Creates and returns a manifest based on the filters pased on
+    to this endpoint
+    parameters:
+        - name: filters
+          in: query
+          type: string
+          description: Filters to be applied when generating the manifest
+        - name: workspace
+          in: query
+          type: string
+          description: The name of the FireCloud workspace to create
+        - name: namespace
+          in: query
+          type: string
+          description: The namespace of the FireCloud workspace to create
+    :return:
+    """
+    workspace = request.args.get('workspace');
+    if workspace is None:
+        return "Missing workspace query parameter", 400
+    namespace = request.args.get('namespace')
+    if namespace is None:
+        return "Missing namespace query parameter", 400
+    # filters are optional
+    filters = request.args.get('filters')
+    try:
+        access_token = google_access_token(request)
+        params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
+        url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
+                                                                    os.getenv('DCC_DASHBOARD_HOST'),params)
+        req = urllib2.Request(url, headers={'Authorization': "Bearer {}".format(access_token)})
+        response = urllib2.urlopen(req)
+        return response.read()
+    except AssertionError as e:
+        response = {
+            'error': e.message
+        }
+        return jsonify(response)
+
+@app.route('/proxy_firecloud', methods=['GET'])
+@login_required
+def proxy_firecloud():
+    path = request.args.get('path')
+    if path is None:
+        return "Missing path query parameter", 400
+    pathParam = path if path.startswith('/') else '/' + path
+    access_token = google_access_token(request)
+    url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
+    headers = {'Authorization': 'Bearer {}'.format(access_token)}
+    for header in ['Accept', 'Accept-Language']:
+        val = request.headers[header]
+        if val is not None:
+            headers[header] = val
+    try:
+        req = urllib2.Request(url, headers=headers)
+        response = urllib2.urlopen(req)
+        return response.read()
+    except urllib2.HTTPError as e:
+        resp = {'url': url, 'headers': headers}
+        return jsonify(resp), e.code
 
 
 @app.route('/<name>.html')
@@ -244,7 +306,6 @@ def html_rend(name):
     """
     data = os.environ['DCC_DASHBOARD_SERVICE']
     coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
-    redwoodHost = os.getenv('REDWOOD_HOST', 'ucsc-cgp.org')
     if name == 'file_browser':
         return render_template(name + '.html', data=data)
     if name == 'invoicing_service' or name == 'invoicing_service1':
@@ -253,17 +314,9 @@ def html_rend(name):
         return redirect(url_for('action_service'))
     if name == 'help':
         return render_template(name+'.html',
-                               coreClientVersion=coreClientVersion,
-                               redwoodHost=redwoodHost)
+                               coreClientVersion=coreClientVersion)
     if name == 'index':
-        plot_points = burndown()
-        total_jobs = plot_points[0]
-        finished_jobs = plot_points[1]
-        captured_dates = plot_points[2]
-        return render_template(name + '.html',
-                               total_jobs=total_jobs,
-                               finished_jobs=finished_jobs,
-                               captured_dates=captured_dates)
+        return render_template(name + '.html')
     if name == 'boardwalk':
         return boardwalk()
     return render_template(name + '.html')
@@ -301,21 +354,6 @@ def html_rend_file_browser():
 @app.route('/boardwalk')
 def boardwalk():
     return redirect(url_for('boardwalk'))
-
-
-@app.route('/token')
-def token():
-    """
-    Endpoint to request a token
-    """
-    if current_user.is_authenticated:
-        # this is where I would retrieve the token, encode it, pass it along.
-        token = current_user.redwood_token
-        return Response(token, mimetype='text/plain',
-                        headers={"Content-disposition":
-                                 "attachment; filename=token.txt"})
-    else:
-        return redirect(url_for('login'))
 
 
 @app.route('/login')
@@ -383,7 +421,6 @@ def callback():
             user.tokens = json.dumps(token)
             user.access_token = token['access_token']
             user.avatar = user_data['picture']
-            user.redwood_token = get_redwood_token(user)
             db.session.add(user)
             db.session.commit()
             login_user(user)
@@ -393,36 +430,6 @@ def callback():
             flash('You are now logged in!', 'success')
             return redirect(url_for('index'))
         return 'Could not fetch your information.'
-
-
-def get_redwood_token(user):
-    """
-    Helper method to fetch the token from
-    Redwood.
-    """
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    username = os.environ['REDWOOD_ADMIN']
-    password = os.environ['REDWOOD_ADMIN_PASSWORD']
-    server = os.environ['REDWOOD_SERVER']
-    server_port = os.environ['REDWOOD_ADMIN_PORT']
-    url = "https://{}:{}@{}:{}/users/{}/tokens".format(username,
-                                                       password,
-                                                       server,
-                                                       server_port,
-                                                       user.email)
-    # json_str = urlopen(str("https://"+username+":
-    # "+password+"@"+server+":"+server_port+"/users/
-    # "+user.email+"/tokens"), context=ctx).read()
-    json_str = urlopen(url, context=ctx).read()
-    try:
-        json_struct = json.loads(json_str)
-        token_str = json_struct['tokens'][0]['access_token']
-        return token_str
-    except Exception:
-        print 'Exception getting token'
-    return 'None'
 
 
 @app.route('/logout')
