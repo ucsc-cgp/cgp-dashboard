@@ -52,6 +52,7 @@ class Config:
     """Base config"""
     APP_NAME = "Test Google Login"
     SECRET_KEY = os.environ.get("SECRET_KEY") or "somethingsecret"
+    GOOGLE_SITE_VERIFICATION_CODE = os.environ.get("GOOGLE_SITE_VERIFICATION_CODE") or ""
 
 
 class DevConfig(Config):
