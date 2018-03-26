@@ -95,6 +95,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(100), nullable=True)
     avatar = db.Column(db.String(200))
     access_token = db.Column(db.String(5000))
+    refresh_token = db.Column(db.String(5000))
     tokens = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
@@ -197,12 +198,12 @@ def get_logged_user(cookie):
     logged_user = User.query.get(decoded_cookie['user_id'])
     return logged_user
 
-
 def google_access_token(request):
     cookie = request.cookies.get('session')
     logged_user = get_logged_user(cookie)
-    access_token = logged_user.access_token
-    return access_token
+    refresh_token = logged_user.refresh_token
+    oauth = get_google_auth()
+    return oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token)
 
 
 @app.route('/check_session/<cookie>')
@@ -423,6 +424,7 @@ def callback():
             print(token)
             user.tokens = json.dumps(token)
             user.access_token = token['access_token']
+            user.refresh_token = token['refresh_token']
             user.avatar = user_data['picture']
             db.session.add(user)
             db.session.commit()
