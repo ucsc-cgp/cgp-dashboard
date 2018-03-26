@@ -203,7 +203,11 @@ def google_access_token(request):
     logged_user = get_logged_user(cookie)
     refresh_token = logged_user.refresh_token
     oauth = get_google_auth()
-    return oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token)
+    extra = {
+        'client_id': Auth.CLIENT_ID,
+        'client_secret': Auth.CLIENT_SECRET,
+    }
+    return oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
 
 
 @app.route('/check_session/<cookie>')
