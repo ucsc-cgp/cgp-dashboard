@@ -24,11 +24,7 @@ import ssl
 from urllib import urlencode, urlopen
 import urllib2
 
-import logging
-
 basedir = os.path.abspath(os.path.dirname(__file__))
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
 
 
 """App Configuration"""
