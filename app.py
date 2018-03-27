@@ -8,6 +8,8 @@ from flask import Flask, url_for, redirect, \
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from oauthlib.oauth2 import OAuth2Error
+
 from decode_cookie import decodeFlaskCookie
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
@@ -94,7 +96,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=True)
     avatar = db.Column(db.String(200))
-    access_token = db.Column(db.String(5000))
+    refresh_token = db.Column(db.String(5000))
     tokens = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
@@ -197,13 +199,17 @@ def get_logged_user(cookie):
     logged_user = User.query.get(decoded_cookie['user_id'])
     return logged_user
 
-
-def google_access_token(request):
+def new_google_access_token(request):
     cookie = request.cookies.get('session')
     logged_user = get_logged_user(cookie)
-    access_token = logged_user.access_token
-    return access_token
-
+    refresh_token = logged_user.refresh_token
+    oauth = get_google_auth()
+    extra = {
+        'client_id': Auth.CLIENT_ID,
+        'client_secret': Auth.CLIENT_SECRET,
+    }
+    resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    return resp['access_token']
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -264,7 +270,10 @@ def export_to_firecloud():
     # filters are optional
     filters = request.args.get('filters')
     try:
-        access_token = google_access_token(request)
+        access_token = new_google_access_token(request)
+    except OAuth2Error as e:
+        return "Error getting access token", 401
+    try:
         params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
         url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
                                                                     os.getenv('DCC_DASHBOARD_HOST'),params)
@@ -284,7 +293,10 @@ def proxy_firecloud():
     if path is None:
         return "Missing path query parameter", 400
     pathParam = path if path.startswith('/') else '/' + path
-    access_token = google_access_token(request)
+    try:
+        access_token = new_google_access_token(request)
+    except OAuth2Error as e:
+        return "Error getting access token", 401
     url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
     headers = {'Authorization': 'Bearer {}'.format(access_token)}
     for header in ['Accept', 'Accept-Language']:
@@ -422,7 +434,7 @@ def callback():
             user.name = user_data['name']
             print(token)
             user.tokens = json.dumps(token)
-            user.access_token = token['access_token']
+            user.refresh_token = token['refresh_token']
             user.avatar = user_data['picture']
             db.session.add(user)
             db.session.commit()
