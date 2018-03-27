@@ -22,7 +22,11 @@ import ssl
 from urllib import urlencode, urlopen
 import urllib2
 
+import logging
+
 basedir = os.path.abspath(os.path.dirname(__file__))
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
 
 
 """App Configuration"""
@@ -207,7 +211,8 @@ def google_access_token(request):
         'client_id': Auth.CLIENT_ID,
         'client_secret': Auth.CLIENT_SECRET,
     }
-    return oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    return resp['access_token']
 
 
 @app.route('/check_session/<cookie>')
