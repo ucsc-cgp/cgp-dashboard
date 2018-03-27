@@ -96,7 +96,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=True)
     avatar = db.Column(db.String(200))
-    access_token = db.Column(db.String(5000))
     refresh_token = db.Column(db.String(5000))
     tokens = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
@@ -435,7 +434,6 @@ def callback():
             user.name = user_data['name']
             print(token)
             user.tokens = json.dumps(token)
-            user.access_token = token['access_token']
             user.refresh_token = token['refresh_token']
             user.avatar = user_data['picture']
             db.session.add(user)
