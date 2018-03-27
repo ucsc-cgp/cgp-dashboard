@@ -91,18 +91,20 @@ login_manager.session_protection = "strong"
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(100), primary_key=True)
     name = db.Column(db.String(100), nullable=True)
     avatar = db.Column(db.String(200))
     access_token = db.Column(db.String(5000))
     tokens = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
 
+    def get_id(self):
+        return self.email
+
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(user_id)
 
 
 """ OAuth Session creation """
@@ -186,16 +188,22 @@ def parse_token():
     # Return the bearer and token string
     return parts[0], parts[1]
 
-def google_access_token(request):
-    cookie = request.cookies.get('session')
+def get_logged_user(cookie):
     decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
     assert (decoded_cookie.viewkeys()
             >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
-    assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
+    assert (User.query.get(decoded_cookie['user_id']) is not None), "No user with {}".format(
         decoded_cookie['user_id'])
-    logged_user = User.query.get(int(decoded_cookie['user_id']))
+    logged_user = User.query.get(decoded_cookie['user_id'])
+    return logged_user
+
+
+def google_access_token(request):
+    cookie = request.cookies.get('session')
+    logged_user = get_logged_user(cookie)
     access_token = logged_user.access_token
     return access_token
+
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -212,14 +220,8 @@ def check_session(cookie):
                 'error': e.message
             }
             return jsonify(response)
-        # Now look at the cookie
-        decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
         try:
-            assert (decoded_cookie.viewkeys()
-                    >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
-            assert (User.query.get(int(decoded_cookie['user_id'])) is not None), "No user with {}".format(
-                decoded_cookie['user_id'])
-            logged_user = User.query.get(int(decoded_cookie['user_id']))
+            logged_user = get_logged_user(cookie)
             response = {
                 'email': logged_user.email,
                 'name': logged_user.name,
