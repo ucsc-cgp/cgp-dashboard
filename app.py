@@ -8,6 +8,8 @@ from flask import Flask, url_for, redirect, \
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
+from oauthlib.oauth2 import OAuth2Error
+
 from decode_cookie import decodeFlaskCookie
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
@@ -202,7 +204,7 @@ def get_logged_user(cookie):
     logged_user = User.query.get(decoded_cookie['user_id'])
     return logged_user
 
-def google_access_token(request):
+def new_google_access_token(request):
     cookie = request.cookies.get('session')
     logged_user = get_logged_user(cookie)
     refresh_token = logged_user.refresh_token
@@ -213,7 +215,6 @@ def google_access_token(request):
     }
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
     return resp['access_token']
-
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -274,7 +275,10 @@ def export_to_firecloud():
     # filters are optional
     filters = request.args.get('filters')
     try:
-        access_token = google_access_token(request)
+        access_token = new_google_access_token(request)
+    except OAuth2Error as e:
+        return "Error getting access token", 401
+    try:
         params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
         url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
                                                                     os.getenv('DCC_DASHBOARD_HOST'),params)
@@ -294,7 +298,10 @@ def proxy_firecloud():
     if path is None:
         return "Missing path query parameter", 400
     pathParam = path if path.startswith('/') else '/' + path
-    access_token = google_access_token(request)
+    try:
+        access_token = new_google_access_token(request)
+    except OAuth2Error as e:
+        return "Error getting access token", 401
     url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
     headers = {'Authorization': 'Bearer {}'.format(access_token)}
     for header in ['Accept', 'Accept-Language']:
