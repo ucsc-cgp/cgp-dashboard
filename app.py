@@ -370,6 +370,10 @@ def html_rend_file_browser():
 def boardwalk():
     return redirect(url_for('boardwalk'))
 
+@app.route('/privacy')
+def privacy():
+    return redirect(url_for('privacy'))
+
 
 @app.route('/login')
 def login():
