@@ -278,8 +278,9 @@ def export_to_firecloud():
         url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
                                                                     os.getenv('DCC_DASHBOARD_HOST'),params)
         req = urllib2.Request(url, headers={'Authorization': "Bearer {}".format(access_token)})
-        response = urllib2.urlopen(req)
-        return response.read()
+        handler = urllib2.urlopen(req)
+        content_type = handler.headers['content-type']
+        return Response(handler.read(), mimetype=content_type)
     except AssertionError as e:
         response = {
             'error': e.message
@@ -305,8 +306,13 @@ def proxy_firecloud():
             headers[header] = val
     try:
         req = urllib2.Request(url, headers=headers)
-        response = urllib2.urlopen(req)
-        return response.read()
+        handler = urllib2.urlopen(req)
+        content_type = handler.headers['content-type']
+        response = Response(handler.read(), mimetype=content_type)
+        content_encoding = handler.headers['content-encoding']
+        if content_encoding is not None:
+            response.headers['content-encoding'] = content_encoding
+        return response
     except urllib2.HTTPError as e:
         resp = {'url': url, 'headers': headers}
         return jsonify(resp), e.code
