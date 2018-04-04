@@ -300,7 +300,7 @@ def proxy_firecloud():
         return "Error getting access token", 401
     url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
     headers = {'Authorization': 'Bearer {}'.format(access_token)}
-    for header in ['Accept', 'Accept-Language']:
+    for header in ['Accept', 'Accept-Language', 'Accept-Encoding']:
         val = request.headers[header]
         if val is not None:
             headers[header] = val
@@ -309,9 +309,10 @@ def proxy_firecloud():
         handler = urllib2.urlopen(req)
         content_type = handler.headers['content-type']
         response = Response(handler.read(), mimetype=content_type)
-        content_encoding = handler.headers['content-encoding']
-        if content_encoding is not None:
-            response.headers['content-encoding'] = content_encoding
+        content_encoding = 'content-encoding'
+        if content_encoding in handler.headers.keys():
+            response.headers[content_encoding] = handler.headers[
+                content_encoding]
         return response
     except urllib2.HTTPError as e:
         resp = {'url': url, 'headers': headers}
