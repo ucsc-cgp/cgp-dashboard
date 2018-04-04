@@ -211,6 +211,20 @@ def new_google_access_token(request):
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
     return resp['access_token']
 
+def make_request(url, headers):
+    try:
+        req = urllib2.Request(url, headers=headers)
+        handler = urllib2.urlopen(req)
+        content_type = handler.headers['content-type']
+        response = Response(handler.read(), mimetype=content_type)
+        content_encoding = 'content-encoding'
+        if content_encoding in handler.headers.keys():
+            response.headers[content_encoding] = handler.headers[
+                content_encoding]
+        return response
+    except urllib2.HTTPError as e:
+        return e.message, e.code
+
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
     if not request.headers.get("Authorization", None):
@@ -273,19 +287,13 @@ def export_to_firecloud():
         access_token = new_google_access_token(request)
     except OAuth2Error as e:
         return "Error getting access token", 401
-    try:
-        params = urlencode({'workspace': workspace, 'namespace': namespace, 'filters': filters})
-        url = "{}://{}/repository/files/export/firecloud?{}".format(os.getenv('DCC_DASHBOARD_PROTOCOL'),
-                                                                    os.getenv('DCC_DASHBOARD_HOST'),params)
-        req = urllib2.Request(url, headers={'Authorization': "Bearer {}".format(access_token)})
-        handler = urllib2.urlopen(req)
-        content_type = handler.headers['content-type']
-        return Response(handler.read(), mimetype=content_type)
-    except AssertionError as e:
-        response = {
-            'error': e.message
-        }
-        return jsonify(response)
+    params = urlencode(
+        {'workspace': workspace, 'namespace': namespace, 'filters': filters})
+    url = "{}://{}/repository/files/export/firecloud?{}".format(
+        os.getenv('DCC_DASHBOARD_PROTOCOL'),
+        os.getenv('DCC_DASHBOARD_HOST'), params)
+    headers = {'Authorization': "Bearer {}".format(access_token)}
+    return make_request(url, headers)
 
 @app.route('/proxy_firecloud', methods=['GET'])
 @login_required
@@ -304,20 +312,7 @@ def proxy_firecloud():
         val = request.headers[header]
         if val is not None:
             headers[header] = val
-    try:
-        req = urllib2.Request(url, headers=headers)
-        handler = urllib2.urlopen(req)
-        content_type = handler.headers['content-type']
-        response = Response(handler.read(), mimetype=content_type)
-        content_encoding = 'content-encoding'
-        if content_encoding in handler.headers.keys():
-            response.headers[content_encoding] = handler.headers[
-                content_encoding]
-        return response
-    except urllib2.HTTPError as e:
-        resp = {'url': url, 'headers': headers}
-        return jsonify(resp), e.code
-
+    return make_request(url, headers)
 
 @app.route('/<name>.html')
 def html_rend(name):
