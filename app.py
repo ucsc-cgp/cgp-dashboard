@@ -47,7 +47,8 @@ class Auth:
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
-    SCOPE = ['profile', 'email']
+    SCOPE = ['https://www.googleapis.com/auth/userinfo.profile',
+             'https://www.googleapis.com/auth/userinfo.email']
 
 
 class Config:
