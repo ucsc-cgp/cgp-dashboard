@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Unauthorized</title>
+    <style>
+        .button {
+            text-decoration: none;
+            color: white;
+            padding: 10px 25px 10px 25px;
+            background-color: #0b9bd3;
+            border-radius: 3px;
+            font-size: 18px;
+            min-height: 48px;
+        }
+        .main {
+            margin: auto;
+            max-width: 840px;
+            padding: 32px;
+            font-family: Arial;
+        }
+        .center {
+            text-align: center;
+        }
+        .title {
+            font-size: 64px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        .detail {
+            margin-bottom: 50px;
+        }
+        .project {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="center">
+        <img src="../static/UCSC-Logo-genomics-web-80.png" width="500px;">
+    </div>
+    <div class="center title">
+        Unauthorized
+    </div>
+    <div class="detail">
+        <p>We are sorry but this account{% if account %},
+            {{ account }}, {% endif %} is not authorized for access
+            to the project <span class="project">{{ project }}</span>.</p>
+        <p>If you believe you are using the correct email address and should be
+            authorized to access this project please contact
+            <a href="mailto:{{ contact }}">{{ contact }}</a>.</p>
+    </div>
+    <div class="center">
+        <a href="/" class="button">Go to Home Page</a>
+    </div>
+</div>
+</body>
+</html>
