@@ -1,6 +1,4 @@
 import os
-import json
-import datetime
 
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
@@ -10,18 +8,14 @@ from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from oauthlib.oauth2 import OAuth2Error
 
-from decode_cookie import decodeFlaskCookie
-from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from models import get_all
 from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
 from oauth2client.crypt import AppIdentityError
 
 
-import ssl
-from urllib import urlencode, urlopen
+from urllib import urlencode
 import urllib2
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -92,22 +86,98 @@ login_manager.session_protection = "strong"
 """ DB Models """
 
 
-class User(db.Model, UserMixin):
-    __tablename__ = "users"
-    email = db.Column(db.String(100), primary_key=True)
-    name = db.Column(db.String(100), nullable=True)
-    avatar = db.Column(db.String(200))
-    refresh_token = db.Column(db.String(5000))
-    tokens = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+class User(UserMixin):
+
+    def __init__(self, user=None, name=None, picture=None):
+        """
+        Pulls the user's info from the session. We use @property to keep the
+        session as the one source of truth, but allow access and setting of
+        user properties here.
+        """
+        if user is not None:
+            session['email'] = user
+        if name is not None:
+            session['name'] = name
+        if picture is not None:
+            session['avatar'] = picture
+        # self._created_at = session.get('created_at', datetime.datetime.utcnow())
+
+    @property
+    def email(self):
+        return session.get('email', None)
+
+    @email.setter
+    def email(self, value):
+        session['email'] = value
+
+    @property
+    def name(self):
+        return session.get('name', None)
+
+    @name.setter
+    def name(self, value):
+        session['name'] = value
+
+    @property
+    def picture(self):
+        return session.get('avatar', None)
+
+    @picture.setter
+    def picture(self, value):
+        session['avatar'] = value
+
+    @property
+    def is_active(self):
+        return self.email is not None
+
+    @property
+    def is_authenticated(self):
+        # FIXME: is this right? right to check refresh token?
+        return self.refresh_token is not None
+
+    @property
+    def is_anonymous(self):
+        return self.email is None
 
     def get_id(self):
         return self.email
 
+    @property
+    def tokens(self):
+        return session.get('tokens', None)
+
+    @tokens.setter
+    def tokens(self, value):
+        # Since these tokens won't be encrypted, make sure the refresh
+        # token isn't in there
+        try:
+            del value['refresh_token']
+        except KeyError:
+            pass
+        session['tokens'] = value
+
+    @property
+    def refresh_token(self):
+        # FIXME: dencrypt
+        return session.get('refresh_token', None)
+
+    @refresh_token.setter
+    def refresh_token(self, value):
+        # FIXME: encrypt
+        session['refresh_token'] = value
+
+    def logout(self):
+        """Clean up all the stuff we left in the session cookie"""
+        for attr in 'email', 'name', 'avatar', 'tokens', 'refresh_token':
+            try:
+                del session[attr]
+            except KeyError:
+                pass
+
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(user_id)
+    return User()
 
 
 """ OAuth Session creation """
@@ -191,19 +261,9 @@ def parse_token():
     # Return the bearer and token string
     return parts[0], parts[1]
 
-def get_logged_user(cookie):
-    decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
-    assert (decoded_cookie.viewkeys()
-            >= {'user_id', '_fresh'}), "Cookie not valid; does not have necessary fields"
-    assert (User.query.get(decoded_cookie['user_id']) is not None), "No user with {}".format(
-        decoded_cookie['user_id'])
-    logged_user = User.query.get(decoded_cookie['user_id'])
-    return logged_user
 
-def new_google_access_token(request):
-    cookie = request.cookies.get('session')
-    logged_user = get_logged_user(cookie)
-    refresh_token = logged_user.refresh_token
+def new_google_access_token():
+    refresh_token = current_user.refresh_token
     oauth = get_google_auth()
     extra = {
         'client_id': Auth.CLIENT_ID,
@@ -211,6 +271,7 @@ def new_google_access_token(request):
     }
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
     return resp['access_token']
+
 
 def make_request(url, headers):
     try:
@@ -225,6 +286,7 @@ def make_request(url, headers):
         return response
     except urllib2.HTTPError as e:
         return e.message, e.code
+
 
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
@@ -241,16 +303,16 @@ def check_session(cookie):
                 'error': e.message
             }
             return jsonify(response)
-        try:
-            logged_user = get_logged_user(cookie)
+        if current_user.email is None:
             response = {
-                'email': logged_user.email,
-                'name': logged_user.name,
-                'avatar': logged_user.avatar
+                'error': 'No user is stored in the session. The user is not '
+                         'logged in.'
             }
-        except AssertionError as e:
+        else:
             response = {
-                'error': e.message
+                'email': current_user.email,
+                'name': current_user.name,
+                'avatar': current_user.picture
             }
         return jsonify(response)
 
@@ -276,7 +338,7 @@ def export_to_firecloud():
           description: The namespace of the FireCloud workspace to create
     :return:
     """
-    workspace = request.args.get('workspace');
+    workspace = request.args.get('workspace')
     if workspace is None:
         return "Missing workspace query parameter", 400
     namespace = request.args.get('namespace')
@@ -285,7 +347,7 @@ def export_to_firecloud():
     # filters are optional
     filters = request.args.get('filters')
     try:
-        access_token = new_google_access_token(request)
+        access_token = new_google_access_token()
     except OAuth2Error as e:
         return "Error getting access token", 401
     params = urlencode(
@@ -296,6 +358,7 @@ def export_to_firecloud():
     headers = {'Authorization': "Bearer {}".format(access_token)}
     return make_request(url, headers)
 
+
 @app.route('/proxy_firecloud', methods=['GET'])
 @login_required
 def proxy_firecloud():
@@ -304,7 +367,7 @@ def proxy_firecloud():
         return "Missing path query parameter", 400
     pathParam = path if path.startswith('/') else '/' + path
     try:
-        access_token = new_google_access_token(request)
+        access_token = new_google_access_token()
     except OAuth2Error as e:
         return "Error getting access token", 401
     url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
@@ -314,6 +377,7 @@ def proxy_firecloud():
         if val is not None:
             headers[header] = val
     return make_request(url, headers)
+
 
 @app.route('/<name>.html')
 def html_rend(name):
@@ -356,7 +420,7 @@ def invoicing_service():
 @login_required
 def action_service():
     """
-    Function to render the action service papge
+    Function to render the action service page
     """
     data1 = os.environ['DCC_ACTION_SERVICE']
     return render_template('action_service.html', data=data1)
@@ -374,6 +438,7 @@ def html_rend_file_browser():
 @app.route('/boardwalk')
 def boardwalk():
     return redirect(url_for('boardwalk'))
+
 
 @app.route('/privacy')
 def privacy():
@@ -447,17 +512,9 @@ def callback():
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
             # return redirect(url_for('unauthorized', account=<redacted email>)),
-            user = User.query.filter_by(email=email).first()
-            if user is None:
-                user = User()
-                user.email = email
-            user.name = user_data['name']
-            print(token)
-            user.tokens = json.dumps(token)
-            user.refresh_token = token['refresh_token']
-            user.avatar = user_data['picture']
-            db.session.add(user)
-            db.session.commit()
+            user = User()
+            for attr in 'email', 'name', 'picture', 'refresh_token', 'tokens':
+                setattr(user, attr, user_data[attr])
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
@@ -470,6 +527,7 @@ def callback():
 @app.route('/logout')
 @login_required
 def logout():
+    User().logout()
     logout_user()
     return redirect(url_for('index'))
 
