@@ -382,8 +382,8 @@ def privacy():
 @app.route('/unauthorized')
 def unauthorized():
     account = request.args.get('account')
-    project = os.getenv('PROJECT_NAME')
-    contact = os.getenv('CONTACT_EMAIL')
+    project = os.getenv('PROJECT_NAME', '')
+    contact = os.getenv('CONTACT_EMAIL', '')
     return render_template('unauthorized.html',
         contact=contact, project=project, account=account)
 
