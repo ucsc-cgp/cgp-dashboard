@@ -337,6 +337,8 @@ def html_rend(name):
         return render_template(name + '.html')
     if name == 'boardwalk':
         return boardwalk()
+    if name == 'unauthorized':
+        return render_template(name + '.html')
     return render_template(name + '.html')
 
 
@@ -376,6 +378,14 @@ def boardwalk():
 @app.route('/privacy')
 def privacy():
     return redirect(url_for('privacy'))
+
+@app.route('/unauthorized')
+def unauthorized():
+    account = request.args.get('account')
+    project = os.getenv('PROJECT_NAME', '')
+    contact = os.getenv('CONTACT_EMAIL', '')
+    return render_template('unauthorized.html',
+        contact=contact, project=project, account=account)
 
 
 @app.route('/login')
@@ -434,6 +444,9 @@ def callback():
         if resp.status_code == 200:
             user_data = resp.json()
             email = user_data['email']
+            # If so configured, check for whitelist and redirect to
+            # unauthorized page if not in whitelist, e.g.,
+            # return redirect(url_for('unauthorized', account=<redacted email>)),
             user = User.query.filter_by(email=email).first()
             if user is None:
                 user = User()
