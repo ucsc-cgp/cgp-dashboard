@@ -504,8 +504,11 @@ def callback():
             # unauthorized page if not in whitelist, e.g.,
             # return redirect(url_for('unauthorized', account=<redacted email>)),
             user = User()
-            for attr in 'email', 'name', 'picture', 'refresh_token', 'tokens':
+            print 'user_data is:', user_data
+            for attr in 'email', 'name', 'picture', 'tokens':
                 setattr(user, attr, user_data[attr])
+            user.refresh_token = user_data.token['refresh_token']
+            print 'user is:', user
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
