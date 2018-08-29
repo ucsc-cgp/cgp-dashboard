@@ -55,16 +55,11 @@ class Config:
 class DevConfig(Config):
     """Dev config"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, "test.db")
 
 
 class ProdConfig(Config):
     """Production config"""
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@login-db/{}'.format(
-                               os.getenv("L_POSTGRES_USER"),
-                               os.getenv("L_POSTGRES_PASSWORD"),
-                               os.getenv("L_POSTGRES_DB"))
 
 
 config = {
@@ -77,13 +72,9 @@ config = {
 """APP creation and configuration"""
 app = Flask(__name__)
 app.config.from_object(config['prod'])
-db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
-
-
-""" DB Models """
 
 
 class User(UserMixin):
