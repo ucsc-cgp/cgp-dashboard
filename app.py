@@ -509,8 +509,9 @@ def callback():
             print 'user_data is:', user_data
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
-            user.tokens = token
+            # We have to save refresh token first b/c it is removed when stored tokens is stored
             user.refresh_token = token['refresh_token']
+            user.tokens = token
             print 'user is:', user
             login_user(user)
             # Empty flashed messages
