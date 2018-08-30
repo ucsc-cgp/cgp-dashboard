@@ -128,7 +128,6 @@ class User(UserMixin):
 
     @property
     def is_authenticated(self):
-        # FIXME: is this right? right to check refresh token?
         return self.refresh_token is not None
 
     @property
@@ -244,12 +243,6 @@ GET burn_idx/_search
     response = s.execute()
     return response.aggregations.filtered_jobs.value
 
-@app.route('/test')
-def test():
-    # FIXME deleteme
-    # print 'encrypted refresh token:', session['refresh_token']
-    # print 'decrypted refresh token:', current_user.refresh_token
-    return 'this is just a test page'
 
 @app.route('/')
 def index():
@@ -539,25 +532,16 @@ def callback():
             # unauthorized page if not in whitelist, e.g.,
             whitelist = os.getenv('EMAIL_WHITELIST_NAME')
             # a value in the variable here is the flag for using a whitelist
-            print 'whitelist name is:', whitelist
             if whitelist:
-                # FIXME: delete prints!
                 b = Bouncer(whitelist)
-                print 'whitelist is activated'
                 if not b.is_authorized(email):
-                    print 'not authorized'
                     return redirect(url_for('unauthorized', account=redact_email(email)))
                 else:
-                    print 'there is a whitelist and they are activated'
             user = User()
-            # FIXME: delete prints
-            print 'token is:', token
-            print 'user_data is:', user_data
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
             user.refresh_token = token['refresh_token']
             user.access_token = token['access_token']
-            print 'user is:', user
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
