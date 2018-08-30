@@ -88,4 +88,32 @@ Restart the apache server by doing:
 sudo apachectl restart
 ```
 
+## Running tests
 
+Right now, the test framework is minimal and underdeveloped. This will
+change soon!
+
+To run tests, first set up a python2.7 virtual environment in the
+repository's directory
+
+```
+virtualenv venv -p python2.7
+```
+
+and activate it
+
+```
+source venv/bin/activate
+```
+
+Make sure requirements are installed:
+
+```
+pip install -r requirements.txt
+```
+
+and then test!
+
+```
+python -m unittest tests
+```
