@@ -4,7 +4,6 @@ RUN apt-get update
 RUN apt-get install -y build-essential libpq-dev libssl-dev libffi-dev python-dev
 #Install procmail to install the lock
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install procmail
-# Even though 2.7 is installed, we need the latest version for boto (for bouncer)
 RUN apt-get install -y python-pip postgresql
 RUN pip install -U pip
 RUN pip install uwsgi
