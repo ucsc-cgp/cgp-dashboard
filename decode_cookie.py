@@ -32,5 +32,3 @@ def encodeFlaskCookie(secret_key, cookieDict):
     sscsi = SimpleSecureCookieSessionInterface()
     signingSerializer = sscsi.get_signing_serializer(secret_key)
     return signingSerializer.dumps(cookieDict)
-
-
