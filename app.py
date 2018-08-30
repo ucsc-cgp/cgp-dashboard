@@ -305,16 +305,19 @@ def check_session(cookie):
                 'error': e.message
             }
             return jsonify(response)
-        if current_user.email is None:
+        # We use User() to get the info from the session since current_user is
+        # anonymous here
+        user = User()
+        if user.email is None:
             response = {
                 'error': 'No user is stored in the session. The user is not '
                          'logged in.'
             }
         else:
             response = {
-                'email': current_user.email,
-                'name': current_user.name,
-                'avatar': current_user.picture
+                'email': user.email,
+                'name': user.name,
+                'avatar': user.picture
             }
         return jsonify(response)
 
