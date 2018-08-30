@@ -161,7 +161,7 @@ class User(UserMixin):
 
     def logout(self):
         """Clean up all the stuff we left in the session cookie"""
-        for attr in 'email', 'name', 'avatar', 'tokens', 'refresh_token':
+        for attr in 'email', 'name', 'avatar', 'access_token', 'refresh_token':
             try:
                 del session[attr]
             except KeyError:
