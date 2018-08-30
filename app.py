@@ -13,14 +13,13 @@ from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
 from oauth2client.crypt import AppIdentityError
-from Crypto.Cipher import AES
-from Crypto import Random
 
 
 from urllib import urlencode
 import urllib2
 
 from decode_cookie import decodeFlaskCookie
+from utils import redact_email, decrypt, encrypt, new_iv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -149,26 +148,16 @@ class User(UserMixin):
 
     @property
     def refresh_token(self):
-        key = os.getenv('REFRESH_TOKEN_ENCRYPT_KEY')
-        if key is None:
-            raise ValueError('There is no encryption key set for the refresh token. '
-                             'Something was misconfigured!')
         encrypted_token = session.get('refresh_token', None)
         iv = session['iv']
-        cipher = AES.new(key, AES.MODE_CFB, iv)
-        return cipher.decrypt(encrypted_token)
+        return decrypt(encrypted_token, iv)
 
     @refresh_token.setter
     def refresh_token(self, value):
-        key = os.getenv('REFRESH_TOKEN_ENCRYPT_KEY')
-        if key is None:
-            raise ValueError('There is no encryption key set for the refresh token. '
-                             'Something was misconfigured!')
-        iv = Random.new().read(AES.block_size)
         # store the initialization vector in the session. It doesn't need to be secure
+        iv = new_iv()
         session['iv'] = iv
-        cipher = AES.new(key, AES.MODE_CFB, iv)
-        session['refresh_token'] = cipher.encrypt(value)
+        session['refresh_token'] = encrypt(value, iv)
 
     def logout(self):
         """Clean up all the stuff we left in the session cookie"""
@@ -474,23 +463,6 @@ def login():
         prompt='select_account consent')
     session['oauth_state'] = state
     return redirect(auth_url)
-
-
-def redact_email(email):
-    """
-    cut out the domain for an email if there is one
-
-    We still show up to 4 character of the top level domain (including the .)
-    For everything else in the domain, just replace with ***
-    Return '****' if email is misformatted
-    """
-    if len(email.split('@')) != 2:
-        return '****'
-    user, host = email.split('@')
-    tld = host.split('.')[-1]
-    if len(host.split('.')) < 2:
-        return user + '@' + '****'
-    return user + '@' + '***' + ('.' + tld)[-4:]
 
 
 @app.route('/gCallback')
