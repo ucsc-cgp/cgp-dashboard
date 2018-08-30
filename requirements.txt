@@ -10,8 +10,8 @@ oauth2client==4.1.2
 pyasn1==0.4.2
 psycopg2==2.7.4
 SQLAlchemy==1.1.5
-pycrypto>=2.6.1, <3
-cgp-bouncer>=0.1, <1
+pycrypto==2.6.1
+cgp-bouncer==0.1.0
 # urllib3 is required b/c otherwise the old version causes a weird error with python 2.7.9
 # it is a requirement for botocore which is required by cgp-bouncer
-urllib3>=1.23, <2
+urllib3==1.23

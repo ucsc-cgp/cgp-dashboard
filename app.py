@@ -531,7 +531,7 @@ def callback():
 @app.route('/logout')
 @login_required
 def logout():
-    User().logout()
+    current_user.logout()
     logout_user()
     return redirect(url_for('index'))
 
