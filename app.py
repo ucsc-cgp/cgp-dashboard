@@ -539,7 +539,6 @@ def callback():
                 b = Bouncer(whitelist)
                 if not b.is_authorized(email):
                     return redirect(url_for('unauthorized', account=redact_email(email)))
-                else:
             user = User()
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
