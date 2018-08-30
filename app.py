@@ -139,18 +139,12 @@ class User(UserMixin):
         return self.email
 
     @property
-    def tokens(self):
-        return session.get('tokens', None)
+    def access_token(self):
+        return session.get('access_token', None)
 
-    @tokens.setter
-    def tokens(self, value):
-        # Since these tokens won't be encrypted, make sure the refresh
-        # token isn't in there
-        try:
-            del value['refresh_token']
-        except KeyError:
-            pass
-        session['tokens'] = value
+    @access_token.setter
+    def access_token(self, value):
+        session['access_token'] = value
 
     @property
     def refresh_token(self):
@@ -253,8 +247,9 @@ GET burn_idx/_search
 @app.route('/test')
 def test():
     # FIXME deleteme
-    print 'encrypted refresh token:', session['refresh_token']
-    print 'decrypted refresh token:', current_user.refresh_token
+    # print 'encrypted refresh token:', session['refresh_token']
+    # print 'decrypted refresh token:', current_user.refresh_token
+    return 'this is just a test page'
 
 @app.route('/')
 def index():
@@ -532,9 +527,8 @@ def callback():
             print 'user_data is:', user_data
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
-            # We have to save refresh token first b/c it is removed when stored tokens is stored
             user.refresh_token = token['refresh_token']
-            user.tokens = token
+            user.access_token = token['access_token']
             print 'user is:', user
             login_user(user)
             # Empty flashed messages
