@@ -13,6 +13,8 @@ from requests_oauthlib import OAuth2Session
 from requests.exceptions import HTTPError
 from oauth2client.client import verify_id_token
 from oauth2client.crypt import AppIdentityError
+from Crypto.Cipher import AES
+from Crypto import Random
 
 
 from urllib import urlencode
@@ -152,13 +154,26 @@ class User(UserMixin):
 
     @property
     def refresh_token(self):
-        # FIXME: dencrypt
-        return session.get('refresh_token', None)
+        key = os.getenv('REFRESH_TOKEN_ENCRYPT_KEY')
+        if key is None:
+            raise ValueError('There is no encryption key set for the refresh token. '
+                             'Something was misconfigured!')
+        encrypted_token = session.get('refresh_token', None)
+        iv = session['iv']
+        cipher = AES.new(key, AES.MODE_CFB, iv)
+        return cipher.decrypt(encrypted_token)
 
     @refresh_token.setter
     def refresh_token(self, value):
-        # FIXME: encrypt
-        session['refresh_token'] = value
+        key = os.getenv('REFRESH_TOKEN_ENCRYPT_KEY')
+        if key is None:
+            raise ValueError('There is no encryption key set for the refresh token. '
+                             'Something was misconfigured!')
+        iv = Random.new().read(AES.block_size)
+        # store the initialization vector in the session. It doesn't need to be secure
+        session['iv'] = iv
+        cipher = AES.new(key, AES.MODE_CFB, iv)
+        session['refresh_token'] = cipher.encrypt(value)
 
     def logout(self):
         """Clean up all the stuff we left in the session cookie"""
@@ -235,6 +250,11 @@ GET burn_idx/_search
     response = s.execute()
     return response.aggregations.filtered_jobs.value
 
+@app.route('/test')
+def test():
+    # FIXME deleteme
+    print 'encrypted refresh token:', session['refresh_token']
+    print 'decrypted refresh token:', current_user.refresh_token
 
 @app.route('/')
 def index():
