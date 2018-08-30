@@ -1,9 +1,9 @@
 import os
 
+from bouncer import Bouncer
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
     flash, get_flashed_messages, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, login_user, \
     logout_user, current_user, UserMixin
 from oauthlib.oauth2 import OAuth2Error
@@ -477,6 +477,23 @@ def login():
     return redirect(auth_url)
 
 
+def redact_email(email):
+    """
+    cut out the domain for an email if there is one
+
+    We still show up to 4 character of the top level domain (including the .)
+    For everything else in the domain, just replace with ***
+    Return '****' if email is misformatted
+    """
+    if len(email.split('@')) != 2:
+        return '****'
+    user, host = email.split('@')
+    tld = host.split('.')[-1]
+    if len(host.split('.')) < 2:
+        return user + '@' + '****'
+    return user + '@' + '***' + ('.' + tld)[-4:]
+
+
 @app.route('/gCallback')
 def callback():
     """
@@ -520,7 +537,18 @@ def callback():
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
-            # return redirect(url_for('unauthorized', account=<redacted email>)),
+            whitelist = os.getenv('EMAIL_WHITELIST_NAME')
+            # a value in the variable here is the flag for using a whitelist
+            print 'whitelist name is:', whitelist
+            if whitelist:
+                # FIXME: delete prints!
+                b = Bouncer(whitelist)
+                print 'whitelist is activated'
+                if not b.is_authorized(email):
+                    print 'not authorized'
+                    return redirect(url_for('unauthorized', account=redact_email(email)))
+                else:
+                    print 'there is a whitelist and they are activated'
             user = User()
             # FIXME: delete prints
             print 'token is:', token
