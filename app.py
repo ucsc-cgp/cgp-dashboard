@@ -20,6 +20,8 @@ from Crypto import Random
 from urllib import urlencode
 import urllib2
 
+from decode_cookie import decodeFlaskCookie
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -305,19 +307,20 @@ def check_session(cookie):
                 'error': e.message
             }
             return jsonify(response)
-        # We use User() to get the info from the session since current_user is
-        # anonymous here
-        user = User()
-        if user.email is None:
+        # we have to decode the cookie manually b/c we're not getting it automatically through
+        # flask, rather it has to be passed to and fro with node and client and dashboard
+        decoded_cookie = decodeFlaskCookie(os.getenv('SECRET_KEY', 'somethingsecret'), cookie)
+        email = decoded_cookie['email']
+        if email is None:
             response = {
                 'error': 'No user is stored in the session. The user is not '
                          'logged in.'
             }
         else:
             response = {
-                'email': user.email,
-                'name': user.name,
-                'avatar': user.picture
+                'email': email,
+                'name': decoded_cookie['name'],
+                'avatar': decoded_cookie['avatar']
             }
         return jsonify(response)
 
