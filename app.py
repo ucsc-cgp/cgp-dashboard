@@ -263,6 +263,7 @@ def new_google_access_token():
         'client_secret': Auth.CLIENT_SECRET,
     }
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    current_user.access_token = resp['access_token']
     return resp['access_token']
 
 
@@ -312,6 +313,62 @@ def check_session(cookie):
                 'avatar': decoded_cookie['avatar']
             }
         return jsonify(response)
+
+
+def get_user_info_from_token():
+    """Try and get the user's info and return the response object"""
+    google = get_google_auth(token={'access_token': current_user.access_token})
+    return google.get(Auth.USER_INFO)
+
+
+@app.route('/me')
+def me():
+    """
+    returns information about the user making the request.
+
+    If authentication is enabled for the deployment, and there is no
+    access token, or it is expired and cannot be renewed, then return a
+    401.
+
+    If authentication is not enabled for the deployment, and there is no
+    access token, or it is expired and cannot be renewed, then return
+    an anonymous user.
+
+        {'name': 'anonymous'}
+
+    If the access token has not expired, or it can be refreshed with the
+    refresh token, then return the following information about the user.
+
+        {
+            "name": "Jane Doe",
+            "email": "jdoe@example.com",
+            "avatar": "https:///lh6.googleusercontent.com/....",
+            "accessToken": "the access token"
+        }
+
+    In addition, if the access token was refreshed, the new access token
+    should be sent back in the session cookie.
+    """
+
+    whitelist = os.getenv('EMAIL_WHITELIST_NAME')
+    # Do we have an access token?
+    if current_user.is_anonymous:
+        if whitelist:
+            return 'No access token', 401
+        else:
+            return jsonify({'name': 'anonymous'})
+    resp = get_user_info_from_token()
+    if resp.status_code == 400:
+        # token expired, try once more
+        new_google_access_token()
+        resp = get_user_info_from_token()
+    if resp.status_code != 200:
+        return 'Invalid access code could not be refreshed', 401
+    user_data = resp.json()
+    output = dict((k, user_data[k]) for k in ('name', 'email'))
+    output['avatar'] = user_data['picture']
+    output['accessToken'] = current_user.access_token
+    return jsonify(output)
 
 
 @app.route('/export_to_firecloud')
