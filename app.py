@@ -256,6 +256,11 @@ def parse_token():
 
 
 def new_google_access_token():
+    """
+    Tries to get new access token.
+
+    If refresh fails an OAuth2Error will be raised
+    """
     refresh_token = current_user.refresh_token
     oauth = get_google_auth()
     extra = {
@@ -360,10 +365,16 @@ def me():
     resp = get_user_info_from_token()
     if resp.status_code == 400:
         # token expired, try once more
-        new_google_access_token()
+        try:
+            new_google_access_token()
+        except OAuth2Error as e:
+            app.logger.warning('Could not refresh access token')
+            session.pop('access_token')
+            session.pop('refresh_token')
+            return 'Could not refresh access token: ' + e.message, 401
         resp = get_user_info_from_token()
     if resp.status_code != 200:
-        return 'Invalid access code could not be refreshed', 401
+        return 'Failed to get user info: ' + resp.text, 401
     user_data = resp.json()
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
