@@ -57,6 +57,7 @@
 					<md-toolbar> <!-- Material Design-based toolbar -->
 					<md-toolbar-row> <!-- Required for correct alignment of child elements -->
 						<img src="{{url_for('static', filename='img/logo-ucsc-gi@1x.png')}}" srcset="{{url_for('static', filename='img/logo-ucsc-gi@2x.png')}} 2x, {{url_for('static', filename='img/logo-ucsc-gi@3x.png')}} 3x"> <!-- Use srcset to specify responsive images -->
+                        <img src="{{ url_for('static', filename='img/stage-commons-logo.png') }}" style="height: inherit">
 
 						<!-- Hamburger start -->
 						<button md-icon-button menu-open>
@@ -77,16 +78,7 @@
 								<a href="index.html">Home</a>
 							</cc-toolbar-nav-item>
 							<cc-toolbar-nav-item {% block page_Boardwalk %}{% endblock  %}>
-								<a href="boardwalk">Boardwalk</a>
-							</cc-toolbar-nav-item>
-							<cc-toolbar-nav-item {% block page_Wiki %}{% endblock  %}>
-								<a href="https://ucsc-cgl.atlassian.net/wiki/">Wiki</a>
-							</cc-toolbar-nav-item>
-							<cc-toolbar-nav-item {% block page_About %}{% endblock  %}>
-								<a href="about.html">About</a>
-							</cc-toolbar-nav-item>
-              						<cc-toolbar-nav-item {% block page_Help %}{% endblock  %}>
-								<a href="help.html">Help</a>
+								<a href="boardwalk">Data Browser</a>
 							</cc-toolbar-nav-item>
               {%- if current_user.is_authenticated -%}
               <cc-toolbar-nav-item>
@@ -138,7 +130,7 @@
 								 <a href="https://ucscgenomics.soe.ucsc.edu/">UCSC Genomics Institute</a>
 							</cgl-footer-nav-item>
 							<cgl-footer-nav-item>
-								 <a href="https://cgl.genomics.ucsc.edu/">UCSC Computational Genomics Laboratory</a>
+								 <a href="https://cgp.genomics.ucsc.edu/">UCSC Computational Genomics Platform</a>
 							</cgl-footer-nav-item>
 							<cgl-footer-nav-item>
 								 <a href="/privacy.html">Privacy Policy</a>

@@ -1,86 +1,121 @@
 {% extends "base.html" %}
-{% block title  %} Analysis Core  {% endblock %}
-{% block page_Analysis %} class="active" {% endblock  %}
-{% block meta  %} 
-	<script src="{{url_for('static', filename='file_browser/common/lib/angular.min.js')}}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
-	<script src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
-{% endblock %}
+{% block title %} UCSC Data Browser  {% endblock %}
+{% block page_Analysis %} class="active" {% endblock %}
 {% block content %}
- 			<main class="layout-column layout-padding flex">
-				<section class="snap-960">
-					<h1 class="md-display-1" style="color:#FF6B6B;">Mission</h1>
-					<p class="md-body-1">Our mission as the Analysis Core is to help researchers in the UCSC Genomics Institute use modern tools to accurately and efficiently analyze large volumes of sequence data.  We build the software that makes this possible (the Development team) and we also are responsible for running the "core" analysis pipelines for projects within the Institute (the Production team). <!--  See our detailed mission statement for more information. --> </p>
-					<h3 class="md-title">Available Workflows</h3>
-					<p class="md-body-1">We are growing our available pipelines to support projects in the Institute including:</p>
-
-					 <cgl-data-table-container> <!-- Required for hiding overflow and enabling scroll on extra small devices -->
-					 <cgl-data-table class="verbose">
-
-						  <!-- Header row start -->
-						  <cgl-data-table-row>
-								<cgl-data-table-cell>
-									 <span class="md-subhead">Pipeline</span>
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 <span class="md-subhead">Description</span>
-								</cgl-data-table-cell>
-						  </cgl-data-table-row>
-						  <!-- Header row end -->
-
-						  <cgl-data-table-row>
-								<cgl-data-table-cell>
-									 RNAseq
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 RNASeq analysis using RSEM and Kallisto
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									 Whole Exome/Whole Genome - Germline
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 GATK best practices germline pipeline with bcbio
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									Whole Genome - Somatic
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 Whole genome somatic workflows from PCAWG including Sanger, DKFZ, and EMBL best practices or bcbio
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									Whole Exome - Somatic
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 Whole exome somatic workflow with bcbio
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-							<cgl-data-table-row>
-								<cgl-data-table-cell>
-									 ProTECT
-								</cgl-data-table-cell>
-								<cgl-data-table-cell>
-									 Neoantigen pipeline
-								</cgl-data-table-cell>
-							</cgl-data-table-row>
-
-					 </cgl-data-table>
-					</cgl-data-table-container>
-
-					<h3 class="md-title">Ordering Analysis</h3>
-					<p class="md-body-1">You can see our current <a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing">Workflow Pricing</a> for information on the costs of analyzing samples with these pipelines. Large batches can be processed at reduced rates, please contact us for more information using the "Submit Analysis Request" below.</p>
-					<center>
-					 	<h3 class="md-title"><a href="https://ucsc-cgl.atlassian.net/wiki/display/PUB/Workflow+Pricing" class="unstyled">Current Analysis Workflows & Pricing</a></h3>
-					 	<h3 class="md-title"><a href="http://goo.gl/forms/rGWJ1Kdq9h" class="unstyled">Submit Analysis Request</a></h3>
-					 	<h3 class="md-title"><a href="https://docs.google.com/spreadsheets/d/1R03EV5vH7Moluepb52R3ingso8xIcL352E52XenO5FQ/edit#gid=0" class="unstyled">Submit Workflow Creation Request</a></h3>
-					 </center>
-				</section>
-			</main>
-
+    <main class="layout-column layout-padding flex">
+        <section class="snap-960">
+            <h1 class="md-display-1 center" style="color:#FF6B6B;">UCSC
+                Boardwalk
+                Data Browser</h1>
+            <h2 class="center">Explore and Export Genomics Research Data</h2>
+            <p class="md-body-1">
+                The UCSC Boardwalk Data Browser is a web-based platform
+                for exploring and exporting genomics data. The data includes
+                the data's metadata, as well as links to the actual data.
+                The links come in two different formats; cloud native URLs
+                such as those supported by Amazon S3 and Google Cloud Storage,
+                as well as
+                emerging GA4GH <a
+                    href="https://github.com/ga4gh/data-object-service-schemas">Data
+                Object Service</a> standard URIs.
+                You can easily search for data using facets, and export
+                the selected data, either locally to a manifest file or into the
+                Broad Institute's
+                <a href="https://bvdp-saturn-prod.appspot.com/">Saturn</a>.
+            </p>
+            <h2 class="center">Getting Started</h2>
+            {% if auth_required %}
+                <h3 class="center">Restricted Access Data</h3>
+                <p class="md-body-1">
+                    The data you are viewing has restricted access. You must
+                    log in with an email address that has been
+                    whitelisted. If your
+                    email is not whitelisted, you can request access
+                    at <a
+                        href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+                    To login, click the login link at the top of the page.
+                </p>
+            {% else %}
+                <h3 class="center">Open Access Data</h3>
+                <p class="md-body-1">
+                    The data you are browsing is open access data. You can
+                    view it anonymously. If you prefer, you can optionally
+                    log in, although that will not the change the functionality.
+                </p>
+            {% endif %}
+            <h3 class="center">Exploring</h3>
+            <p class="md-body-1">
+                To start exploring, click the Data Browser link at the top of
+                the page. You will see various boxes with filters that you can
+                apply to search the data. These are known as facets. At
+                the bottom of the page, there is a table showing all the
+                selected data. As you filter the data, the contents of the
+                table will change.
+            <p class="md-body-1">By default, all data is selected when you first
+                navigate to the
+                data
+                browser. If you want to look for particular data, you can use
+                the facet boxes to do so. Depending
+                on the data you are viewing, the facets you see may differ from
+            those used here as examples,
+                but you might see facets such as <span class="italic">Specimen Type</span>,
+                <span class="italic">Center Name</span>, and <span
+                        class="italic">File ID</span>.</p>
+            <p class="md-body-1">For some
+                facets, such as <span class="italic">Specimen Type</span>, you
+                will see all
+                the different values in the dataset, along with the count of the
+                number of instances of
+                each value. Click checkboxes of the specimen
+                types that you want to view.</p>
+            <p class="md-body-1">For other facets, such as the
+                <span class="italic">File ID</span>, where every
+                row has a different value, instead of clicking a checkbox, enter
+                the first few characters of the File ID. A dropdown of all file
+                ids matching the pattern will appear, and you can select the
+                exact
+                id.</p>
+            </p>
+            <h3 class="center">Exporting</h3>
+            <p class="md-body-1">
+                Once you have selected the relevant data in the data browser,
+                you can export that data. You can either export the data
+                to your local disk as a TSV file, or you can send the data
+                to <a href="https://bvdp-saturn-prod.appspot.com/">Saturn</a>,
+                for further processing in a FireCloud workspace. The data
+                is sent to Saturn as a
+                <a href="http://bd2k.ini.usc.edu/tools/bdbag/">BDBag</a>.
+            </p>
+            <p class="md-body-1">
+                There are two buttons on the bottom right of the screen in the
+                data browser. The upper button exports to Saturn; the lower
+                button downloads the data to your local disk. Click on the
+                appropriate button.
+            </p>
+            <h2 class="center">About the Data Browser</h2>
+            <p class="md-body-1 ">
+                The data browser is composed of the open source software in the
+                <a href="https://github.com/DataBiosphere">DataBiosphere
+                    organization</a> on GitHub.
+            </p>
+            <p class="md-body-1">
+                <a href="https://github.com/DataBiosphere/cgp-boardwalk">Boardwalk</a>
+                is the browser's web UI.
+            </p>
+            <p class="md-body-1">
+                <a href="https://github.com/DataBiosphere/azul">Azul</a> is an
+                Elastic Search indexer, as well as
+                an API to access the index.
+            </p>
+            <p class="md-body-1">
+                <a href="https://github.com/DataBiosphere/cgp-dashboard">Dashboard</a>
+                handles authentication,
+                authorization, and serving up static web content.
+            </p>
+            <p class="md-body-1">
+                <a href="https://github.com/DataBiosphere/cgp-deployment">CGP-Deployment</a>
+                is the deployment piece that ties all the repos together.
+            </p>
+        </section>
+    </main>
 {% endblock %}
