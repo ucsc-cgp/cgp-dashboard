@@ -326,11 +326,11 @@ def me():
     """
     returns information about the user making the request.
 
-    If authentication is enabled for the deployment, and there is no
+    If authentication is required for the deployment, and there is no
     access token, or it is expired and cannot be renewed, then return a
     401.
 
-    If authentication is not enabled for the deployment, and there is no
+    If authentication is not required for the deployment, and there is no
     access token, or it is expired and cannot be renewed, then return
     an anonymous user.
 
