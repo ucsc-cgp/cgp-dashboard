@@ -354,7 +354,7 @@ def get_user_info(token=None):
         resp = _get_user_info_from_token()
     # If there is a 5xx error, or some unexpected 4xx we will return the message but
     # leave the token's intact b/c they're not necessarily to blame for the error.
-    assert resp.status_code == 200, 'Failed to get user info: ' + resp.text
+    assert resp.status_code == 200, str(resp.text)
     return resp.json()
 
 
