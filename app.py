@@ -82,6 +82,8 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
 
+# make a global bouncer instance to avoid needless re-instantiation
+whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
 
 class User(UserMixin):
 
@@ -320,10 +322,40 @@ def check_session(cookie):
         return jsonify(response)
 
 
-def get_user_info_from_token():
-    """Try and get the user's info and return the response object"""
-    google = get_google_auth(token={'access_token': current_user.access_token})
+def _get_user_info_from_token(token=None):
+    """
+    Try and get the user's info. By default the access token in the session is used.
+
+    returns the response object
+    """
+    google = get_google_auth(token={
+        'access_token': current_user.access_token if token is None else token})
     return google.get(Auth.USER_INFO)
+
+
+def get_user_info(token=None):
+    """
+    Get user's info, retry with refreshed token if failed, and raise AssertError
+    or OAuth2Error if failure
+
+    If access token is provided, use that first
+    """
+    resp = _get_user_info_from_token(token=token)
+    if resp.status_code == 400:
+        # token expired, try once more
+        try:
+            new_google_access_token()
+        except OAuth2Error:
+            # erase old tokens if they're broken / expired
+            app.logger.warning('Could not refresh access token')
+            session.pop('access_token')
+            session.pop('refresh_token')
+            raise
+        resp = _get_user_info_from_token()
+    # If there is a 5xx error, or some unexpected 4xx we will return the message but
+    # leave the token's intact b/c they're not necessarily to blame for the error.
+    assert resp.status_code == 200, 'Failed to get user info: ' + resp.text
+    return resp.json()
 
 
 @app.route('/me')
@@ -362,24 +394,60 @@ def me():
             return 'No access token', 401
         else:
             return jsonify({'name': 'anonymous'})
-    resp = get_user_info_from_token()
-    if resp.status_code == 400:
-        # token expired, try once more
-        try:
-            new_google_access_token()
-        except OAuth2Error as e:
-            app.logger.warning('Could not refresh access token')
-            session.pop('access_token')
-            session.pop('refresh_token')
-            return 'Could not refresh access token: ' + e.message, 401
-        resp = get_user_info_from_token()
-    if resp.status_code != 200:
-        return 'Failed to get user info: ' + resp.text, 401
-    user_data = resp.json()
+    try:
+        user_data = get_user_info()
+    except AssertionError as e:
+        return e.message, 401
+    except OAuth2Error as e:
+        return 'Failed to get user info: ' + e.message, 401
+
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
     output['accessToken'] = current_user.access_token
     return jsonify(output)
+
+
+@app.route('/authorization')
+def authorization():
+    """
+    This endpoint determines if the caller is authorized of not.
+
+    If there is a bearer token, we try and use that. Otherwise we use
+    the access token in the session. If the token fails, then try and
+    refresh.
+
+    If we get a working token, then ping google for user info, get
+    their email and check it against bouncer.
+
+    If there is no whitelist, return 200
+    Can't get user info, return 401
+    User is authorized, return 204
+    User is not authorized, return 403
+    """
+    if not os.getenv('EMAIL_WHITELIST_NAME'):
+        return '', 200
+    try:
+        # parsing succeeds if there is an auth header
+        bearer, auth_token = parse_token()
+    except AssertionError:
+        auth_token = None
+    else:
+        if bearer != "Bearer":
+            return "Authorization must start with Bearer", 401
+    if auth_token is None and current_user.is_anonymous:
+        return "No token provided", 401
+    # use access token in session
+    try:
+        user_data = get_user_info(auth_token)
+    except AssertionError as e:
+        return str(e.message), 401
+    except OAuth2Error as e:
+        return 'Failed to get user info: ' + e.message, 401
+    # Now that we have the user data we can verify the email
+    if whitelist_checker.is_authorized(user_data['email']):
+        return '', 204
+    else:
+        return '', 403
 
 
 @app.route('/export_to_firecloud')
@@ -576,11 +644,7 @@ def callback():
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
-            whitelist = os.getenv('EMAIL_WHITELIST_NAME')
-            # a value in the variable here is the flag for using a whitelist
-            if whitelist:
-                b = Bouncer(whitelist)
-                if not b.is_authorized(email):
+            if os.getenv('EMAIL_WHITELIST_NAME') and not whitelist_checker.is_authorized(email):
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
