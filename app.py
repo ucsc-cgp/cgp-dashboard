@@ -380,7 +380,6 @@ def me():
             "name": "Jane Doe",
             "email": "jdoe@example.com",
             "avatar": "https:///lh6.googleusercontent.com/....",
-            "accessToken": "the access token"
         }
 
     In addition, if the access token was refreshed, the new access token
@@ -403,7 +402,6 @@ def me():
 
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
-    output['accessToken'] = current_user.access_token
     return jsonify(output)
 
 
