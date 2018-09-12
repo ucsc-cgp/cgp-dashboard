@@ -391,10 +391,9 @@ def html_rend(name):
         return render_template(name+'.html',
                                coreClientVersion=coreClientVersion)
     if name == 'index':
-        project = os.getenv('PROJECT_NAME', '')
         auth_required = os.getenv('EMAIL_WHITELIST_NAME') is not None
         contact_email = os.getenv('CONTACT_EMAIL', '')
-        return render_template(name + '.html', project=project,
+        return render_template(name + '.html',
                                auth_required=auth_required,
                                contact_email=contact_email)
     if name == 'boardwalk':
