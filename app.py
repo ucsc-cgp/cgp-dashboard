@@ -346,6 +346,8 @@ def get_user_info(token=None):
     """
     resp = _get_user_info_from_token(token=token)
     if resp.status_code == 400:
+        if token is None:
+            raise ValueError('The provided token was not accepted')
         # token expired, try once more
         try:
             new_google_access_token()
@@ -403,7 +405,7 @@ def me():
         return e.message, 401
     except OAuth2Error as e:
         return 'Failed to get user info: ' + e.message, 401
-    if not whitelist_checker.is_authorized(user_data['email']):
+    if whitelist_checker is not None and not whitelist_checker.is_authorized(user_data['email']):
         return 'User no longer whitelisted', 401
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
