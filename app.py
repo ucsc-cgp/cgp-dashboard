@@ -83,7 +83,10 @@ login_manager.login_view = "login"
 login_manager.session_protection = "strong"
 
 # make a global bouncer instance to avoid needless re-instantiation
-whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
+if os.getenv('EMAIL_WHITELIST_NAME') is not None:
+    whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
+else:
+    whitelist_checker = None
 
 class User(UserMixin):
 
@@ -269,6 +272,7 @@ def new_google_access_token():
         'client_id': Auth.CLIENT_ID,
         'client_secret': Auth.CLIENT_SECRET,
     }
+    # this call may throw an OAuth2Error
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
     current_user.access_token = resp['access_token']
     return resp['access_token']
@@ -354,7 +358,8 @@ def get_user_info(token=None):
         resp = _get_user_info_from_token()
     # If there is a 5xx error, or some unexpected 4xx we will return the message but
     # leave the token's intact b/c they're not necessarily to blame for the error.
-    assert resp.status_code == 200, str(resp.text)
+    if resp.status_code != 200:
+        raise ValueError(resp.text)
     return resp.json()
 
 
@@ -383,23 +388,23 @@ def me():
         }
 
     In addition, if the access token was refreshed, the new access token
-    should be sent back in the session cookie.
+    will be sent back in the session cookie.
     """
 
-    whitelist = os.getenv('EMAIL_WHITELIST_NAME')
     # Do we have an access token?
     if current_user.is_anonymous:
-        if whitelist:
+        if whitelist_checker:
             return 'No access token', 401
         else:
             return jsonify({'name': 'anonymous'})
     try:
         user_data = get_user_info()
-    except AssertionError as e:
+    except ValueError as e:
         return e.message, 401
     except OAuth2Error as e:
         return 'Failed to get user info: ' + e.message, 401
-
+    if not whitelist_checker.is_authorized(user_data['email']):
+        return 'User no longer whitelisted', 401
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
     return jsonify(output)
@@ -417,13 +422,13 @@ def authorization():
     If we get a working token, then ping google for user info, get
     their email and check it against bouncer.
 
-    If there is no whitelist, return 200
+    If there is no whitelist, return 204
     Can't get user info, return 401
     User is authorized, return 204
     User is not authorized, return 403
     """
-    if not os.getenv('EMAIL_WHITELIST_NAME'):
-        return '', 200
+    if whitelist_checker is None:
+        return '', 204
     try:
         # parsing succeeds if there is an auth header
         bearer, auth_token = parse_token()
@@ -437,8 +442,8 @@ def authorization():
     # use access token in session
     try:
         user_data = get_user_info(auth_token)
-    except AssertionError as e:
-        return str(e.message), 401
+    except ValueError as e:
+        return e.message, 401
     except OAuth2Error as e:
         return 'Failed to get user info: ' + e.message, 401
     # Now that we have the user data we can verify the email
@@ -642,7 +647,7 @@ def callback():
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
-            if os.getenv('EMAIL_WHITELIST_NAME') and not whitelist_checker.is_authorized(email):
+            if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
