@@ -82,6 +82,11 @@ login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
 
+# make a global bouncer instance to avoid needless re-instantiation
+if os.getenv('EMAIL_WHITELIST_NAME') is not None:
+    whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
+else:
+    whitelist_checker = None
 
 class User(UserMixin):
 
@@ -256,13 +261,20 @@ def parse_token():
 
 
 def new_google_access_token():
+    """
+    Tries to get new access token.
+
+    If refresh fails an OAuth2Error will be raised
+    """
     refresh_token = current_user.refresh_token
     oauth = get_google_auth()
     extra = {
         'client_id': Auth.CLIENT_ID,
         'client_secret': Auth.CLIENT_SECRET,
     }
+    # this call may throw an OAuth2Error
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    current_user.access_token = resp['access_token']
     return resp['access_token']
 
 
@@ -312,6 +324,135 @@ def check_session(cookie):
                 'avatar': decoded_cookie['avatar']
             }
         return jsonify(response)
+
+
+def _get_user_info_from_token(token=None):
+    """
+    Try and get the user's info. By default the access token in the session is used.
+
+    returns the response object
+    """
+    google = get_google_auth(token={
+        'access_token': current_user.access_token if token is None else token})
+    return google.get(Auth.USER_INFO)
+
+
+def get_user_info(token=None):
+    """
+    Get user's info, retry with refreshed token if failed, and raise AssertError
+    or OAuth2Error if failure
+
+    If access token is provided, use that first
+    """
+    resp = _get_user_info_from_token(token=token)
+    if resp.status_code == 400:
+        if token is None:
+            raise ValueError('The provided token was not accepted')
+        # token expired, try once more
+        try:
+            new_google_access_token()
+        except OAuth2Error:
+            # erase old tokens if they're broken / expired
+            app.logger.warning('Could not refresh access token')
+            session.pop('access_token')
+            session.pop('refresh_token')
+            raise
+        resp = _get_user_info_from_token()
+    # If there is a 5xx error, or some unexpected 4xx we will return the message but
+    # leave the token's intact b/c they're not necessarily to blame for the error.
+    if resp.status_code != 200:
+        raise ValueError(resp.text)
+    return resp.json()
+
+
+@app.route('/me')
+def me():
+    """
+    returns information about the user making the request.
+
+    If authentication is required for the deployment, and there is no
+    access token, or it is expired and cannot be renewed, then return a
+    401.
+
+    If authentication is not required for the deployment, and there is no
+    access token, or it is expired and cannot be renewed, then return
+    an anonymous user.
+
+        {'name': 'anonymous'}
+
+    If the access token has not expired, or it can be refreshed with the
+    refresh token, then return the following information about the user.
+
+        {
+            "name": "Jane Doe",
+            "email": "jdoe@example.com",
+            "avatar": "https:///lh6.googleusercontent.com/....",
+        }
+
+    In addition, if the access token was refreshed, the new access token
+    will be sent back in the session cookie.
+    """
+
+    # Do we have an access token?
+    if current_user.is_anonymous:
+        if whitelist_checker:
+            return 'No access token', 401
+        else:
+            return jsonify({'name': 'anonymous'})
+    try:
+        user_data = get_user_info()
+    except ValueError as e:
+        return e.message, 401
+    except OAuth2Error as e:
+        return 'Failed to get user info: ' + e.message, 401
+    if whitelist_checker is not None and not whitelist_checker.is_authorized(user_data['email']):
+        return 'User no longer whitelisted', 401
+    output = dict((k, user_data[k]) for k in ('name', 'email'))
+    output['avatar'] = user_data['picture']
+    return jsonify(output)
+
+
+@app.route('/authorization')
+def authorization():
+    """
+    This endpoint determines if the caller is authorized of not.
+
+    If there is a bearer token, we try and use that. Otherwise we use
+    the access token in the session. If the token fails, then try and
+    refresh.
+
+    If we get a working token, then ping google for user info, get
+    their email and check it against bouncer.
+
+    If there is no whitelist, return 204
+    Can't get user info, return 401
+    User is authorized, return 204
+    User is not authorized, return 403
+    """
+    if whitelist_checker is None:
+        return '', 204
+    try:
+        # parsing succeeds if there is an auth header
+        bearer, auth_token = parse_token()
+    except AssertionError:
+        auth_token = None
+    else:
+        if bearer != "Bearer":
+            return "Authorization must start with Bearer", 401
+    if auth_token is None and current_user.is_anonymous:
+        return "No token provided", 401
+    # use access token in session
+    try:
+        user_data = get_user_info(auth_token)
+    except ValueError as e:
+        return e.message, 401
+    except OAuth2Error as e:
+        return 'Failed to get user info: ' + e.message, 401
+    # Now that we have the user data we can verify the email
+    if whitelist_checker.is_authorized(user_data['email']):
+        return '', 204
+    else:
+        return '', 403
 
 
 @app.route('/export_to_firecloud')
@@ -508,11 +649,7 @@ def callback():
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
-            whitelist = os.getenv('EMAIL_WHITELIST_NAME')
-            # a value in the variable here is the flag for using a whitelist
-            if whitelist:
-                b = Bouncer(whitelist)
-                if not b.is_authorized(email):
+            if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
