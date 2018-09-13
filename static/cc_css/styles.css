@@ -11637,6 +11637,14 @@ p {
 strong {
   font-weight: 500; }
 
+.center {
+  text-align: center;
+}
+
+.emphasis {
+  font-style: italic;
+}
+
 /**
  * Typography styles, pulled from Angular Material 1.1.1
  */

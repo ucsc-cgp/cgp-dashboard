@@ -540,40 +540,20 @@ def html_rend(name):
     coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
     if name == 'file_browser':
         return render_template(name + '.html', data=data)
-    if name == 'invoicing_service' or name == 'invoicing_service1':
-        return redirect(url_for('invoicing_service'))
-    if name == 'action_service':
-        return redirect(url_for('action_service'))
     if name == 'help':
         return render_template(name+'.html',
                                coreClientVersion=coreClientVersion)
     if name == 'index':
-        return render_template(name + '.html')
+        auth_required = os.getenv('EMAIL_WHITELIST_NAME') is not None
+        contact_email = os.getenv('CONTACT_EMAIL', '')
+        return render_template(name + '.html',
+                               auth_required=auth_required,
+                               contact_email=contact_email)
     if name == 'boardwalk':
         return boardwalk()
     if name == 'unauthorized':
         return render_template(name + '.html')
     return render_template(name + '.html')
-
-
-@app.route('/invoicing_service')
-@login_required
-def invoicing_service():
-    """
-    Function for rendering the invoicing page
-    """
-    data1 = os.environ['DCC_INVOICING_SERVICE']
-    return render_template('invoicing_service.html', data=data1)
-
-
-@app.route('/action_service')
-@login_required
-def action_service():
-    """
-    Function to render the action service page
-    """
-    data1 = os.environ['DCC_ACTION_SERVICE']
-    return render_template('action_service.html', data=data1)
 
 
 @app.route('/file_browser/')
