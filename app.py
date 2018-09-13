@@ -1,5 +1,6 @@
 import os
 
+import requests
 from bouncer import Bouncer
 from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
@@ -44,6 +45,7 @@ class Auth:
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
+    REVOKE_TOKEN = 'https://accounts.google.com/o/oauth2/revoke'
     SCOPE = ['https://www.googleapis.com/auth/userinfo.profile',
              'https://www.googleapis.com/auth/userinfo.email']
 
@@ -166,10 +168,20 @@ class User(UserMixin):
 
     def logout(self):
         """Clean up all the stuff we left in the session cookie"""
+        # as per google's docs "The token can be an access token or a refresh token.
+        # If the token is an access token and it has a corresponding refresh token,
+        # the refresh token will also be revoked."
+        if session.get('access_token'):
+            res = requests.post(Auth.REVOKE_TOKEN, params={'token': session['access_token']},
+                                headers={'content-type': 'application/x-www-form-urlencoded'})
+            if res.status_code != 200:
+                print('Failed to revoke tokens. Expected 200 response, received '
+                      '{} with message: {}'.format(res.status_code, res.text))
         for attr in 'email', 'name', 'avatar', 'access_token', 'refresh_token':
             try:
                 del session[attr]
             except KeyError:
+                print('Could not clear {} from session'.format(attr))
                 pass
 
 
