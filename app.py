@@ -85,7 +85,7 @@ login_manager.login_view = "login"
 login_manager.session_protection = "strong"
 
 # make a global bouncer instance to avoid needless re-instantiation
-if os.getenv('EMAIL_WHITELIST_NAME') is not None:
+if os.getenv('EMAIL_WHITELIST_NAME'):
     whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
 else:
     whitelist_checker = None
