@@ -538,19 +538,12 @@ def html_rend(name):
     """
     data = os.environ['DCC_DASHBOARD_SERVICE']
     coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
-    if name == 'file_browser':
-        return render_template(name + '.html', data=data)
-    if name == 'help':
-        return render_template(name+'.html',
-                               coreClientVersion=coreClientVersion)
     if name == 'index':
         auth_required = os.getenv('EMAIL_WHITELIST_NAME') is not None
         contact_email = os.getenv('CONTACT_EMAIL', '')
         return render_template(name + '.html',
                                auth_required=auth_required,
                                contact_email=contact_email)
-    if name == 'boardwalk':
-        return boardwalk()
     if name == 'unauthorized':
         return render_template(name + '.html')
     return render_template(name + '.html')
