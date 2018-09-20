@@ -6,7 +6,7 @@ from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
     flash, get_flashed_messages, jsonify
 from flask_login import LoginManager, login_required, login_user, \
-    logout_user, current_user, UserMixin
+    logout_user, current_user, UserMixin, AnonymousUserMixin
 from oauthlib.oauth2 import OAuth2Error
 
 from elasticsearch_dsl import Search
@@ -89,6 +89,7 @@ if os.getenv('EMAIL_WHITELIST_NAME'):
     whitelist_checker = Bouncer(os.getenv('EMAIL_WHITELIST_NAME'))
 else:
     whitelist_checker = None
+
 
 class User(UserMixin):
 
@@ -190,6 +191,26 @@ def load_user(user_id):
     return User()
 
 
+_user = User()
+
+
+def get_user():
+    """
+    Normally we should just be able to count on current_user to have the right user info
+
+    Unfortunately, when hitting these endpoints from azul-webservice (such as /authorization)
+    we get an anonymous user despite being logged in and sending the request with the session
+    cookie. Since the session has all of the relevant information anyway and is sent with the
+    request we can just instantiate User() manually.
+
+    This is slightly hacky and not the ideal approach, but it ensures that we always get the
+    user data from the cookie if it's available.
+
+    :return: an instance of User, one way or another
+    """
+    return _user if current_user.is_anonymous else current_user
+
+
 """ OAuth Session creation """
 
 
@@ -278,7 +299,8 @@ def new_google_access_token():
 
     If refresh fails an OAuth2Error will be raised
     """
-    refresh_token = current_user.refresh_token
+    user = get_user()
+    refresh_token = user.refresh_token
     oauth = get_google_auth()
     extra = {
         'client_id': Auth.CLIENT_ID,
@@ -286,7 +308,7 @@ def new_google_access_token():
     }
     # this call may throw an OAuth2Error
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
-    current_user.access_token = resp['access_token']
+    user.access_token = resp['access_token']
     return resp['access_token']
 
 
@@ -344,8 +366,9 @@ def _get_user_info_from_token(token=None):
 
     returns the response object
     """
+    user = get_user()
     google = get_google_auth(token={
-        'access_token': current_user.access_token if token is None else token})
+        'access_token': user.access_token if token is None else token})
     return google.get(Auth.USER_INFO)
 
 
@@ -404,9 +427,9 @@ def me():
     In addition, if the access token was refreshed, the new access token
     will be sent back in the session cookie.
     """
-
+    user = get_user()
     # Do we have an access token?
-    if current_user.is_anonymous:
+    if user.is_anonymous:
         if whitelist_checker:
             return 'No access token', 401
         else:
@@ -441,6 +464,14 @@ def authorization():
     User is authorized, return 204
     User is not authorized, return 403
     """
+    # For a yet unsolved reason
+    # current user is anonymous when called from azul-webservice, even though the
+    # session cookie is sent over. overwriting the anonymous user with User() ensures
+    # that the session cookie is checked for user info and cookies
+    user = get_user()
+
+    print 'request headers:', request.headers
+    print 'request cookies:', request.cookies
     if whitelist_checker is None:
         return '', 204
     try:
@@ -451,7 +482,12 @@ def authorization():
     else:
         if bearer != "Bearer":
             return "Authorization must start with Bearer", 401
-    if auth_token is None and current_user.is_anonymous:
+    #FIXME current user doesnt work!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    print 'current user:', user
+    print 'is anonymous', user.is_anonymous
+    print 'User().name is:', user.name
+    print 'User().is_anonymous:', user.is_anonymous
+    if auth_token is None and user.is_anonymous:
         return "No token provided", 401
     # use access token in session
     try:
