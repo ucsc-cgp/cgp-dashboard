@@ -147,23 +147,27 @@ class User(UserMixin):
 
     @property
     def access_token(self):
-        return session.get('access_token', None)
+        encrypted_token = session.get('access_token', None)
+        iv = session['access_iv']
+        return decrypt(encrypted_token, iv)
 
     @access_token.setter
     def access_token(self, value):
-        session['access_token'] = value
+        iv = new_iv()
+        session['access_iv'] = iv
+        session['access_token'] = encrypt(value, iv)
 
     @property
     def refresh_token(self):
         encrypted_token = session.get('refresh_token', None)
-        iv = session['iv']
+        iv = session['refresh_iv']
         return decrypt(encrypted_token, iv)
 
     @refresh_token.setter
     def refresh_token(self, value):
         # store the initialization vector in the session. It doesn't need to be secure
         iv = new_iv()
-        session['iv'] = iv
+        session['refresh_iv'] = iv
         session['refresh_token'] = encrypt(value, iv)
 
     def logout(self):
