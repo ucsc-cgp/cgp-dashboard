@@ -395,8 +395,6 @@ def me():
         return jsonify({'name': 'anonymous'})
     except OAuth2Error:
         return jsonify({'name': 'anonymous'})
-    if whitelist_checker is not None and not whitelist_checker.is_authorized(user_data['email']):
-        return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
     return jsonify(output)
