@@ -386,43 +386,19 @@ def me():
     """
     returns information about the user making the request.
 
-    If authentication is required for the deployment, and there is no
-    access token, or it is expired and cannot be renewed, then return a
-    401.
-
-    If authentication is not required for the deployment, and there is no
-    access token, or it is expired and cannot be renewed, then return
-    an anonymous user.
-
-        {'name': 'anonymous'}
-
-    If the access token has not expired, or it can be refreshed with the
-    refresh token, then return the following information about the user.
-
-        {
-            "name": "Jane Doe",
-            "email": "jdoe@example.com",
-            "avatar": "https:///lh6.googleusercontent.com/....",
-        }
-
-    In addition, if the access token was refreshed, the new access token
-    will be sent back in the session cookie.
+    If there are any problems getting the user's info, refreshing the token, etc
+    then just return the anonymous user.
     """
 
     # Do we have an access token?
     if current_user.is_anonymous:
-        if whitelist_checker:
-            return 'No access token', 401
-        else:
-            return jsonify({'name': 'anonymous'})
+        return jsonify({'name': 'anonymous'})
     try:
         user_data = get_user_info()
-    except ValueError as e:
-        return e.message, 401
-    except OAuth2Error as e:
-        return 'Failed to get user info: ' + e.message, 401
-    if whitelist_checker is not None and not whitelist_checker.is_authorized(user_data['email']):
-        return 'User no longer whitelisted', 401
+    except ValueError:
+        return jsonify({'name': 'anonymous'})
+    except OAuth2Error:
+        return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
     return jsonify(output)
