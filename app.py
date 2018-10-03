@@ -362,7 +362,7 @@ def get_user_info(token=None):
     """
     resp = _get_user_info_from_token(token=token)
     if resp.status_code == 400:
-        if token is None:
+        if token:
             raise ValueError('The provided token was not accepted')
         # token expired, try once more
         try:
