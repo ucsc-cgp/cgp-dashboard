@@ -355,7 +355,7 @@ def _get_user_info_from_token(token=None):
 
 def get_user_info(token=None):
     """
-    Get user's info, retry with refreshed token if failed, and raise AssertError
+    Get user's info, retry with refreshed token if failed, and raise ValueError
     or OAuth2Error if failure
 
     If access token is provided, use that first
