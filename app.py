@@ -446,69 +446,6 @@ def authorization():
     else:
         return '', 403
 
-
-@app.route('/export_to_firecloud')
-@login_required
-def export_to_firecloud():
-    """
-    Creates and returns a manifest based on the filters pased on
-    to this endpoint
-    parameters:
-        - name: filters
-          in: query
-          type: string
-          description: Filters to be applied when generating the manifest
-        - name: workspace
-          in: query
-          type: string
-          description: The name of the FireCloud workspace to create
-        - name: namespace
-          in: query
-          type: string
-          description: The namespace of the FireCloud workspace to create
-    :return:
-    """
-    workspace = request.args.get('workspace')
-    if workspace is None:
-        return "Missing workspace query parameter", 400
-    namespace = request.args.get('namespace')
-    if namespace is None:
-        return "Missing namespace query parameter", 400
-    # filters are optional
-    filters = request.args.get('filters')
-    try:
-        access_token = new_google_access_token()
-    except OAuth2Error as e:
-        return "Error getting access token", 401
-    params = urlencode(
-        {'workspace': workspace, 'namespace': namespace, 'filters': filters})
-    url = "{}://{}/repository/files/export/firecloud?{}".format(
-        os.getenv('DCC_DASHBOARD_PROTOCOL'),
-        os.getenv('DCC_DASHBOARD_HOST'), params)
-    headers = {'Authorization': "Bearer {}".format(access_token)}
-    return make_request(url, headers)
-
-
-@app.route('/proxy_firecloud', methods=['GET'])
-@login_required
-def proxy_firecloud():
-    path = request.args.get('path')
-    if path is None:
-        return "Missing path query parameter", 400
-    pathParam = path if path.startswith('/') else '/' + path
-    try:
-        access_token = new_google_access_token()
-    except OAuth2Error as e:
-        return "Error getting access token", 401
-    url = "{}{}".format(os.getenv('FIRECLOUD_API_BASE', 'https://api.firecloud.org'), pathParam)
-    headers = {'Authorization': 'Bearer {}'.format(access_token)}
-    for header in ['Accept', 'Accept-Language', 'Accept-Encoding']:
-        val = request.headers[header]
-        if val is not None:
-            headers[header] = val
-    return make_request(url, headers)
-
-
 @app.route('/<name>.html')
 def html_rend(name):
     """
