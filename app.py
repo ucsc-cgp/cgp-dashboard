@@ -392,15 +392,16 @@ def me():
 
     # Do we have an access token?
     if current_user.is_anonymous:
+        app.logger.info('Request by user anonymous')
         return jsonify({'name': 'anonymous'})
     try:
         user_data = get_user_info()
-    except ValueError:
-        return jsonify({'name': 'anonymous'})
-    except OAuth2Error:
+    except (ValueError, OAuth2Error):
+        app.logger.info('Request by user anonymous')
         return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
+    app.logger.info('Request by user %s with email %s', user_data['name'], user_data['email'])
     return jsonify(output)
 
 
@@ -422,6 +423,7 @@ def authorization():
     User is not authorized, return 403
     """
     if whitelist_checker is None:
+        app.logger.info('No whitelist; user is authorized')
         return '', 204
     try:
         # parsing succeeds if there is an auth header
@@ -442,8 +444,10 @@ def authorization():
         return 'Failed to get user info: ' + e.message, 401
     # Now that we have the user data we can verify the email
     if whitelist_checker.is_authorized(user_data['email']):
+        app.logger.info('User %s with email %s is authorized', user_data['name'], user_data['email'])
         return '', 204
     else:
+        app.logger.info('User %s with email %s is not authorized', user_data['name'], user_data['email'])
         return '', 403
 
 @app.route('/<name>.html')
