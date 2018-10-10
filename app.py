@@ -405,17 +405,17 @@ def me():
 
     # Do we have an access token?
     if current_user.is_anonymous:
-        app.logger.debug('Request by user anonymous')
+        app.logger.debug('Request %s by user anonymous', request.path)
         return jsonify({'name': 'anonymous'})
     try:
         user_data = get_user_info()
     except (ValueError, OAuth2Error):
-        app.logger.debug('Request by user anonymous')
+        app.logger.debug('Request path %s by user anonymous', request.path)
         return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
 
-    app.logger.info('Request by user with email %s', user_data['email'])
+    app.logger.info('Request path %s by user with email %s', request.path, user_data['email'])
     return jsonify(output)
 
 
@@ -437,7 +437,7 @@ def authorization():
     User is not authorized, return 403
     """
     if whitelist_checker is None:
-        app.logger.debug('No whitelist; user is authorized')
+        app.logger.debug('Request path %s. No whitelist; user is authorized', request.path)
         return '', 204
     try:
         # parsing succeeds if there is an auth header
@@ -458,10 +458,10 @@ def authorization():
         return 'Failed to get user info: ' + e.message, 401
     # Now that we have the user data we can verify the email
     if whitelist_checker.is_authorized(user_data['email']):
-        app.logger.info('User with email %s is authorized', user_data['email'])
+        app.logger.info('Request path %s. User with email %s is authorized', request.path, user_data['email'])
         return '', 204
     else:
-        app.logger.info('User with email %s is not authorized', user_data['email'])
+        app.logger.info('Request path %s. User with email %s is not authorized', request.path, user_data['email'])
         return '', 403
 
 @app.route('/<name>.html')
@@ -517,14 +517,14 @@ def login():
     Endpoint to Login into the page
     """
     if current_user.is_authenticated:
-        app.logger.info('Current user with ID %s is authenticated; redirecting to index URL', current_user.get_id())
+        app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
         return redirect(url_for('index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
         prompt='select_account consent')
     session['oauth_state'] = state
-    app.logger.info('Redirecting current user with ID %s to authorization URL', current_user.get_id())
+    app.logger.info('Request path %s. Redirecting current user with ID %s to authorization URL', request.path, current_user.get_id())
     return redirect(auth_url)
 
 
@@ -534,21 +534,21 @@ def callback():
     Callback method required by Google's OAuth 2.0
     """
     if current_user is not None and current_user.is_authenticated:
-        app.logger.info('Current user with ID %s is authenticated; redirecting to index URL', current_user.get_id())
+        app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
         return redirect(url_for('index'))
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
             if current_user is not None:
-                app.logger.info('Current user with ID %s access is denied', current_user.get_id())
+                app.logger.info('Request path %s. Current user with ID %s access is denied', request.path, current_user.get_id())
             else:
-                app.logger.info('Access is denied for current user None')
+                app.logger.info('Request path %s. Access is denied for current user None', request.path)
             return 'You are denied access.'
         return 'Error encountered.'
     if 'code' not in request.args and 'state' not in request.args:
         if current_user is not None:
-            app.logger.info('Redirecting current user with ID %s to login URL', current_user.get_id())
+            app.logger.info('Request path %s. Redirecting current user with ID %s to login URL', request.path, current_user.get_id())
         else:
-            app.logger.info('Redirecting current user None to login URL')
+            app.logger.info('Request path %s. Redirecting current user None to login URL', request.path)
 
         return redirect(url_for('login'))
     else:
@@ -560,16 +560,16 @@ def callback():
                 authorization_response=request.url)
         except HTTPError:
             if current_user is not None:
-                app.logger.error('Could not fetch token for current user with ID %s', current_user.get_id())
+                app.logger.error('Request path %s. Could not fetch token for current user with ID %s', request.path, current_user.get_id())
             else:
-                app.logger.error('Could not fetch token for current user None')
+                app.logger.error('Request path %s. Could not fetch token for current user None', request.path)
             return 'HTTPError occurred.'
         # Testing the token verification step.
         try:
             # jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
             verify_id_token(token['id_token'], Auth.CLIENT_ID)
         except AppIdentityError:
-            app.logger.error('Could not verify token for current user with ID %s', current_user.get_id())
+            app.logger.error('Request path %s. Could not verify token for current user with ID %s', request.path, current_user.get_id())
             return 'Could not verify token.'
         # Check if you have the appropriate domain
         # Commenting this section out to let anyone with
@@ -587,7 +587,7 @@ def callback():
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
             if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
-                    app.logger.info('User with email %s is not authorized', user_data['email'])
+                    app.logger.info('Request path %s. User with email %s is not authorized', request.path, user_data['email'])
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
@@ -599,7 +599,7 @@ def callback():
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
-            app.logger.info('User with email %s was logged in; redirecting to index URL', user_data['email'])
+            app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
             return redirect(url_for('index'))
         app.logger.info('Could not fetch information for current user')
         return 'Could not fetch your information.'
@@ -608,7 +608,7 @@ def callback():
 @app.route('/logout')
 @login_required
 def logout():
-    app.logger.info('Current user with ID %s will be logged out', current_user.get_id())
+    app.logger.info('Request path %s. Current user with ID %s will be logged out', request.path, current_user.get_id())
     current_user.logout()
     logout_user()
     return redirect(url_for('index'))
