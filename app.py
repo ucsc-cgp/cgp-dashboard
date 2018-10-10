@@ -22,6 +22,8 @@ import urllib2
 from decode_cookie import decodeFlaskCookie
 from utils import redact_email, decrypt, encrypt, new_iv
 
+import logging
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -78,9 +80,19 @@ config = {
 
 
 """APP creation and configuration"""
+def set_prod_logging_level(logger, level):
+    for handler in logger.handlers:
+        if handler.__class__.__name__ == 'ProductionHandler':
+            handler.level = level
+    if not logger.isEnabledFor(level):
+        logger.setLevel(level)
+
+
+"""APP creation and configuration"""
 app = Flask(__name__)
 app.config.from_object(config['prod'])
-app.debug = True
+set_prod_logging_level(app.logger, logging.INFO)
+
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
