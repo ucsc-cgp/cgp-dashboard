@@ -405,12 +405,12 @@ def me():
 
     # Do we have an access token?
     if current_user.is_anonymous:
-        app.logger.info('Request by user anonymous')
+        app.logger.debug('Request by user anonymous')
         return jsonify({'name': 'anonymous'})
     try:
         user_data = get_user_info()
     except (ValueError, OAuth2Error):
-        app.logger.info('Request by user anonymous')
+        app.logger.debug('Request by user anonymous')
         return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
@@ -437,7 +437,7 @@ def authorization():
     User is not authorized, return 403
     """
     if whitelist_checker is None:
-        app.logger.info('No whitelist; user is authorized')
+        app.logger.debug('No whitelist; user is authorized')
         return '', 204
     try:
         # parsing succeeds if there is an auth header
@@ -538,11 +538,18 @@ def callback():
         return redirect(url_for('index'))
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
-            app.logger.info('Current user with ID %s access is denied', current_user.get_id())
+            if current_user is not None:
+                app.logger.info('Current user with ID %s access is denied', current_user.get_id())
+            else:
+                app.logger.info('Access is denied for current user None')
             return 'You are denied access.'
         return 'Error encountered.'
     if 'code' not in request.args and 'state' not in request.args:
-        app.logger.info('Redirecting current user with ID %s to login URL', current_user.get_id())
+        if current_user is not None:
+            app.logger.info('Redirecting current user with ID %s to login URL', current_user.get_id())
+        else:
+            app.logger.info('Redirecting current user None to login URL')
+
         return redirect(url_for('login'))
     else:
         google = get_google_auth(state=session['oauth_state'])
@@ -552,14 +559,17 @@ def callback():
                 client_secret=Auth.CLIENT_SECRET,
                 authorization_response=request.url)
         except HTTPError:
-            app.logger.info('Could not fetch token for current user with ID %s', current_user.get_id())
+            if current_user is not None:
+                app.logger.error('Could not fetch token for current user with ID %s', current_user.get_id())
+            else:
+                app.logger.error('Could not fetch token for current user None')
             return 'HTTPError occurred.'
         # Testing the token verification step.
         try:
             # jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
             verify_id_token(token['id_token'], Auth.CLIENT_ID)
         except AppIdentityError:
-            app.logger.info('Could not verify token for current user with ID %s', current_user.get_id())
+            app.logger.error('Could not verify token for current user with ID %s', current_user.get_id())
             return 'Could not verify token.'
         # Check if you have the appropriate domain
         # Commenting this section out to let anyone with
