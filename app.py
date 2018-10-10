@@ -22,8 +22,6 @@ import urllib2
 from decode_cookie import decodeFlaskCookie
 from utils import redact_email, decrypt, encrypt, new_iv
 
-import inspect
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
