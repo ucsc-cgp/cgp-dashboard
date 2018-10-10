@@ -80,6 +80,7 @@ config = {
 """APP creation and configuration"""
 app = Flask(__name__)
 app.config.from_object(config['prod'])
+app.debug = True
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 login_manager.session_protection = "strong"
@@ -503,12 +504,14 @@ def login():
     Endpoint to Login into the page
     """
     if current_user.is_authenticated:
+        app.logger.info('Current user is authenticated; redirecting to index URL')
         return redirect(url_for('index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
         prompt='select_account consent')
     session['oauth_state'] = state
+    app.logger.info('Redirecting current user to authorization URL')
     return redirect(auth_url)
 
 
@@ -518,12 +521,15 @@ def callback():
     Callback method required by Google's OAuth 2.0
     """
     if current_user is not None and current_user.is_authenticated:
+        app.logger.info('Current user is authenticated; redirecting to index URL')
         return redirect(url_for('index'))
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
-            return 'You denied access.'
+            app.logger.info('Current user access is denied')
+            return 'You are denied access.'
         return 'Error encountered.'
     if 'code' not in request.args and 'state' not in request.args:
+        app.logger.info('Redirecting current user to login URL')
         return redirect(url_for('login'))
     else:
         google = get_google_auth(state=session['oauth_state'])
@@ -533,12 +539,14 @@ def callback():
                 client_secret=Auth.CLIENT_SECRET,
                 authorization_response=request.url)
         except HTTPError:
+            app.logger.info('Could not fetch token for current user')
             return 'HTTPError occurred.'
         # Testing the token verification step.
         try:
             # jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
             verify_id_token(token['id_token'], Auth.CLIENT_ID)
         except AppIdentityError:
+            app.logger.info('Could not verify token for current user')
             return 'Could not verify token.'
         # Check if you have the appropriate domain
         # Commenting this section out to let anyone with
@@ -556,6 +564,7 @@ def callback():
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
             if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
+                    app.logger.info('User %s with email %s is not authorized', user_data['name'], user_data['email'])
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
@@ -567,7 +576,9 @@ def callback():
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
+            app.logger.info('User %s with email %s was logged in; redirecting to index URL', user_data['name'], user_data['email'])
             return redirect(url_for('index'))
+        app.logger.info('Could not fetch information for current user')
         return 'Could not fetch your information.'
 
 
