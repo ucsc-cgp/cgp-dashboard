@@ -22,6 +22,8 @@ import urllib2
 from decode_cookie import decodeFlaskCookie
 from utils import redact_email, decrypt, encrypt, new_iv
 
+import inspect
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -403,8 +405,7 @@ def me():
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
 
-    user_info = ", ".join("=".join((str(k),str(v))) for k,v in user_data.items())
-    app.logger.info('Request by user with attributes %s', user_info)
+    app.logger.info('Request by user with email %s', user_data['email'])
     return jsonify(output)
 
 
@@ -447,12 +448,10 @@ def authorization():
         return 'Failed to get user info: ' + e.message, 401
     # Now that we have the user data we can verify the email
     if whitelist_checker.is_authorized(user_data['email']):
-        user_info = ", ".join("=".join((str(k),str(v))) for k,v in user_data.items())
-        app.logger.info('User with attributes %s is authorized', user_info)
+        app.logger.info('User with email %s is authorized', user_data['email'])
         return '', 204
     else:
-        user_info = ", ".join("=".join((str(k),str(v))) for k,v in user_data.items())
-        app.logger.info('User with attributes %s is not authorized', user_info)
+        app.logger.info('User with email %s is not authorized', user_data['email'])
         return '', 403
 
 @app.route('/<name>.html')
@@ -508,14 +507,14 @@ def login():
     Endpoint to Login into the page
     """
     if current_user.is_authenticated:
-        app.logger.info('Current user with attribtues %s is authenticated; redirecting to index URL', str(current_user))
+        app.logger.info('Current user with ID %s is authenticated; redirecting to index URL', current_user.get_id())
         return redirect(url_for('index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
         prompt='select_account consent')
     session['oauth_state'] = state
-    app.logger.info('Redirecting current user with attributes %s to authorization URL', str(current_user))
+    app.logger.info('Redirecting current user with ID %s to authorization URL', current_user.get_id())
     return redirect(auth_url)
 
 
@@ -525,15 +524,15 @@ def callback():
     Callback method required by Google's OAuth 2.0
     """
     if current_user is not None and current_user.is_authenticated:
-        app.logger.info('Current user with attributes %s is authenticated; redirecting to index URL', str(current_user))
+        app.logger.info('Current user with ID %s is authenticated; redirecting to index URL', current_user.get_id())
         return redirect(url_for('index'))
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
-            app.logger.info('Current user with attributes %s access is denied', str(current_user))
+            app.logger.info('Current user with ID %s access is denied', current_user.get_id())
             return 'You are denied access.'
         return 'Error encountered.'
     if 'code' not in request.args and 'state' not in request.args:
-        app.logger.info('Redirecting current user with attributes %s to login URL', str(current_user))
+        app.logger.info('Redirecting current user with ID %s to login URL', current_user.get_id())
         return redirect(url_for('login'))
     else:
         google = get_google_auth(state=session['oauth_state'])
@@ -543,14 +542,14 @@ def callback():
                 client_secret=Auth.CLIENT_SECRET,
                 authorization_response=request.url)
         except HTTPError:
-            app.logger.info('Could not fetch token for current user with attributes %s', str(current_user))
+            app.logger.info('Could not fetch token for current user with ID %s', current_user.get_id())
             return 'HTTPError occurred.'
         # Testing the token verification step.
         try:
             # jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
             verify_id_token(token['id_token'], Auth.CLIENT_ID)
         except AppIdentityError:
-            app.logger.info('Could not verify token for current user with attributes %s', str(current_user))
+            app.logger.info('Could not verify token for current user with ID %s', current_user.get_id())
             return 'Could not verify token.'
         # Check if you have the appropriate domain
         # Commenting this section out to let anyone with
@@ -568,8 +567,7 @@ def callback():
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
             if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
-                    user_info = ", ".join("=".join((str(k),str(v))) for k,v in user_data.items())
-                    app.logger.info('User with attributes %s is not authorized', user_info)
+                    app.logger.info('User with email %s is not authorized', user_data['email'])
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
             for attr in 'email', 'name', 'picture':
@@ -581,8 +579,7 @@ def callback():
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
-            user_info = ", ".join("=".join((str(k),str(v))) for k,v in user_data.items())
-            app.logger.info('User with attributes %s was logged in; redirecting to index URL', user_info)
+            app.logger.info('User with email %s was logged in; redirecting to index URL', user_data['email'])
             return redirect(url_for('index'))
         app.logger.info('Could not fetch information for current user')
         return 'Could not fetch your information.'
@@ -591,9 +588,9 @@ def callback():
 @app.route('/logout')
 @login_required
 def logout():
+    app.logger.info('Current user with ID %s will be logged out', current_user.get_id())
     current_user.logout()
     logout_user()
-    app.logger.info('Current user with attributes %s logged out', str(current_user))
     return redirect(url_for('index'))
 
 
