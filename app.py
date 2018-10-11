@@ -410,7 +410,7 @@ def me():
     try:
         user_data = get_user_info()
     except (ValueError, OAuth2Error):
-        app.logger.debug('Request path %s by user anonymous', request.path)
+        app.logger.error('Request path %s by user anonymous', request.path)
         return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
@@ -539,9 +539,9 @@ def callback():
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
             if current_user is not None:
-                app.logger.info('Request path %s. Current user with ID %s access is denied', request.path, current_user.get_id())
+                app.logger.error('Request path %s. Current user with ID %s access is denied', request.path, current_user.get_id())
             else:
-                app.logger.info('Request path %s. Access is denied for current user None', request.path)
+                app.logger.error('Request path %s. Access is denied for current user None', request.path)
             return 'You are denied access.'
         return 'Error encountered.'
     if 'code' not in request.args and 'state' not in request.args:
@@ -601,7 +601,7 @@ def callback():
             flash('You are now logged in!', 'success')
             app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
             return redirect(url_for('index'))
-        app.logger.info('Could not fetch information for current user')
+        app.logger.error('Could not fetch information for current user')
         return 'Could not fetch your information.'
 
 
