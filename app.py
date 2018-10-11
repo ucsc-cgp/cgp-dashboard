@@ -410,7 +410,7 @@ def me():
     try:
         user_data = get_user_info()
     except (ValueError, OAuth2Error):
-        app.logger.error('Request path %s by user anonymous', request.path)
+        app.logger.error('Request path %s by unknown user', request.path)
         return jsonify({'name': 'anonymous'})
     output = dict((k, user_data[k]) for k in ('name', 'email'))
     output['avatar'] = user_data['picture']
