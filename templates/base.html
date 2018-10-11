@@ -56,9 +56,7 @@
 	{% block header  %}
 					<md-toolbar> <!-- Material Design-based toolbar -->
 					<md-toolbar-row> <!-- Required for correct alignment of child elements -->
-						<img src="{{url_for('static', filename='img/logo-ucsc-gi@1x.png')}}"
-                             srcset="{{url_for('static', filename='img/logo-ucsc-gi@2x.png')}} 2x, {{url_for('static', filename='img/logo-ucsc-gi@3x.png')}} 3x"> <!-- Use srcset to specify responsive images -->
-                        <img src="{{ url_for('static', filename='img/stage-commons-logo.png') }}" style="height: inherit">
+						<img src="{{ url_for('static', filename='img/stage-commons-logo.png') }}" style="height:48px">
 
 						<!-- Hamburger start -->
 						<button md-icon-button menu-open>
