@@ -431,14 +431,15 @@ def authorization():
     If we get a working token, then ping google for user info, get
     their email and check it against bouncer.
 
-    If there is no whitelist, return 204
-    Can't get user info, return 401
-    User is authorized, return 204
-    User is not authorized, return 403
+    The user needs to be logged in with Google in order to be
+    authorized. The method returns the following HTTP status
+    codes:
+    204  user is authorized regardless of whether user
+         is on the whitelist or not
+    401  user info is not available
+    403  user is not authorized
     """
-    if whitelist_checker is None:
-        app.logger.debug('Request path %s. No whitelist; user is authorized', request.path)
-        return '', 204
+
     try:
         # parsing succeeds if there is an auth header
         bearer, auth_token = parse_token()
@@ -457,11 +458,20 @@ def authorization():
     except OAuth2Error as e:
         return 'Failed to get user info: ' + e.message, 401
     # Now that we have the user data we can verify the email
-    if whitelist_checker.is_authorized(user_data['email']):
-        app.logger.info('Request path %s. User with email %s is authorized', request.path, user_data['email'])
+    if whitelist_checker is None:
+        app.logger.info(
+            'Request path %s. No whitelist; User with email %s is logged in',
+            request.path, user_data['email'])
+        return '', 204
+    elif whitelist_checker.is_authorized(user_data['email']):
+        app.logger.info(
+            'Request path %s. User with email %s is authorized',
+            request.path, user_data['email'])
         return '', 204
     else:
-        app.logger.info('Request path %s. User with email %s is not authorized', request.path, user_data['email'])
+        app.logger.info(
+            'Request path %s. User with email %s is not authorized',
+            request.path, user_data['email'])
         return '', 403
 
 @app.route('/<name>.html')
