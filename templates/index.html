@@ -24,25 +24,16 @@
                 <a href="https://bvdp-saturn-prod.appspot.com/">Saturn</a>.
             </p>
             <h2 class="center">Getting Started</h2>
-            {% if auth_required %}
-                <h3 class="center">Restricted Access Data</h3>
-                <p class="md-body-1">
-                    The data you are viewing has restricted access. You must
-                    log in with an email address that has been
-                    whitelisted. If your
-                    email is not whitelisted, you can request access
-                    at <a
-                        href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
-                    To login, click the login link at the top of the page.
-                </p>
-            {% else %}
-                <h3 class="center">Open Access Data</h3>
-                <p class="md-body-1">
-                    The data you are browsing is open access data. You can
-                    view it anonymously. If you prefer, you can optionally
-                    log in, although that will not the change the functionality.
-                </p>
-            {% endif %}
+            <h3 class="center">Restricted Access Data</h3>
+            <p class="md-body-1">
+                The data you are viewing has restricted access. You must
+                log in with an email address that has been
+                whitelisted. If your
+                email is not whitelisted, you can request access
+                at <a
+                    href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+                To login, click the login link at the top of the page.
+            </p>
             <h3 class="center">Exploring</h3>
             <p class="md-body-1">
                 To start exploring, click the Data Browser link at the top of
