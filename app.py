@@ -365,7 +365,7 @@ def _get_user_info_from_token(token=None):
         'access_token': current_user.access_token if token is None else token})
     return google.get(Auth.USER_INFO)
 
-
+@login_manager.needs_refresh_handler
 def get_user_info(token=None):
     """
     Get user's info, retry with refreshed token if failed, and raise ValueError
@@ -450,6 +450,11 @@ def authorization():
             return "Authorization must start with Bearer", 401
     if auth_token is None and current_user.is_anonymous:
         return "No token provided", 401
+
+    # If user is logged-in in a session it could be stale. Refresh it.
+    app.logger.info('Refreshing login')
+    login_manager.needs_refresh()
+
     # use access token in session
     try:
         user_data = get_user_info(auth_token)
