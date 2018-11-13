@@ -365,7 +365,7 @@ def _get_user_info_from_token(token=None):
         'access_token': current_user.access_token if token is None else token})
     return google.get(Auth.USER_INFO)
 
-@login_manager.needs_refresh_handler
+#@login_manager.needs_refresh_handler
 def get_user_info(token=None):
     """
     Get user's info, retry with refreshed token if failed, and raise ValueError
@@ -374,7 +374,8 @@ def get_user_info(token=None):
     If access token is provided, use that first
     """
     resp = _get_user_info_from_token(token=token)
-    if resp.status_code == 400:
+    #if resp.status_code == 400:
+    if True:
         if token:
             raise ValueError('The provided token was not accepted')
         # token expired, try once more
@@ -451,9 +452,9 @@ def authorization():
     if auth_token is None and current_user.is_anonymous:
         return "No token provided", 401
 
-    # If user is logged-in in a session it could be stale. Refresh it.
-    app.logger.info('Refreshing login')
-    login_manager.needs_refresh()
+    # # If user is logged-in in a session it could be stale. Refresh it.
+    # app.logger.info('Refreshing login')
+    # login_manager.needs_refresh()
 
     # use access token in session
     try:
