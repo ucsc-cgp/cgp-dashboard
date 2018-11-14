@@ -536,6 +536,7 @@ def login():
         prompt='select_account consent')
     session['oauth_state'] = state
     app.logger.info('Request path %s. Redirecting current user with ID %s to authorization URL', request.path, current_user.get_id())
+    app.logger.info('Login headers %s', request.headers)
     return redirect(auth_url)
 
 
@@ -544,6 +545,7 @@ def callback():
     """
     Callback method required by Google's OAuth 2.0
     """
+    app.logger.info('gCallback headers %s', request.headers)
     if current_user is not None and current_user.is_authenticated:
         app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
         return redirect(url_for('index'))
