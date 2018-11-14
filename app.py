@@ -43,7 +43,8 @@ class Auth:
         DCC_DASHBOARD_PORT = os.environ['DCC_DASHBOARD_PORT']
     if 'DCC_DASHBOARD_PROTOCOL' in os.environ.keys():
         DCC_DASHBOARD_PROTOCOL = os.environ['DCC_DASHBOARD_PROTOCOL']
-    REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+'/gCallback'
+    # REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+'/gCallback'
+    REDIRECT_URI = 'https://dev.commons.ucsc-cgp-dev.org/gCallback'
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
