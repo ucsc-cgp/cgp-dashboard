@@ -484,10 +484,10 @@ def html_rend(name):
     data = os.environ['DCC_DASHBOARD_SERVICE']
     coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
     if name == 'index':
-        auth_required = bool(os.getenv('EMAIL_WHITELIST_NAME'))
+        whitelist_validation_required = bool(os.getenv('EMAIL_WHITELIST_NAME'))
         contact_email = os.getenv('CONTACT_EMAIL', '')
         return render_template(name + '.html',
-                               auth_required=auth_required,
+                               whitelist_validation_required=whitelist_validation_required,
                                contact_email=contact_email)
     if name == 'unauthorized':
         return render_template(name + '.html')

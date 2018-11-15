@@ -23,24 +23,21 @@
                 Broad Institute's
                 <a href="https://bvdp-saturn-prod.appspot.com/">Saturn</a>.
             </p>
-            <h2 class="center">Getting Started</h2>
-            {% if auth_required %}
-                <h3 class="center">Restricted Access Data</h3>
+            {% if whitelist_validation_required %}
+                <h3 class="center">Restricted-Access Data</h3>
                 <p class="md-body-1">
                     The data you are viewing has restricted access. You must
-                    log in with an email address that has been
-                    whitelisted. If your
-                    email is not whitelisted, you can request access
-                    at <a
-                        href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
-                    To login, click the login link at the top of the page.
+                    log in with an email address that has been whitelisted. If
+                    your email is not whitelisted, you can request access at <a
+                    href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+                    To log in, click the login link at the top of the page.
                 </p>
             {% else %}
                 <h3 class="center">Open Access Data</h3>
                 <p class="md-body-1">
-                    The data you are browsing is open access data. You can
-                    view it anonymously. If you prefer, you can optionally
-                    log in, although that will not the change the functionality.
+                    Although the data are open access you need
+                    to log in in order to browse it. To log in, click the login
+                    link at the top of the page.
                 </p>
             {% endif %}
             <h3 class="center">Exploring</h3>
