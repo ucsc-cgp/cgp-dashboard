@@ -60,7 +60,6 @@ class Config:
     # Make cookies secure so that the tokens stored in them are safe and only travel over https
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
-    REMEMBER_COOKIE_REFRESH_EACH_REQUEST = True
 
 
 class DevConfig(Config):
@@ -567,6 +566,7 @@ def login():
 
 
 @app.route('/gCallback')
+@login_manager.needs_refresh
 def callback():
     """
     Callback method required by Google's OAuth 2.0
