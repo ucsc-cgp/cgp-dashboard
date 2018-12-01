@@ -566,21 +566,34 @@ def callback():
     app.logger.info("(MK comment) This is request.args: {}".format(request.args))
     
     if current_user is not None and current_user.is_authenticated:
-        app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
+        app.logger.info('Request path %s. '
+                        'Current user with ID %s is authenticated; '
+                        'redirecting to index URL',
+                        request.path, current_user.get_id())
         return redirect(url_for('index'))
+
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
             if current_user is not None:
-                app.logger.error('Request path %s. Current user with ID %s access is denied', request.path, current_user.get_id())
+                app.logger.error('Request path %s. '
+                                 'Current user with ID %s access is denied',
+                                 request.path, current_user.get_id())
             else:
-                app.logger.error('Request path %s. Access is denied for current user None', request.path)
+                app.logger.error('Request path %s. '
+                                 'Access is denied for current user None',
+                                 request.path)
             return 'You are denied access.'
         return 'Error encountered.'
+
     if 'code' not in request.args and 'state' not in request.args:
         if current_user is not None:
-            app.logger.info('Request path %s. Redirecting current user with ID %s to login URL', request.path, current_user.get_id())
+            app.logger.info('Request path %s. '
+                            'Redirecting current user with ID %s to login URL',
+                            request.path, current_user.get_id())
         else:
-            app.logger.info('Request path %s. Redirecting current user None to login URL', request.path)
+            app.logger.info('Request path %s. '
+                            'Redirecting current user None to login URL',
+                            request.path)
 
         return redirect(url_for('login'))
     else:  # (MK) how is this case WRT current_user and request.args defined?
@@ -593,16 +606,24 @@ def callback():
             app.logger.info('(MK comment) Got new token: {}'.format(token))
         except HTTPError:
             if current_user is not None:
-                app.logger.error('Request path %s. Could not fetch token for current user with ID %s', request.path, current_user.get_id())
+                app.logger.error(
+                    'Request path %s. '
+                    'Could not fetch token for current user with ID %s',
+                    request.path, current_user.get_id())
             else:
-                app.logger.error('Request path %s. Could not fetch token for current user None', request.path)
+                app.logger.error('Request path %s. '
+                                 'Could not fetch token for current user None',
+                                 request.path)
             return 'HTTPError occurred.'
         # Testing the token verification step.
         try:
             # jwt = verify_id_token(token['id_token'], Auth.CLIENT_ID)
             verify_id_token(token['id_token'], Auth.CLIENT_ID)
         except AppIdentityError:
-            app.logger.error('Request path %s. Could not verify token for current user with ID %s', request.path, current_user.get_id())
+            app.logger.error(
+                'Request path %s. '
+                'Could not verify token for current user with ID %s',
+                request.path, current_user.get_id())
             return 'Could not verify token.'
         # Check if you have the appropriate domain
         # Commenting this section out to let anyone with
@@ -614,21 +635,28 @@ def callback():
 
         google = get_google_auth(token=token)
         resp = google.get(Auth.USER_INFO)
+        app.logger.info("(MK comment) status code: {}".format(resp.status_code))
         if resp.status_code == 200:
             user_data = resp.json()
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
             # unauthorized page if not in whitelist, e.g.,
-            if whitelist_checker is not None and not whitelist_checker.is_authorized(email):
-                    app.logger.info('Request path %s. User with email %s is not authorized', request.path, user_data['email'])
-                    return redirect(url_for('unauthorized', account=redact_email(email)))
+            if whitelist_checker is not None \
+                    and not whitelist_checker.is_authorized(email):
+                    app.logger.info('Request path %s. '
+                                    'User with email %s is not authorized',
+                                    request.path, user_data['email'])
+                    return redirect(url_for('unauthorized',
+                                            account=redact_email(email)))
+            # Instantiate user and set attributes.
             user = User()
-            # Set user attributes.
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
             for attr in 'refresh_token', 'access_token':
                 setattr(user, attr, token[attr])
-            app.logger.info('(MK comment) user object after setting refresh token: {}'.format(user))
+            app.logger.info(
+                '(MK comment) user object after setting refresh token: {}'
+                    .format(user))
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
@@ -637,8 +665,13 @@ def callback():
             # app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
             # return redirect(url_for('index'))
             # (MK) changing redirect following login to file browser (DataBrowser).
-            app.logger.info('Request path %s. User with email %s was logged in; redirecting to boardwalk URL', request.path, user_data['email'])
+            app.logger.info('Request path %s. '
+                            'User with email %s was logged in; '
+                            'redirecting to boardwalk URL',
+                            request.path,
+                            user_data['email'])
             return redirect(url_for('boardwalk'))
+
         app.logger.error('Could not fetch information for current user')
         return 'Could not fetch your information.'
 
