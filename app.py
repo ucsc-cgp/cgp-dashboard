@@ -6,7 +6,7 @@ from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
     flash, get_flashed_messages, jsonify
 from flask_login import LoginManager, login_required, login_user, \
-    logout_user, current_user, UserMixin
+    logout_user, current_user, UserMixin, confirm_login, user_needs_refresh
 from oauthlib.oauth2 import OAuth2Error
 
 from elasticsearch_dsl import Search
@@ -282,9 +282,13 @@ def parse_token():
     Parses the Authorization token from the request header
     :return: the bearer and token string
     """
+    
     authorization_header = request.headers.get("Authorization", None)
+    authorization_header2 = request.headers
+    app.logger.info('(MK comment) authorization header structure: {}'.format(authorization_header2))
     assert authorization_header is not None, "No Authorization header in the request"
     parts = authorization_header.split()
+    app.logger.info('(MK comment) parts[0]: {}, parts[1]: {}'.format(parts[0], parts[1]))
     # Return the bearer and token string
     return parts[0], parts[1]
 
@@ -303,6 +307,8 @@ def new_google_access_token():
     }
     # this call may throw an OAuth2Error
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
+    app.logger.info('(MK comment) resp[access_token]: {}'.format(resp['access_token']))    
     current_user.access_token = resp['access_token']
     return resp['access_token']
 
@@ -374,13 +380,16 @@ def get_user_info(token=None):
     If access token is provided, use that first
     """
     resp = _get_user_info_from_token(token=token)
-    #if resp.status_code == 400:
-    if True:
+    if resp.status_code == 400:
+    #if True:
+        #if token is None:
         if token:
             raise ValueError('The provided token was not accepted')
         # token expired, try once more
         try:
-            new_google_access_token()
+            app.logger.info('(MK comment) Trying to refresh access token.')
+            user.access_token(new_google_access_token())
+            app.logger.info('(MK comment) user.access_token: {}'.format(user.access_token))
         except OAuth2Error:
             # erase old tokens if they're broken / expired
             app.logger.warning('Could not refresh access token')
@@ -444,7 +453,9 @@ def authorization():
     try:
         # parsing succeeds if there is an auth header
         bearer, auth_token = parse_token()
-    except AssertionError:
+        app.logger.info('(MK comment) bearer: {}, auth_token: {}'.format(bearer, auth_token))
+    except AssertionError as e:
+        app.logger.error('(MK comment) Assertion error: ' + e.message)
         auth_token = None
     else:
         if bearer != "Bearer":
@@ -459,6 +470,7 @@ def authorization():
     # use access token in session
     try:
         user_data = get_user_info(auth_token)
+        app.logger.info('(MK comment) user_data: {}'.format(user_data))
     except ValueError as e:
         return e.message, 401
     except OAuth2Error as e:
@@ -549,6 +561,10 @@ def callback():
     """
     Callback method required by Google's OAuth 2.0
     """
+    # (MK) Check what current_user and requests.args holds:
+    app.logger.info("(MK comment) This is current_user: {}".format(current_user))
+    app.logger.info("(MK comment) This is request.args: {}".format(request.args))
+    
     if current_user is not None and current_user.is_authenticated:
         app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
         return redirect(url_for('index'))
@@ -567,13 +583,14 @@ def callback():
             app.logger.info('Request path %s. Redirecting current user None to login URL', request.path)
 
         return redirect(url_for('login'))
-    else:
+    else:  # (MK) how is this case WRT current_user and request.args defined?
         google = get_google_auth(state=session['oauth_state'])
         try:
             token = google.fetch_token(
                 Auth.TOKEN_URI,
                 client_secret=Auth.CLIENT_SECRET,
                 authorization_response=request.url)
+            app.logger.info('(MK comment) Got new token: {}'.format(token))
         except HTTPError:
             if current_user is not None:
                 app.logger.error('Request path %s. Could not fetch token for current user with ID %s', request.path, current_user.get_id())
@@ -606,17 +623,22 @@ def callback():
                     app.logger.info('Request path %s. User with email %s is not authorized', request.path, user_data['email'])
                     return redirect(url_for('unauthorized', account=redact_email(email)))
             user = User()
+            # Set user attributes.
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
-            user.refresh_token = token['refresh_token']
-            user.access_token = token['access_token']
+            for attr in 'refresh_token', 'access_token':
+                setattr(user, attr, token[attr])
+            app.logger.info('(MK comment) user object after setting refresh token: {}'.format(user))
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
-            app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
-            return redirect(url_for('index'))
+            # app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
+            # return redirect(url_for('index'))
+            # (MK) changing redirect following login to file browser (DataBrowser).
+            app.logger.info('Request path %s. User with email %s was logged in; redirecting to boardwalk URL', request.path, user_data['email'])
+            return redirect(url_for('boardwalk'))
         app.logger.error('Could not fetch information for current user')
         return 'Could not fetch your information.'
 
