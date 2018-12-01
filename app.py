@@ -372,7 +372,7 @@ def _get_user_info_from_token(token=None):
     return google.get(Auth.USER_INFO)
 
 #@login_manager.needs_refresh_handler
-def get_user_info(token=None):
+def get_user_info(token=None, user=None):
     """
     Get user's info, retry with refreshed token if failed, and raise ValueError
     or OAuth2Error if failure
@@ -388,8 +388,10 @@ def get_user_info(token=None):
         # token expired, try once more
         try:
             app.logger.info('(MK comment) Trying to refresh access token.')
-            user.access_token(new_google_access_token())
-            app.logger.info('(MK comment) user.access_token: {}'.format(user.access_token))
+            access_token = new_google_access_token()
+            setattr(user, 'access_token', access_token)
+            app.logger.info('(MK comment) user.access_token: {}'
+                            .format(user.access_token))
         except OAuth2Error:
             # erase old tokens if they're broken / expired
             app.logger.warning('Could not refresh access token')
@@ -430,7 +432,7 @@ def me():
 
 
 @app.route('/authorization')
-def authorization():
+def authorization(user):
     """
     This endpoint determines if the caller is authorized of not.
 
@@ -470,6 +472,7 @@ def authorization():
     # use access token in session
     try:
         user_data = get_user_info(auth_token)
+        resp = get_user_info(user)
         app.logger.info('(MK comment) user_data: {}'.format(user_data))
     except ValueError as e:
         return e.message, 401
@@ -545,14 +548,20 @@ def login():
     Endpoint to Login into the page
     """
     if current_user.is_authenticated:
-        app.logger.info('Request path %s. Current user with ID %s is authenticated; redirecting to index URL', request.path, current_user.get_id())
+        app.logger.info('Request path %s. '
+                        'Current user with ID %s is authenticated; '
+                        'redirecting to index URL',
+                        request.path, current_user.get_id())
         return redirect(url_for('index'))
     google = get_google_auth()
     auth_url, state = google.authorization_url(
         Auth.AUTH_URI, access_type='offline',
         prompt='select_account consent')
     session['oauth_state'] = state
-    app.logger.info('Request path %s. Redirecting current user with ID %s to authorization URL', request.path, current_user.get_id())
+    app.logger.info('Request path %s. '
+                    'Redirecting current user with ID %s to authorization URL',
+                    request.path,
+                    current_user.get_id())
     return redirect(auth_url)
 
 
@@ -652,8 +661,9 @@ def callback():
             user = User()
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
-            for attr in 'refresh_token', 'access_token':
-                setattr(user, attr, token[attr])
+            get_user_info(token=token, user=user)  # get new access token
+            # for attr in 'refresh_token', 'access_token':
+            #     setattr(user, attr, token[attr])
             app.logger.info(
                 '(MK comment) user object after setting refresh token: {}'
                     .format(user))
