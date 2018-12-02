@@ -103,6 +103,8 @@ if os.getenv('EMAIL_WHITELIST_NAME'):
 else:
     whitelist_checker = None
 
+
+
 class User(UserMixin):
 
     def __init__(self, user=None, name=None, picture=None):
@@ -201,6 +203,8 @@ class User(UserMixin):
                 print('Could not clear {} from session'.format(attr))
                 pass
 
+# (MK) Global user instance.
+#user = User()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -392,6 +396,7 @@ def get_user_info(token=None, user=None):
         try:
             app.logger.info('(MK comment) Trying to refresh access token.')
             access_token = new_google_access_token()
+            user = load_user(current_user.get_id())
             setattr(user, 'access_token', access_token)
             app.logger.info('(MK comment) user.access_token: {}'
                             .format(user.access_token))
@@ -485,6 +490,7 @@ def authorization():
         app.logger.info(
             'Request path %s. No whitelist; User with email %s is logged in',
             request.path, user_data['email'])
+        user = load_user(current_user.get_id())
         return '', 204
     elif whitelist_checker.is_authorized(user_data['email']):
         app.logger.info(
@@ -575,13 +581,17 @@ def callback():
     # (MK) Check what current_user and requests.args holds:
     app.logger.info("(MK comment) This is current_user: {}".format(current_user))
     app.logger.info("(MK comment) This is request.args: {}".format(request.args))
+
+
     
     if current_user is not None and current_user.is_authenticated:
         app.logger.info('Request path %s. '
                         'Current user with ID %s is authenticated; '
                         'redirecting to index URL',
                         request.path, current_user.get_id())
-        return redirect(url_for('index'))
+        user = load_user(current_user.get_id())
+        #return redirect(url_for('index'))
+        #return redirect(url_for('boardwalk'))
 
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
@@ -648,6 +658,7 @@ def callback():
         resp = google.get(Auth.USER_INFO)
         app.logger.info("(MK comment) status code: {}".format(resp.status_code))
         if resp.status_code == 200:
+            user = load_user(current_user.get_id())
             user_data = resp.json()
             email = user_data['email']
             # If so configured, check for whitelist and redirect to
@@ -660,7 +671,7 @@ def callback():
                     return redirect(url_for('unauthorized',
                                             account=redact_email(email)))
             # Instantiate user and set attributes.
-            user = User()
+            #user = User()
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
             #get_user_info(token=token, user=user)  # get new access token
