@@ -317,7 +317,7 @@ def new_google_access_token():
     app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
     app.logger.info('(MK comment) resp[access_token]: {}'.format(resp['access_token']))    
     current_user.access_token = resp['access_token']
-    return resp['access_token']
+    return resp['access_token'], resp['refresh_token']
 
 
 def make_request(url, headers):
@@ -395,11 +395,16 @@ def get_user_info(token=None, user=None):
         # token expired, try once more
         try:
             app.logger.info('(MK comment) Trying to refresh access token.')
-            access_token = new_google_access_token()
+            access_token, refresh_token = new_google_access_token()
             user = load_user(current_user.get_id())
             setattr(user, 'access_token', access_token)
-            app.logger.info('(MK comment) user.access_token: {}'
+            app.logger.info('(MK comment) set user.access_token: {}'
                             .format(user.access_token))
+
+            setattr(user, 'refresh_token', refresh_token)
+            app.logger.info('(MK comment) set user.refresh_token: {}'
+                            .format(user.access_token))
+
         except OAuth2Error:
             # erase old tokens if they're broken / expired
             app.logger.warning('Could not refresh access token')
