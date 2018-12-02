@@ -403,7 +403,7 @@ def get_user_info(token=None, user=None):
 
             setattr(user, 'refresh_token', refresh_token)
             app.logger.info('(MK comment) set user.refresh_token: {}'
-                            .format(user.access_token))
+                            .format(user.refresh_token))
 
         except OAuth2Error:
             # erase old tokens if they're broken / expired
