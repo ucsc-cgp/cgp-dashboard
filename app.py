@@ -432,7 +432,7 @@ def me():
 
 
 @app.route('/authorization')
-def authorization(user):
+def authorization():
     """
     This endpoint determines if the caller is authorized of not.
 
@@ -472,7 +472,6 @@ def authorization(user):
     # use access token in session
     try:
         user_data = get_user_info(auth_token)
-        resp = get_user_info(user)
         app.logger.info('(MK comment) user_data: {}'.format(user_data))
     except ValueError as e:
         return e.message, 401
