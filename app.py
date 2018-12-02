@@ -371,7 +371,7 @@ def _get_user_info_from_token(token=None):
         'access_token': current_user.access_token if token is None else token})
     return google.get(Auth.USER_INFO)
 
-#@login_manager.needs_refresh_handler
+
 def get_user_info(token=None, user=None):
     """
     Get user's info, retry with refreshed token if failed, and raise ValueError
@@ -566,7 +566,6 @@ def login():
 
 
 @app.route('/gCallback')
-@login_manager.needs_refresh
 def callback():
     """
     Callback method required by Google's OAuth 2.0
@@ -662,9 +661,9 @@ def callback():
             user = User()
             for attr in 'email', 'name', 'picture':
                 setattr(user, attr, user_data[attr])
-            get_user_info(token=token, user=user)  # get new access token
-            # for attr in 'refresh_token', 'access_token':
-            #     setattr(user, attr, token[attr])
+            #get_user_info(token=token, user=user)  # get new access token
+            for attr in 'refresh_token', 'access_token':
+                setattr(user, attr, token[attr])
             app.logger.info(
                 '(MK comment) user object after setting refresh token: {}'
                     .format(user))
