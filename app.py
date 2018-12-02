@@ -289,6 +289,7 @@ def parse_token():
     assert authorization_header is not None, "No Authorization header in the request"
     parts = authorization_header.split()
     app.logger.info('(MK comment) parts[0]: {}, parts[1]: {}'.format(parts[0], parts[1]))
+    # response = check_session(cookie=co)
     # Return the bearer and token string
     return parts[0], parts[1]
 
@@ -307,6 +308,8 @@ def new_google_access_token():
     }
     # this call may throw an OAuth2Error
     resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    app.logger.info('(MK comment) response from new_google_access_token: {}'.
+                    format(resp))
     app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
     app.logger.info('(MK comment) resp[access_token]: {}'.format(resp['access_token']))    
     current_user.access_token = resp['access_token']
@@ -327,7 +330,7 @@ def make_request(url, headers):
     except urllib2.HTTPError as e:
         return e.message, e.code
 
-
+# What method calls check_session? (don't see any) What is its function?
 @app.route('/check_session/<cookie>')
 def check_session(cookie):
     if not request.headers.get("Authorization", None):
