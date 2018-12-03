@@ -610,7 +610,7 @@ def callback():
             # Set a new success flash message
             flash('You are now logged in!', 'success')
             app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
-            return redirect(url_for('index'))
+            return redirect(url_for('boardwalk'))
         app.logger.error('Could not fetch information for current user')
         return 'Could not fetch your information.'
 
