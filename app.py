@@ -391,9 +391,11 @@ def get_user_info(token=None, user=None):
     # if True:
         if token:
             raise ValueError('The provided token was not accepted')
-        # token expired, try once more
+        # Token expired, try to refresh access token.
         try:
-            app.logger.info('(MK comment) Trying to refresh access token.')
+            app.logger.info('(MK comment) get_user_info status code: {}. '
+                            'Trying to refresh access token.'
+                            .format(resp.status_code))
             access_token, refresh_token = new_google_access_token()
             user = load_user(current_user.get_id())
             setattr(user, 'access_token', access_token)
