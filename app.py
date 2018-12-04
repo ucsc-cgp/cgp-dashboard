@@ -496,7 +496,7 @@ def authorization():
         app.logger.info(
             'Request path %s. No whitelist; User with email %s is logged in',
             request.path, user_data['email'])
-        user = load_user(current_user.get_id())
+        #user = load_user(current_user.get_id())
         return '', 204
     elif whitelist_checker.is_authorized(user_data['email']):
         app.logger.info(
@@ -516,8 +516,10 @@ def html_rend(name):
     Handle the templates differently depending
     on its name.
     """
+    # TODO: these variables are unused.
     data = os.environ['DCC_DASHBOARD_SERVICE']
     coreClientVersion = os.getenv('DCC_CORE_CLIENT_VERSION', '1.1.0')
+
     if name == 'index':
         auth_required = bool(os.getenv('EMAIL_WHITELIST_NAME'))
         contact_email = os.getenv('CONTACT_EMAIL', '')
@@ -610,7 +612,7 @@ def callback():
             return 'You are denied access.'
         return 'Error encountered.'
 
-    # TODO: What is a condition that denies a user access?
+    # (MK) Under what a condition is code and state not in _request_?
     if 'code' not in request.args and 'state' not in request.args:
         if current_user is not None:
             app.logger.info('Request path %s. '
@@ -693,7 +695,7 @@ def callback():
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
-            # TODO: That message persist for too long - restrict life time.
+            # TODO: Looks like message persist for long - restrict life time?
             #  app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
             # return redirect(url_for('index'))
             # (MK) changing redirect following login to file browser (DataBrowser).
