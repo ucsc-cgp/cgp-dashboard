@@ -389,7 +389,7 @@ def get_user_info(token=None, user=None):
     resp = _get_user_info_from_token(token=token)
     app.logger.info('MK comment) get_user_info: initial resp. status: {}'
                     .format(resp.status_code))
-    if resp.status_code == 400:
+    if resp.status_code == 401:
     #if True:
         if token:
             raise ValueError('The provided token was not accepted')
