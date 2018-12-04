@@ -6,7 +6,7 @@ from flask import Flask, url_for, redirect, \
     render_template, session, request, Response, \
     flash, get_flashed_messages, jsonify
 from flask_login import LoginManager, login_required, login_user, \
-    logout_user, current_user, UserMixin, confirm_login, user_needs_refresh
+    logout_user, current_user, UserMixin
 from oauthlib.oauth2 import OAuth2Error
 
 from elasticsearch_dsl import Search
@@ -203,8 +203,6 @@ class User(UserMixin):
                 print('Could not clear {} from session'.format(attr))
                 pass
 
-# (MK) Global user instance.
-#user = User()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -390,7 +388,7 @@ def get_user_info(token=None):
     app.logger.info('MK comment) get_user_info: initial resp. status: {}'
                     .format(resp.status_code))
     if resp.status_code == 401:
-    #if True:
+    #if True:  # useful to mimic a persistent 401 for testing
         if token:
             raise ValueError('The provided token was not accepted')
         # Token expired, try to refresh access token.
