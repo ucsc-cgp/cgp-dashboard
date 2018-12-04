@@ -387,8 +387,10 @@ def get_user_info(token=None, user=None):
     If access token is provided, use that first
     """
     resp = _get_user_info_from_token(token=token)
-    if resp.status_code == 400:
-    # if True:
+    app.logger.info('MK comment) get_user_info: initial resp. status: {}'
+                    .format(resp.status_code))
+    # if resp.status_code == 400:
+    if True:
         if token:
             raise ValueError('The provided token was not accepted')
         # Token expired, try to refresh access token.
@@ -471,7 +473,7 @@ def authorization():
         bearer, auth_token = parse_token()
         app.logger.info('(MK comment) bearer: {}, auth_token: {}'.format(bearer, auth_token))
     except AssertionError as e:
-        app.logger.error('(MK comment) Assertion error: ' + e.message)
+        app.logger.info('(MK comment) Assertion error: ' + e.message)
         auth_token = None
     else:
         if bearer != "Bearer":
@@ -588,8 +590,6 @@ def callback():
     app.logger.info("(MK comment) This is current_user: {}".format(current_user))
     app.logger.info("(MK comment) This is request.args: {}".format(request.args))
 
-
-    
     if current_user is not None and current_user.is_authenticated:
         app.logger.info('Request path %s. '
                         'Current user with ID %s is authenticated; '
@@ -597,7 +597,7 @@ def callback():
                         request.path, current_user.get_id())
         user = load_user(current_user.get_id())
         #return redirect(url_for('index'))
-        #return redirect(url_for('boardwalk'))
+        return redirect(url_for('boardwalk'))
 
     if 'error' in request.args:
         if request.args.get('error') == 'access_denied':
@@ -612,6 +612,7 @@ def callback():
             return 'You are denied access.'
         return 'Error encountered.'
 
+    # TODO: What is a condition that denies a user access?
     if 'code' not in request.args and 'state' not in request.args:
         if current_user is not None:
             app.logger.info('Request path %s. '
@@ -686,12 +687,16 @@ def callback():
             app.logger.info(
                 '(MK comment) user object after setting refresh token: {}'
                     .format(user))
+            app.logger.info('(MK comment) new refresh token: {}, '
+                            'new access token: {}'.format(user.access_token,
+                                                          user.refresh_token))
             login_user(user)
             # Empty flashed messages
             get_flashed_messages()
             # Set a new success flash message
             flash('You are now logged in!', 'success')
-            # app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
+            # TODO: That message persist for too long - restrict life time.
+            #  app.logger.info('Request path %s. User with email %s was logged in; redirecting to index URL', request.path, user_data['email'])
             # return redirect(url_for('index'))
             # (MK) changing redirect following login to file browser (DataBrowser).
             app.logger.info('Request path %s. '
