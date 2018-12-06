@@ -46,6 +46,7 @@ class Auth:
     REDIRECT_URI = DCC_DASHBOARD_PROTOCOL+'://'+DCC_DASHBOARD_HOST+'/gCallback'
     AUTH_URI = 'https://accounts.google.com/o/oauth2/auth'
     TOKEN_URI = 'https://accounts.google.com/o/oauth2/token'
+    REFRESH_URI = TOKEN_URI  # true for Google but not all providers
     USER_INFO = 'https://www.googleapis.com/userinfo/v2/me'
     REVOKE_TOKEN = 'https://accounts.google.com/o/oauth2/revoke'
     SCOPE = ['https://www.googleapis.com/auth/userinfo.profile',
