@@ -704,7 +704,7 @@ def callback():
                             'redirecting to boardwalk URL',
                             request.path,
                             user_data['email'])
-            return redirect(url_for('boardwalk'))
+            return redirect(url_for('index'))
 
         app.logger.error('Could not fetch information for current user')
         return 'Could not fetch your information.'
