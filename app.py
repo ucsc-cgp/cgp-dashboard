@@ -421,20 +421,6 @@ def get_user_info(token=None):
     return resp.json()
 
 
-def refresh_token():
-    """ Refreshes an expired access token using refresh token. """
-    token = session['oauth_token']
-
-    extra = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-    }
-
-    google = OAuth2Session(client_id, token=token)
-    session['oauth_token'] = google.refresh_token(refresh_url, **extra)
-
-
-
 @app.route('/me')
 def me():
     """
