@@ -310,7 +310,7 @@ def new_google_access_token():
         'client_secret': Auth.CLIENT_SECRET,
     }
     # this call may throw an OAuth2Error
-    resp = oauth.refresh_token(Auth.TOKEN_URI, refresh_token=refresh_token, **extra)
+    resp = oauth.refresh_token(Auth.REFRESH_URI, refresh_token=refresh_token, **extra)
     app.logger.info('(MK comment) response from new_google_access_token: {}'.
                     format(resp))
     app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
@@ -412,11 +412,27 @@ def get_user_info(token=None):
             session.pop('refresh_token')
             raise
         resp = _get_user_info_from_token()
+        app.logger.info('MK comment) get_user_info: resp. status after refresh: {}'
+                    .format(resp.status_code))
     # If there is a 5xx error, or some unexpected 4xx we will return the message but
     # leave the token's intact b/c they're not necessarily to blame for the error.
     if resp.status_code != 200:
         raise ValueError(resp.text)
     return resp.json()
+
+
+def refresh_token():
+    """ Refreshes an expired access token using refresh token. """
+    token = session['oauth_token']
+
+    extra = {
+        'client_id': client_id,
+        'client_secret': client_secret,
+    }
+
+    google = OAuth2Session(client_id, token=token)
+    session['oauth_token'] = google.refresh_token(refresh_url, **extra)
+
 
 
 @app.route('/me')
