@@ -213,7 +213,15 @@ def load_user(user_id):
 """ OAuth Session creation """
 
 
-def get_google_auth(state=None, token=None):
+def get_google_auth(state=None, token=None, token_updater=None, extra=None):
+    if token and token_updater and extra:
+        return OAuth2Session(
+            Auth.CLIENT_ID,
+            token=token,
+            auto_refresh_kwargs=extra,
+            auto_refresh_url=Auth.REFRESH_URI,
+            token_updater=token_updater
+        )
     if token:
         return OAuth2Session(Auth.CLIENT_ID, token=token)
     if state:
@@ -303,20 +311,29 @@ def new_google_access_token():
 
     If refresh fails an OAuth2Error will be raised
     """
-    refresh_token = current_user.refresh_token
-    oauth = get_google_auth()
+    access_token = session['oauth_token']
+    # refresh_token = current_user.refresh_token
+
+    # def token_updater(access_token):
+    #     session['oauth_token'] = access_token
+
     extra = {
         'client_id': Auth.CLIENT_ID,
         'client_secret': Auth.CLIENT_SECRET,
     }
+
+    oauth = get_google_auth(token=access_token)
+
     # this call may throw an OAuth2Error
-    resp = oauth.refresh_token(Auth.REFRESH_URI, refresh_token=refresh_token, **extra)
-    app.logger.info('(MK comment) response from new_google_access_token: {}'.
-                    format(resp))
-    app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
-    app.logger.info('(MK comment) resp[access_token]: {}'.format(resp['access_token']))    
-    current_user.access_token = resp['access_token']
-    return resp['access_token'], resp['refresh_token']
+    # resp = oauth.refresh_token(Auth.REFRESH_URI, refresh_token=refresh_token, **extra)
+    session['oauth_token'] = oauth.refresh_token(Auth.REFRESH_URI, **extra)
+    #
+    # app.logger.info('(MK comment) response from new_google_access_token: {}'.
+    #                 format(resp))
+    # app.logger.info('(MK comment) refresh_token: {}'.format(refresh_token))
+    # app.logger.info('(MK comment) resp[access_token]: {}'.format(resp['access_token']))
+    # current_user.access_token = resp['access_token']
+    # return resp['access_token'], resp['refresh_token']
 
 
 def make_request(url, headers):
@@ -373,6 +390,7 @@ def _get_user_info_from_token(token=None):
 
     returns the response object
     """
+
     google = get_google_auth(
         token={
         'access_token': current_user.access_token if token is None else token},
@@ -400,13 +418,15 @@ def get_user_info(token=None):
             app.logger.info('(MK comment) get_user_info status code: {}. '
                             'Trying to refresh access token.'
                             .format(resp.status_code))
-            access_token, refresh_token = new_google_access_token()
-            current_user.access_token = access_token
-            current_user.refresh_token = refresh_token
-            app.logger.info('(MK comment) set user.access_token: {}'
-                            .format(current_user.access_token))
-            app.logger.info('(MK comment) set user.refresh_token: {}'
-                            .format(current_user.refresh_token))
+            new_google_access_token()
+            #
+            # access_token, refresh_token = new_google_access_token()
+            # current_user.access_token = access_token
+            # current_user.refresh_token = refresh_token
+            # app.logger.info('(MK comment) set user.access_token: {}'
+            #                 .format(current_user.access_token))
+            # app.logger.info('(MK comment) set user.refresh_token: {}'
+            #                 .format(current_user.refresh_token))
 
         except OAuth2Error:
             # erase old tokens if they're broken / expired
@@ -414,6 +434,8 @@ def get_user_info(token=None):
             session.pop('access_token')
             session.pop('refresh_token')
             raise
+        app.logger.info('(MK comment) refreshed access token: {}'
+                        .format(session['access_token']))
         resp = _get_user_info_from_token()
         app.logger.info('MK comment) get_user_info: resp. status after refresh: {}'
                     .format(resp.status_code))
