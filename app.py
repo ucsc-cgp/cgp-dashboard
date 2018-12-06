@@ -373,8 +373,11 @@ def _get_user_info_from_token(token=None):
 
     returns the response object
     """
-    google = get_google_auth(token={
-        'access_token': current_user.access_token if token is None else token})
+    google = get_google_auth(
+        token={
+        'access_token': current_user.access_token if token is None else token},
+        state=session['oauth_state']
+    )
     return google.get(Auth.USER_INFO)
 
 
