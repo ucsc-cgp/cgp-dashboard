@@ -397,14 +397,12 @@ def get_user_info(token=None):
                             'Trying to refresh access token.'
                             .format(resp.status_code))
             access_token, refresh_token = new_google_access_token()
-            user = load_user(current_user.get_id())
-            setattr(user, 'access_token', access_token)
+            current_user.access_token = access_token
+            current_user.refresh_token = refresh_token
             app.logger.info('(MK comment) set user.access_token: {}'
-                            .format(user.access_token))
-
-            setattr(user, 'refresh_token', refresh_token)
+                            .format(current_user.access_token))
             app.logger.info('(MK comment) set user.refresh_token: {}'
-                            .format(user.refresh_token))
+                            .format(current_user.refresh_token))
 
         except OAuth2Error:
             # erase old tokens if they're broken / expired
