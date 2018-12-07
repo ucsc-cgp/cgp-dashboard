@@ -374,7 +374,6 @@ def get_user_info(token=None):
     If access token is provided, use that first
     """
     resp = _get_user_info_from_token(token=token)
-    app.logger.info('status code: {}'.format(resp.status_code))
     if resp.status_code >= 400 and resp.status_code < 500:
         if token:
             raise ValueError('The provided token was not accepted')
@@ -388,8 +387,6 @@ def get_user_info(token=None):
             session.pop('refresh_token')
             raise
         resp = _get_user_info_from_token()
-        app.logger.info('status code after access token refresh: {}'
-                        .format(resp.status_code))
     # If there is a 5xx error, or some unexpected 4xx we will return the message but
     # leave the token's intact b/c they're not necessarily to blame for the error.
     if resp.status_code != 200:
