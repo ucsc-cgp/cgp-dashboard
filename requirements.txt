@@ -11,4 +11,4 @@ pycrypto==2.6.1
 cgp-bouncer==0.1.0
 # urllib3 is required b/c otherwise the old version causes a weird error with python 2.7.9
 # it is a requirement for botocore which is required by cgp-bouncer
-urllib3==1.23
+urllib3==1.24.2
