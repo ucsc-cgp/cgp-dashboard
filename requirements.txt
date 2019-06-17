@@ -1,6 +1,6 @@
 elasticsearch==5.2.0
 elasticsearch-dsl==5.2.0
-requests==2.12.4
+requests==2.20.0
 flask==0.12.3
 requests-oauthlib==0.7.0
 pyopenssl==16.2.0
